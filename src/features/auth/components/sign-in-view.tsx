@@ -1,4 +1,5 @@
 import { AuthCover } from '@/components/auth/auth-cover';
+import AuthHeading from '@/components/auth/auth-heading';
 import { SignIn as ClerkSignInForm } from '@clerk/nextjs';
 import { Metadata } from 'next';
 import Image from 'next/image';
@@ -16,7 +17,12 @@ export default function SignInViewPage() {
 
       {/* Right Side - Form */}
       <div className='flex w-full items-center justify-center bg-[#F8F8F8] p-4 lg:w-1/2 lg:p-8'>
-        <div className='w-full max-w-md space-y-6'>
+        <div className='w-full max-w-lg space-y-20'>
+          <AuthHeading
+            title='Welcome Back'
+            highlight='!'
+            subtitle='Please enter your details.'
+          />
           {/* Form */}
           <ClerkSignInForm
             initialValues={{

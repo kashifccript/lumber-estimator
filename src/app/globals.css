@@ -6,12 +6,6 @@
 
 @import './theme.css';
 
-@theme {
-  --font-sans: var(--font-urbanist);
-  --font-mono: var(--font-mono);
-  --font-poppins: var(--font-poppins);
-}
-
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -20,9 +14,9 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.6518 0.165 32.07);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  --secondary: oklch(0.2393 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
@@ -162,3 +156,4 @@
   /* Apply the reveal animation */
   animation: reveal 0.4s ease-in-out forwards;
 }
+
