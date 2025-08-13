@@ -1,5 +1,6 @@
 import { AuthCover } from '@/components/auth/auth-cover';
 import AuthHeading from '@/components/auth/auth-heading';
+import SigninForm from '@/components/auth/sign-in-form';
 import { SignIn as ClerkSignInForm } from '@clerk/nextjs';
 import { Metadata } from 'next';
 import Image from 'next/image';
@@ -23,12 +24,13 @@ export default function SignInViewPage() {
             highlight='!'
             subtitle='Please enter your details.'
           />
-          {/* Form */}
+          <SigninForm />
+          {/* Form
           <ClerkSignInForm
             initialValues={{
               emailAddress: 'your_mail+clerk_test@example.com'
             }}
-          />
+          /> */}
         </div>
       </div>
     </div>
