@@ -6,6 +6,12 @@
 
 @import './theme.css';
 
+@theme {
+  --font-sans: var(--font-urbanist);
+  --font-mono: var(--font-mono);
+  --font-poppins: var(--font-poppins);
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

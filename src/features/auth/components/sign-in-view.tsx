@@ -26,7 +26,7 @@ export default function SignInViewPage() {
 
         {/* Overlay Text */}
         <div className='absolute inset-0 flex items-end justify-center pb-16'>
-          <h2 className='max-w-[80%] text-start text-[56px] leading-snug text-white'>
+          <h2 className='font-poppins max-w-[80%] text-start text-[56px] leading-snug text-white'>
             Navigate World wide Property with Ease
           </h2>
         </div>
