@@ -18,9 +18,12 @@ export default function Header() {
   ];
 
   return (
-    <header className='flex h-[52px] items-center justify-between'>
+    <header className='flex h-[52px] items-center justify-between overflow-hidden'>
       {/* Left: Logo + App Name */}
-      <div className='flex h-full items-center gap-2 rounded-lg bg-white p-[5px]'>
+      <Link
+        href='/'
+        className='flex h-full items-center gap-2 rounded-lg bg-white p-[5px]'
+      >
         <Image
           src='/assets/home.svg'
           alt='Lumber Estimator'
@@ -30,8 +33,7 @@ export default function Header() {
         <span className='text-secondary text-base font-medium'>
           Lumber Estimator
         </span>
-      </div>
-
+      </Link>
       {/* Center: Navigation */}
       <nav className='flex items-center gap-2 rounded-lg bg-white p-[5px]'>
         {navItems.map((item) => {
