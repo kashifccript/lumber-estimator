@@ -23,7 +23,7 @@ export default function OverviewPage() {
 
   return (
     <PageContainer>
-      <div className='flex flex-1 flex-col gap-3'>
+      <div className='flex flex-1 flex-col gap-3 pb-6'>
         <HeroSection onCreateEstimate={() => setShowCreateModal(true)} />
         <FeaturesSection />
         <QuickTipsSection />
