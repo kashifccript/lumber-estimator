@@ -16,13 +16,17 @@ export function UserAvatarProfile({
   user
 }: UserAvatarProfileProps) {
   return (
-    <div className='flex items-center gap-2'>
-      <Avatar className={className}>
+    <div className='flex items-center justify-start gap-2'>
+      <Avatar className={`${className}`}>
         <AvatarImage src={user?.imageUrl || ''} alt={user?.fullName || ''} />
         <AvatarFallback className='rounded-lg'>
           {user?.fullName?.slice(0, 2)?.toUpperCase() || 'CN'}
         </AvatarFallback>
       </Avatar>
+
+      <p className='text-secondary text-lg font-medium'>
+        {user?.fullName || 'User Name'}
+      </p>
 
       {showInfo && (
         <div className='grid flex-1 text-left text-sm leading-tight'>

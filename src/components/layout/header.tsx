@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Bell, Home, LayoutGrid, FileText, Settings } from 'lucide-react';
+import { Bell, LayoutGrid, FileText, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
@@ -14,7 +14,7 @@ export default function Header() {
   const navItems = [
     { name: 'Dashboard', href: '/dashboard/overview', icon: LayoutGrid },
     { name: 'Estimates', href: '/dashboard/estimates', icon: FileText },
-    { name: 'Settings', href: '/settings', icon: Settings }
+    { name: 'Settings', href: '/dashboard/settings', icon: Settings }
   ];
 
   return (
@@ -56,21 +56,16 @@ export default function Header() {
       </nav>
 
       {/* Right: Notifications + User */}
-      <div className='flex h-full items-center gap-2'>
+      <div className='flex h-full gap-2'>
         <Button
           variant='ghost'
-          size='icon'
-          className='relative h-full rounded-lg bg-white p-4'
+          className='relative size-[50px] rounded-xl bg-white p-4'
         >
-          <Bell className='h-6 w-6 text-black' />
-          <span className='bg-primary absolute top-1 right-1 h-2 w-2 rounded-full'></span>
+          <Bell className='text-black' />
+          <span className='bg-primary absolute top-1 right-1 h-2 w-2 rounded-full' />
         </Button>
 
-        <div className='flex h-full items-center gap-2 rounded-lg bg-white p-[5px]'>
-          <Avatar className='h-8 w-8'>
-            <AvatarImage src='https://randomuser.me/api/portraits/men/32.jpg' />
-            <AvatarFallback>DB</AvatarFallback>
-          </Avatar>
+        <div className='hover:hover:bg-accent flex h-full items-center rounded-xl bg-white px-[5px] py-[10px]'>
           <UserNav />
         </div>
       </div>
