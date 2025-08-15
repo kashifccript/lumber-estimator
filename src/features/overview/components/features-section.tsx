@@ -1,3 +1,5 @@
+import { Building, Fast, CheckMark } from '@/assets/icons';
+
 export function FeaturesSection() {
   const features = [
     {
