@@ -11,7 +11,7 @@ export default function PageContainer({
   return (
     <>
       {scrollable ? (
-        <ScrollArea className='h-[calc(100dvh-52px)]'>
+        <ScrollArea className='h-[calc(100dvh-52px)] py-5' hideScrollbar={true}>
           <div className='flex flex-1'>{children}</div>
         </ScrollArea>
       ) : (
