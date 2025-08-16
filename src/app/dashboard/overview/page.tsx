@@ -17,7 +17,7 @@ export default function OverviewPage() {
     console.log('File uploaded:', file.name);
     setTimeout(() => {
       setShowCreateModal(false);
-      window.location.href = '/estimation-details';
+      window.location.href = 'dashboard/estimation-details';
     }, 3000);
   };
 

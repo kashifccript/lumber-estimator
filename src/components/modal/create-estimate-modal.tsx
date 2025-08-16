@@ -85,7 +85,7 @@ export function CreateEstimateModal({
       onClose={onClose}
     >
       <div className='max'>
-        {false ? (
+        {!uploading ? (
           <div
             className={`space-y-2.5 rounded-xl border-2 border-dashed p-12 text-center transition-colors ${
               dragActive
