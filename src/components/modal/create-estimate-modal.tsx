@@ -84,24 +84,24 @@ export function CreateEstimateModal({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className='space-y-6'>
-        {!uploading ? (
+      <div className='max'>
+        {false ? (
           <div
-            className={`rounded-xl border-2 border-dashed p-12 text-center transition-colors ${
+            className={`space-y-2.5 rounded-xl border-2 border-dashed p-12 text-center transition-colors ${
               dragActive
-                ? 'border-[#E2624B] bg-[#E2624B]/5'
-                : 'border-[#FFD6A8] bg-gray-50'
+                ? 'border-primary bg-primary/5'
+                : 'bg-background border-[#FFD6A8]'
             }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
           >
-            <Upload className='mx-auto mb-6 h-12 w-12 text-[#1F1F1F]' />
-            <h3 className='mb-2 text-xl font-medium text-[#1F1F1F]'>
+            <Upload className='text-secondary mx-auto h-12 w-12' />
+            <h3 className='text-secondary text-2xl font-medium'>
               Drag & drop your Design PDF here
             </h3>
-            <p className='mb-6 text-[#1F1F1F]'>or browse files</p>
+            <p className='text-secondary mb-6'>or browse files</p>
 
             <div className='space-y-4'>
               <label className='inline-block'>
@@ -111,29 +111,29 @@ export function CreateEstimateModal({
                   onChange={handleFileSelect}
                   className='hidden'
                 />
-                <span className='cursor-pointer rounded-xl border border-gray-300 bg-white px-6 py-3 font-semibold text-[#1F1F1F] transition-colors hover:bg-gray-50'>
+                <span className='text-secondary cursor-pointer rounded-xl border border-gray-300 bg-white px-4 py-3.5 font-semibold transition-colors hover:bg-gray-50'>
                   Browse Files
                 </span>
               </label>
-              <p className='text-[#1F1F1F]'>Supports PDF files up to 50MB</p>
+              <p className='text-secondary'>Supports PDF files up to 50MB</p>
             </div>
           </div>
         ) : (
-          <div className='rounded-xl border-2 border-dashed border-[#FFD6A8] bg-gray-50 p-8'>
+          <div className='bg-background rounded-xl border-2 border-dashed border-[#FFD6A8] p-8'>
             <div className='flex items-center gap-4'>
-              <FileText className='h-10 w-10 flex-shrink-0 text-[#1F1F1F]' />
+              <FileText className='text-secondary h-10 w-10 flex-shrink-0' />
               <div className='flex-1 space-y-3'>
-                <h3 className='text-lg font-medium text-[#1F1F1F]'>
+                <h3 className='text-secondary text-xl font-medium'>
                   Processing your document...
                 </h3>
                 <div className='space-y-1'>
                   <div className='h-3 w-full rounded-full bg-gray-300'>
                     <div
-                      className='h-3 rounded-full bg-[#E2624B] transition-all duration-300'
+                      className='bg-primary h-3 rounded-full transition-all duration-300'
                       style={{ width: `${uploadProgress}%` }}
                     />
                   </div>
-                  <p className='text-[#1F1F1F]'>
+                  <p className='text-secondary text-base font-medium'>
                     Processing document... {Math.round(uploadProgress)}%
                   </p>
                 </div>
@@ -141,22 +141,6 @@ export function CreateEstimateModal({
             </div>
           </div>
         )}
-
-        {/* Footer Actions */}
-        <div className='flex w-full items-center justify-end space-x-2 pt-6'>
-          <Button variant='outline' onClick={onClose} disabled={uploading}>
-            Cancel
-          </Button>
-          {uploading && (
-            <Button
-              variant='default'
-              disabled
-              className='bg-[#E2624B] hover:bg-[#E2624B]'
-            >
-              Processing...
-            </Button>
-          )}
-        </div>
       </div>
     </Modal>
   );

@@ -32,8 +32,12 @@ export const Modal: React.FC<ModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
+          <DialogTitle className='text-secondary font-semebold text-[32px]'>
+            {title}
+          </DialogTitle>
+          <DialogDescription className='text-secondary text-lg font-normal'>
+            {description}
+          </DialogDescription>
         </DialogHeader>
         <div>{children}</div>
       </DialogContent>
