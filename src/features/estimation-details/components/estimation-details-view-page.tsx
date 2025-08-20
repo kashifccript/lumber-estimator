@@ -1,7 +1,8 @@
 'use client';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import PageContainer from '@/components/layout/page-container';
 import { AddItemModal } from '@/components/modal/add-estimation-modal';
-import { useState } from 'react';
 import { EstimationActionBar } from './estimation-action-bar';
 import { SummaryDetails } from './summary-details';
 import { DataTable } from './estimation-table';
@@ -56,18 +57,35 @@ const mockData: Item[] = [
 
 export default function EstimationDetailsViewPage() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
-  // const [items, setItems] = useState<EstimationItem[]>(mockData);
+  const [items, setItems] = useState<Item[]>(mockData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
-  // const handleAddItem = (newItem: { name: string; quantity: string }) => {
-  //   const item: EstimationItem = {
-  //     id: Date.now().toString(),
-  //     name: newItem.name,
-  //     sku: 'NEW-01',
-  //     quantity: newItem.quantity,
-  //     cost: '$ 0'
-  //   };
-  //   setItems([...items, item]);
-  // };
+  const handleAddItem = (newItem: { name: string; quantity: string }) => {
+    const item: Item = {
+      id: Date.now().toString(),
+      name: newItem.name,
+      sku: 'NEW-01',
+      quantity: parseInt(newItem.quantity) || 0,
+      cost: '$ 0'
+    };
+    setItems([...items, item]);
+  };
+
+  const handleSubmitEstimate = async () => {
+    setIsSubmitting(true);
+
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 20000));
+
+      // Redirect to estimates page after successful submission
+      router.push('/dashboard/estimates');
+    } catch (error) {
+      console.error('Error submitting estimate:', error);
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <PageContainer>
@@ -82,11 +100,14 @@ export default function EstimationDetailsViewPage() {
           />
 
           {/* Action Bar */}
-          <EstimationActionBar onAddNewItem={() => setShowAddItemModal(true)} />
+          <EstimationActionBar
+            onAddNewItem={() => setShowAddItemModal(true)}
+            onSubmitEstimate={handleSubmitEstimate}
+          />
         </div>
 
         {/* Table */}
-        <DataTable columns={itemColumns} data={mockData} />
+        <DataTable columns={itemColumns} data={items} />
 
         {/* Summary */}
         <SummaryDetails />
@@ -95,7 +116,7 @@ export default function EstimationDetailsViewPage() {
       <AddItemModal
         isOpen={showAddItemModal}
         onClose={() => setShowAddItemModal(false)}
-        // onSubmit={handleAddItem}
+        onSubmit={handleAddItem}
       />
     </PageContainer>
   );

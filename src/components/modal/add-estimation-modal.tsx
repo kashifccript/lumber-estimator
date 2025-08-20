@@ -17,18 +17,16 @@ import { Input } from '../ui/input';
 interface AddItemModalProps {
   isOpen: boolean;
   onClose: () => void;
-  // onSubmit?: (item: { name: string; quantity: string }) => void;
+  onSubmit?: (item: { name: string; quantity: string }) => void;
 }
 
 const formSchema = z.object({
   item: z.string().min(2, 'Item name is required'),
-  quantity: z.string().min(2, 'Quantity name is required'),
+  quantity: z.string().min(1, 'Quantity is required'),
   productCode: z.string().optional()
 });
 
-export function AddItemModal({ isOpen, onClose }: AddItemModalProps) {
-  const [itemName, setItemName] = useState('');
-  const [quantity, setQuantity] = useState('');
+export function AddItemModal({ isOpen, onClose, onSubmit }: AddItemModalProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,23 +35,18 @@ export function AddItemModal({ isOpen, onClose }: AddItemModalProps) {
       productCode: ''
     }
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+
+  function handleSubmit(values: z.infer<typeof formSchema>) {
+    onSubmit?.({
+      name: values.item,
+      quantity: values.quantity
+    });
+    form.reset();
+    onClose();
   }
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (itemName.trim() && quantity.trim()) {
-  //     onSubmit?.({ name: itemName.trim(), quantity: quantity.trim() });
-  //     setItemName('');
-  //     setQuantity('');
-  //     onClose();
-  //   }
-  // };
-
   const handleCancel = () => {
-    setItemName('');
-    setQuantity('');
+    form.reset();
     onClose();
   };
 
@@ -68,7 +61,7 @@ export function AddItemModal({ isOpen, onClose }: AddItemModalProps) {
     >
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(handleSubmit)}
           className='w-full space-y-2.5 overflow-y-auto'
         >
           {/* Item Name */}
@@ -118,7 +111,12 @@ export function AddItemModal({ isOpen, onClose }: AddItemModalProps) {
           />
           {/* Actions */}
           <div className='mt-6 flex items-center justify-end gap-2'>
-            <Button onClick={handleCancel} variant='secondary' size='secondary'>
+            <Button
+              onClick={handleCancel}
+              variant='secondary'
+              size='secondary'
+              type='button'
+            >
               Cancel
             </Button>
             <Button type='submit' variant='primary' size='secondary'>
