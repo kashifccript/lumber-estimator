@@ -1,41 +1,46 @@
-'use client';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb';
-import { useBreadcrumbs } from '@/hooks/use-breadcrumbs';
-import { IconSlash } from '@tabler/icons-react';
-import { Fragment } from 'react';
+import { ChevronLeft } from 'lucide-react';
+import Link from 'next/link';
 
-export function Breadcrumbs() {
-  const items = useBreadcrumbs();
-  if (items.length === 0) return null;
+interface BreadcrumbProps {
+  items: Array<{
+    label: string;
+    href?: string;
+    active?: boolean;
+  }>;
+}
 
+export function Breadcrumb({ items }: BreadcrumbProps) {
   return (
-    <Breadcrumb>
-      <BreadcrumbList>
+    <div className='flex items-center gap-3'>
+      <Link
+        href='/dashboard'
+        className='flex h-12 w-12 items-center justify-center rounded-xl border border-gray-100 bg-white transition-colors hover:bg-gray-50'
+      >
+        <ChevronLeft className='h-6 w-6 text-[#1F1F1F]' />
+      </Link>
+      <div className='text-2xl'>
         {items.map((item, index) => (
-          <Fragment key={item.title}>
-            {index !== items.length - 1 && (
-              <BreadcrumbItem className='hidden md:block'>
-                <BreadcrumbLink href={item.link}>{item.title}</BreadcrumbLink>
-              </BreadcrumbItem>
+          <span key={index}>
+            {item.href && !item.active ? (
+              <Link
+                href={item.href}
+                className='text-[#1F1F1F]/45 transition-colors hover:text-[#1F1F1F]/70'
+              >
+                {item.label}
+              </Link>
+            ) : (
+              <span
+                className={item.active ? 'text-[#1F1F1F]' : 'text-[#1F1F1F]/45'}
+              >
+                {item.label}
+              </span>
             )}
             {index < items.length - 1 && (
-              <BreadcrumbSeparator className='hidden md:block'>
-                <IconSlash />
-              </BreadcrumbSeparator>
+              <span className='text-[#1F1F1F]'> / </span>
             )}
-            {index === items.length - 1 && (
-              <BreadcrumbPage>{item.title}</BreadcrumbPage>
-            )}
-          </Fragment>
+          </span>
         ))}
-      </BreadcrumbList>
-    </Breadcrumb>
+      </div>
+    </div>
   );
 }

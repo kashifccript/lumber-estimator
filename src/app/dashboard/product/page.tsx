@@ -37,7 +37,7 @@ export default async function Page(props: pageProps) {
           />
           <Link
             href='/dashboard/product/new'
-            className={cn(buttonVariants(), 'text-xs md:text-sm')}
+            className={cn(buttonVariants(), 'text-xs md:text-sm w-fit')}
           >
             <IconPlus className='mr-2 h-4 w-4' /> Add New
           </Link>

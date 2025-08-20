@@ -91,7 +91,7 @@ export function AddItemModal({ isOpen, onClose }: AddItemModalProps) {
             name='quantity'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Item Name</FormLabel>
+                <FormLabel>Quantity</FormLabel>
                 <FormControl>
                   <Input
                     placeholder='e.g., 20 sq ft, 30 piece, 120 hour'

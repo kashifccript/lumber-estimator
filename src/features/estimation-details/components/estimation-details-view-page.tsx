@@ -4,25 +4,16 @@ import { AddItemModal } from '@/components/modal/add-estimation-modal';
 import { useState } from 'react';
 import { EstimationActionBar } from './estimation-action-bar';
 import { SummaryDetails } from './summary-details';
+import { DataTable } from './estimation-table';
+import { Item, itemColumns } from './estimation-table/columns';
+import { Breadcrumb } from '@/components/breadcrumbs';
 
-interface EstimationItem {
-  id: string;
-  name: string;
-  sku: string;
-  quantity: string;
-  cost: string;
-  contractor?: {
-    name: string;
-    avatar: string;
-  };
-}
-
-const mockData: EstimationItem[] = [
+const mockData: Item[] = [
   {
     id: '1',
     name: 'Concrete Foundation (Grade A)',
     sku: 'PLY-34',
-    quantity: '150 cubic yards',
+    quantity: 150,
     cost: '$ 127,344',
     contractor: {
       name: 'Dianne Russell',
@@ -34,14 +25,14 @@ const mockData: EstimationItem[] = [
     id: '2',
     name: 'Steel Structural Beams I-Beam 12"',
     sku: 'PLY-34',
-    quantity: '45 Units',
+    quantity: 45,
     cost: '$ 127,344'
   },
   {
     id: '3',
     name: 'Premium Glass Curtain Wall System',
     sku: 'PLY-34',
-    quantity: '2,200 sq ft',
+    quantity: 2200,
     cost: '$ 127,344',
     contractor: {
       name: 'Albert Flores',
@@ -53,7 +44,7 @@ const mockData: EstimationItem[] = [
     id: '4',
     name: 'Electrical Conduit & Wiring',
     sku: 'PLY-34',
-    quantity: '24 units',
+    quantity: 24,
     cost: '$ 127,344',
     contractor: {
       name: 'Albert Flores',
@@ -65,94 +56,37 @@ const mockData: EstimationItem[] = [
 
 export default function EstimationDetailsViewPage() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
-  const [items, setItems] = useState<EstimationItem[]>(mockData);
+  // const [items, setItems] = useState<EstimationItem[]>(mockData);
 
-  const handleAddItem = (newItem: { name: string; quantity: string }) => {
-    const item: EstimationItem = {
-      id: Date.now().toString(),
-      name: newItem.name,
-      sku: 'NEW-01',
-      quantity: newItem.quantity,
-      cost: '$ 0'
-    };
-    setItems([...items, item]);
-  };
+  // const handleAddItem = (newItem: { name: string; quantity: string }) => {
+  //   const item: EstimationItem = {
+  //     id: Date.now().toString(),
+  //     name: newItem.name,
+  //     sku: 'NEW-01',
+  //     quantity: newItem.quantity,
+  //     cost: '$ 0'
+  //   };
+  //   setItems([...items, item]);
+  // };
 
   return (
     <PageContainer>
       <div className='mx-10 flex flex-1 flex-col gap-3 pb-6'>
-        {/* Breadcrumb */}
-        {/* <Breadcrumb
+        <div className='flex items-center justify-between'>
+          {/* Breadcrumb */}
+          <Breadcrumb
             items={[
-              { label: 'Dashboard', href: '/' },
+              { label: 'Dashboard', href: '/dashboard' },
               { label: 'Estimation Details', active: true }
             ]}
-          /> */}
+          />
 
-        {/* Action Bar */}
-        <EstimationActionBar onAddNewItem={() => setShowAddItemModal(true)} />
+          {/* Action Bar */}
+          <EstimationActionBar onAddNewItem={() => setShowAddItemModal(true)} />
+        </div>
 
         {/* Table */}
-        <div className='overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm'>
-          <div className='overflow-x-auto'>
-            <table className='w-full'>
-              <thead className='bg-slate-100'>
-                <tr>
-                  <th className='min-w-[300px] px-6 py-4 text-left text-sm font-medium text-[#1F1F1F]'>
-                    Item Name
-                  </th>
-                  <th className='min-w-[120px] px-6 py-4 text-left text-sm font-medium text-[#1F1F1F]'>
-                    SKU/ID
-                  </th>
-                  <th className='min-w-[150px] px-6 py-4 text-left text-sm font-medium text-[#1F1F1F]'>
-                    Quantity
-                  </th>
-                  <th className='min-w-[120px] px-6 py-4 text-left text-sm font-medium text-[#1F1F1F]'>
-                    Estimated Cost
-                  </th>
-                  <th className='min-w-[150px] px-6 py-4 text-left text-sm font-medium text-[#1F1F1F]'>
-                    Contractor
-                  </th>
-                </tr>
-              </thead>
-              <tbody className='divide-y divide-gray-200'>
-                {items.map((item) => (
-                  <tr key={item.id} className='hover:bg-gray-50'>
-                    <td className='px-6 py-5 text-sm text-[#1F1F1F]'>
-                      {item.name}
-                    </td>
-                    <td className='px-6 py-5 text-sm text-[#1F1F1F]'>
-                      {item.sku}
-                    </td>
-                    <td className='px-6 py-5 text-sm text-[#1F1F1F]'>
-                      {item.quantity}
-                    </td>
-                    <td className='px-6 py-5 text-sm text-[#1F1F1F]'>
-                      {item.cost}
-                    </td>
-                    <td className='px-6 py-5'>
-                      {item.contractor ? (
-                        <div className='flex items-center gap-3'>
-                          <div
-                            className='h-8 w-8 rounded-full bg-cover bg-center'
-                            style={{
-                              backgroundImage: `url(${item.contractor.avatar})`
-                            }}
-                          />
-                          <span className='text-sm text-[#101828]'>
-                            {item.contractor.name}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className='text-sm text-[#101828]'>___</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <DataTable columns={itemColumns} data={mockData} />
 
         {/* Summary */}
         <SummaryDetails />
