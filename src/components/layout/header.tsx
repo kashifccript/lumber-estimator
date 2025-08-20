@@ -43,7 +43,7 @@ export default function Header() {
             <Link key={item.name} href={item.href}>
               <Button
                 variant={isActive ? 'default' : 'outline'}
-                className={`font-mediumgap-2 flex items-center rounded-md px-5 py-[10px] text-base ${
+                className={`flex h-10.5 items-center gap-2 rounded-md px-5 py-[10px] text-base font-medium ${
                   isActive
                     ? 'bg-primary hover:bg-primary/90 text-white'
                     : 'bg-background text-secondary'
