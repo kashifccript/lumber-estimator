@@ -3,8 +3,8 @@ import Header from '@/components/layout/header';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Next Shadcn Dashboard Starter',
-  description: 'Basic dashboard with Next.js and Shadcn'
+  title: 'Dashboard | Lumber Estimator',
+  description: 'Lumber Estimator'
 };
 
 export default async function DashboardLayout({
