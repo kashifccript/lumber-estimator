@@ -89,7 +89,7 @@ export default function EstimationDetailsViewPage() {
 
   return (
     <PageContainer>
-      <div className='mx-10 flex flex-1 flex-col gap-3 pb-6'>
+      <div className='flex flex-1 flex-col gap-3 pb-6'>
         <div className='flex items-center justify-between'>
           {/* Breadcrumb */}
           <Breadcrumb

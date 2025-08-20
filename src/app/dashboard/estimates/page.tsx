@@ -1,7 +1,9 @@
-import React from 'react';
+import EstimatesViewPage from '@/features/estimates/components/estimates-view-page';
 
-const page = () => {
-  return <div>Estimates</div>;
+export const metadata = {
+  title: 'Estimates'
 };
 
-export default page;
+export default function page() {
+  return <EstimatesViewPage />;
+}
