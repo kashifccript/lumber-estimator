@@ -14,7 +14,8 @@ const mockData: Item[] = [
     id: '1',
     name: 'Concrete Foundation (Grade A)',
     sku: 'PLY-34',
-    quantity: 150,
+    quantity: '150 cubic yards',
+    status: 'approved',
     cost: '$ 127,344',
     contractor: {
       name: 'Dianne Russell',
@@ -26,14 +27,16 @@ const mockData: Item[] = [
     id: '2',
     name: 'Steel Structural Beams I-Beam 12"',
     sku: 'PLY-34',
-    quantity: 45,
+    quantity: '45 Units',
+    status: 'quotation-needed',
     cost: '$ 127,344'
   },
   {
     id: '3',
     name: 'Premium Glass Curtain Wall System',
     sku: 'PLY-34',
-    quantity: 2200,
+    quantity: '2,200 sq ft',
+    status: 'pending',
     cost: '$ 127,344',
     contractor: {
       name: 'Albert Flores',
@@ -45,7 +48,8 @@ const mockData: Item[] = [
     id: '4',
     name: 'Electrical Conduit & Wiring',
     sku: 'PLY-34',
-    quantity: 24,
+    quantity: '24 units',
+    status: 'rejected',
     cost: '$ 127,344',
     contractor: {
       name: 'Albert Flores',
@@ -66,7 +70,8 @@ export default function EstimationDetailsViewPage() {
       id: Date.now().toString(),
       name: newItem.name,
       sku: 'NEW-01',
-      quantity: parseInt(newItem.quantity) || 0,
+      quantity: newItem.quantity,
+      status: 'pending',
       cost: '$ 0'
     };
     setItems([...items, item]);

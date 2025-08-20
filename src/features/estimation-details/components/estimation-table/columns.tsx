@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal, Pencil, Trash, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { StatusBadge } from '../status-badge';
 
 interface Contractor {
   name: string;
@@ -11,8 +12,9 @@ export interface Item {
   id: string | number;
   name: string;
   sku: string;
-  quantity: number;
+  quantity: string;
   cost: string;
+  status: 'approved' | 'pending' | 'rejected' | 'quotation-needed';
   contractor?: Contractor | null;
 }
 
@@ -32,6 +34,14 @@ export const itemColumns: ColumnDef<Item>[] = [
   {
     accessorKey: 'cost',
     header: 'Estimated Cost'
+  },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => {
+      const item = row.original;
+      return <StatusBadge status={item.status}>{item.status}</StatusBadge>;
+    }
   },
   {
     accessorKey: 'contractor',
