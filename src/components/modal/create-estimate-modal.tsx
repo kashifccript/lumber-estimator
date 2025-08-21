@@ -3,26 +3,41 @@ import { useEffect, useState } from 'react';
 import { X, Upload, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
+import { uploadPDFForEstimation } from '@/lib/lumber-estimation';
+import { toast } from 'sonner';
 
 interface CreateEstimateModalProps {
   isOpen: boolean;
   onClose: () => void;
   onFileUpload?: (file: File) => void;
+  onUploadSuccess?: (data: any) => void;
 }
 
 export function CreateEstimateModal({
   isOpen,
   onClose,
-  onFileUpload
+  onFileUpload,
+  onUploadSuccess
 }: CreateEstimateModalProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [currentFile, setCurrentFile] = useState<File | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!isOpen) {
+      // Reset state when modal closes
+      setUploading(false);
+      setUploadProgress(0);
+      setCurrentFile(null);
+      setDragActive(false);
+    }
+  }, [isOpen]);
 
   if (!isMounted) {
     return null;
@@ -54,26 +69,63 @@ export function CreateEstimateModal({
     }
   };
 
-  const handleFileUpload = (file: File) => {
+  const handleFileUpload = async (file: File) => {
     if (file.type !== 'application/pdf') {
-      alert('Please upload a PDF file');
+      toast.error('Please upload a PDF file');
       return;
     }
 
+    if (file.size > 50 * 1024 * 1024) {
+      // 50MB limit
+      toast.error('File size must be less than 50MB');
+      return;
+    }
+
+    setCurrentFile(file);
     setUploading(true);
     setUploadProgress(0);
 
-    // Simulate upload progress
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 85) {
-          clearInterval(interval);
-          return 85;
-        }
-        return prev + Math.random() * 15;
-      });
-    }, 200);
+    try {
+      // Generate project name from filename
+      const projectName = file.name.replace(/\.[^/.]+$/, '');
 
+      const response = await uploadPDFForEstimation(
+        {
+          file,
+          project_name: projectName,
+          force_fresh: false
+        },
+        (progress) => {
+          setUploadProgress(progress);
+        }
+      );
+
+      // Simulate processing time after upload completes
+      setUploadProgress(85);
+
+      // Simulate final processing
+      setTimeout(() => {
+        setUploadProgress(100);
+        toast.success('PDF analysis completed successfully!');
+
+        // Store data and notify parent
+        localStorage.setItem('current_estimation', JSON.stringify(response));
+        onUploadSuccess?.(response);
+
+        // Close modal after success
+        setTimeout(() => {
+          onClose();
+        }, 1000);
+      }, 2000); // 2 second processing simulation
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error(error instanceof Error ? error.message : 'Upload failed');
+      setUploading(false);
+      setUploadProgress(0);
+      setCurrentFile(null);
+    }
+
+    // Call the original callback for compatibility
     onFileUpload?.(file);
   };
 
@@ -124,8 +176,16 @@ export function CreateEstimateModal({
               <FileText className='text-secondary h-10 w-10 flex-shrink-0' />
               <div className='flex-1 space-y-3'>
                 <h3 className='text-secondary text-xl font-medium'>
-                  Processing your document...
+                  {uploadProgress < 85
+                    ? 'Uploading document...'
+                    : 'Analyzing document...'}
                 </h3>
+                {currentFile && (
+                  <p className='text-sm text-gray-600'>
+                    Processing: {currentFile.name} (
+                    {(currentFile.size / (1024 * 1024)).toFixed(2)} MB)
+                  </p>
+                )}
                 <div className='space-y-1'>
                   <div className='h-3 w-full rounded-full bg-gray-300'>
                     <div
@@ -134,7 +194,11 @@ export function CreateEstimateModal({
                     />
                   </div>
                   <p className='text-secondary text-base font-medium'>
-                    Processing document... {Math.round(uploadProgress)}%
+                    {uploadProgress < 85
+                      ? `Uploading... ${uploadProgress}%`
+                      : uploadProgress < 100
+                        ? 'Analyzing PDF content...'
+                        : 'Analysis complete!'}
                   </p>
                 </div>
               </div>

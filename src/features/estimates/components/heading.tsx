@@ -9,11 +9,17 @@ export default function Heading() {
 
   const handleFileUpload = (file: File) => {
     console.log('File uploaded:', file.name);
-    setTimeout(() => {
-      setShowCreateModal(false);
-      window.location.href = '/dashboard/estimation-details';
-    }, 3000);
+    // This is called for compatibility but real work is done in modal
   };
+
+  const handleUploadSuccess = (data: any) => {
+    console.log('Upload successful:', data);
+    // Redirect to estimation details after successful upload
+    setTimeout(() => {
+      window.location.href = '/dashboard/estimation-details';
+    }, 1000);
+  };
+
   return (
     <div className='flex items-center justify-between'>
       <h1 className='text-secondary text-2xl font-semibold'>
@@ -32,6 +38,7 @@ export default function Heading() {
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
         onFileUpload={handleFileUpload}
+        onUploadSuccess={handleUploadSuccess}
       />
     </div>
   );
