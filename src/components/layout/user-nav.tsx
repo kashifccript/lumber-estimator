@@ -10,29 +10,26 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { UserAvatarProfile } from '@/components/user-avatar-profile';
-// Remove Clerk imports
-// import { SignOutButton, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-
-// Mock user data - replace with your authentication solution
-const mockUser = {
-  fullName: 'John Doe',
-  emailAddresses: [{ emailAddress: 'john@example.com' }],
-  imageUrl: ''
-};
+import { useAuth } from '@/hooks/use-auth';
 
 export function UserNav() {
-  // Remove Clerk user hook
-  // const { user } = useUser();
-  const user = mockUser; // Use mock data for now
+  const { user, logout } = useAuth();
   const router = useRouter();
 
   const handleSignOut = () => {
-    // Implement your sign out logic here
-    router.push('/auth/sign-in');
+    logout();
+    router.push('/sign-in');
   };
 
   if (user) {
+    // Convert user data to match avatar component interface
+    const avatarUser = {
+      fullName: `${user.first_name} ${user.last_name}`,
+      emailAddresses: [{ emailAddress: user.email }],
+      imageUrl: ''
+    };
+
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -40,7 +37,7 @@ export function UserNav() {
             variant='ghost'
             className='relative px-0 py-0 hover:bg-transparent'
           >
-            <UserAvatarProfile user={user} />
+            <UserAvatarProfile user={avatarUser} />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -51,11 +48,11 @@ export function UserNav() {
         >
           <DropdownMenuLabel className='font-normal'>
             <div className='flex flex-col space-y-1'>
-              <p className='text-sm font-medium leading-none'>
-                {user.fullName}
+              <p className='text-sm leading-none font-medium'>
+                {avatarUser.fullName}
               </p>
-              <p className='text-xs leading-none text-muted-foreground'>
-                {user.emailAddresses[0].emailAddress}
+              <p className='text-muted-foreground text-xs leading-none'>
+                {user.email}
               </p>
             </div>
           </DropdownMenuLabel>
@@ -69,10 +66,7 @@ export function UserNav() {
             <DropdownMenuItem>New Team</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleSignOut}>
-            {/* Replace SignOutButton with custom button */}
-            Sign Out
-          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleSignOut}>Sign Out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     );

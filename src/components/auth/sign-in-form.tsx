@@ -17,23 +17,46 @@ import { Separator } from '@/components/ui/separator';
 import { FcGoogle } from 'react-icons/fc';
 import { FaApple } from 'react-icons/fa';
 import Link from 'next/link';
+import { useState } from 'react';
+import { loginUser } from '@/lib/auth';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/use-auth';
 
 const formSchema = z.object({
-  email: z.string().email('Invalid email'),
-  password: z.string().min(6, 'Password must be at least 6 characters')
+  username: z.string().min(1, 'Username is required'),
+  password: z.string().min(1, 'Password is required')
 });
 
 export default function SigninForm() {
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
+      username: '',
       password: ''
     }
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    try {
+      const response = await loginUser(values);
+
+      // Store auth data
+      login(response.user, response.access_token);
+
+      toast.success(`Welcome back, ${response.user.first_name}!`);
+      router.push('/dashboard/overview');
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error(error instanceof Error ? error.message : 'Login failed');
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -42,15 +65,19 @@ export default function SigninForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className='w-full space-y-5 pb-10'
       >
-        {/* Email */}
+        {/* Username */}
         <FormField
           control={form.control}
-          name='email'
+          name='username'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Your Email</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder='Enter your email' {...field} />
+                <Input
+                  placeholder='Enter your username'
+                  disabled={isLoading}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -68,7 +95,8 @@ export default function SigninForm() {
                 <div className='relative'>
                   <Input
                     type='password'
-                    placeholder='Your Password'
+                    placeholder='Enter your password'
+                    disabled={isLoading}
                     {...field}
                   />
                 </div>
@@ -77,6 +105,7 @@ export default function SigninForm() {
             </FormItem>
           )}
         />
+
         {/* Forget Password link aligned right */}
         <div className='flex justify-end'>
           <Link
@@ -88,8 +117,13 @@ export default function SigninForm() {
         </div>
 
         {/* Submit Button */}
-        <Button type='submit' variant='default'>
-          LogIn
+        <Button
+          type='submit'
+          variant='default'
+          disabled={isLoading}
+          className='w-full'
+        >
+          {isLoading ? 'Signing In...' : 'Sign In'}
         </Button>
 
         {/* Separator */}
@@ -100,11 +134,11 @@ export default function SigninForm() {
         </div>
 
         {/* Social Login Buttons */}
-        <Button type='button' variant='outline'>
+        <Button type='button' variant='outline' disabled={isLoading}>
           <FcGoogle size={20} /> Continue with Google
         </Button>
 
-        <Button type='button' variant='outline'>
+        <Button type='button' variant='outline' disabled={isLoading}>
           <FaApple size={20} /> Continue with Apple
         </Button>
       </form>
