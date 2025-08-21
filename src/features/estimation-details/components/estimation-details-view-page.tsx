@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import PageContainer from '@/components/layout/page-container';
 import { AddItemModal } from '@/components/modal/add-estimation-modal';
@@ -9,61 +9,103 @@ import { DataTable } from './estimation-table';
 import { Item, itemColumns } from './estimation-table/columns';
 import { Breadcrumb } from '@/components/breadcrumbs';
 
-const mockData: Item[] = [
-  {
-    id: '1',
-    name: 'Concrete Foundation (Grade A)',
-    sku: 'PLY-34',
-    quantity: '150 cubic yards',
-    status: 'approved',
-    cost: '$ 127,344',
-    contractor: {
-      name: 'Dianne Russell',
-      avatar:
-        'https://api.builder.io/api/v1/image/assets/TEMP/c621edd36a0654de255120825ca63122a262c93a?width=64'
-    }
-  },
-  {
-    id: '2',
-    name: 'Steel Structural Beams I-Beam 12"',
-    sku: 'PLY-34',
-    quantity: '45 Units',
-    status: 'quotation-needed',
-    cost: '$ 127,344'
-  },
-  {
-    id: '3',
-    name: 'Premium Glass Curtain Wall System',
-    sku: 'PLY-34',
-    quantity: '2,200 sq ft',
-    status: 'pending',
-    cost: '$ 127,344',
-    contractor: {
-      name: 'Albert Flores',
-      avatar:
-        'https://api.builder.io/api/v1/image/assets/TEMP/a0f0d78e603192c6a2e8bb999f17e4ac994c0e1a?width=64'
-    }
-  },
-  {
-    id: '4',
-    name: 'Electrical Conduit & Wiring',
-    sku: 'PLY-34',
-    quantity: '24 units',
-    status: 'rejected',
-    cost: '$ 127,344',
-    contractor: {
-      name: 'Albert Flores',
-      avatar:
-        'https://api.builder.io/api/v1/image/assets/TEMP/a0f0d78e603192c6a2e8bb999f17e4ac994c0e1a?width=64'
-    }
-  }
-];
-
 export default function EstimationDetailsViewPage() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
-  const [items, setItems] = useState<Item[]>(mockData);
+  const [items, setItems] = useState<Item[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [estimationData, setEstimationData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    // Load estimation data from localStorage
+    const storedData = localStorage.getItem('current_estimation');
+    if (storedData) {
+      try {
+        const data = JSON.parse(storedData);
+        console.log('Loaded estimation data:', data);
+        setEstimationData(data);
+
+        // Convert API data to table items
+        const apiItems: Item[] = [];
+
+        // Check if we have lumber specs from the API
+        if (data.results?.lumber_estimates?.detailed_lumber_specs?.length > 0) {
+          // Use detailed lumber specs - CORRECTED DATA MAPPING
+          data.results.lumber_estimates.detailed_lumber_specs.forEach(
+            (spec: any, index: number) => {
+              apiItems.push({
+                id: spec.database_info?.item_id || `lumber-${index}`,
+                name: spec.item_name || `Lumber Item ${index + 1}`,
+                sku:
+                  spec.database_info?.item_id ||
+                  `LBR-${String(index + 1).padStart(3, '0')}`,
+                quantity: `${spec.quantity?.needed || 0} ${spec.quantity?.unit || 'units'}`,
+                cost: spec.pricing?.total_price
+                  ? `$ ${Number(spec.pricing.total_price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                  : 'N/A',
+                status:
+                  spec.sourcing?.database_match === 'Available'
+                    ? ('approved' as const)
+                    : ('quotation-needed' as const),
+                contractor: spec.sourcing?.recommended_contractor
+                  ? {
+                      name: spec.sourcing.recommended_contractor,
+                      avatar: '/assets/icons/building.svg'
+                    }
+                  : null
+              });
+            }
+          );
+        } else if (data.results?.detailed_items?.length > 0) {
+          // Use detailed items if lumber specs not available
+          data.results.detailed_items.forEach((item: any, index: number) => {
+            const needsQuotation =
+              item.unit_price === 'Quotation needed' ||
+              item.total_price === 'Quotation needed';
+
+            apiItems.push({
+              id: item.item_id || `item-${index}`,
+              name: item.item_name || item.description || `Item ${index + 1}`,
+              sku: item.item_id || `ITM-${String(index + 1).padStart(3, '0')}`,
+              quantity: `${item.quantity_needed || 0} ${item.unit || 'units'}`,
+              cost: needsQuotation
+                ? 'Quotation Needed'
+                : item.total_price
+                  ? `$ ${Number(item.total_price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                  : 'N/A',
+              status: needsQuotation
+                ? ('quotation-needed' as const)
+                : ('approved' as const),
+              contractor: item.recommended_contractor
+                ? {
+                    name: item.recommended_contractor,
+                    avatar: '/assets/icons/building.svg'
+                  }
+                : null
+            });
+          });
+        } else {
+          // Create a summary item if no detailed items
+          apiItems.push({
+            id: 'summary-1',
+            name: `${data.project_name} - Lumber Estimation`,
+            sku: 'EST-001',
+            quantity: `${data.results?.lumber_estimates?.total_lumber_items || 0} items`,
+            cost: `$ ${(data.results?.lumber_estimates?.total_lumber_cost || 0).toLocaleString()}`,
+            status: 'approved' as const,
+            contractor: null
+          });
+        }
+
+        setItems(apiItems);
+      } catch (error) {
+        console.error('Error parsing estimation data:', error);
+        // Keep empty items array if parsing fails
+      }
+    }
+    setIsLoading(false);
+  }, []);
 
   const handleAddItem = (newItem: { name: string; quantity: string }) => {
     const item: Item = {
@@ -92,6 +134,16 @@ export default function EstimationDetailsViewPage() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <PageContainer>
+        <div className='flex flex-1 items-center justify-center'>
+          <div className='text-lg'>Loading estimation details...</div>
+        </div>
+      </PageContainer>
+    );
+  }
+
   return (
     <PageContainer>
       <div className='flex flex-1 flex-col gap-3 pb-6'>
@@ -115,7 +167,7 @@ export default function EstimationDetailsViewPage() {
         <DataTable columns={itemColumns} data={items} />
 
         {/* Summary */}
-        <SummaryDetails />
+        <SummaryDetails estimationData={estimationData} />
       </div>
 
       <AddItemModal

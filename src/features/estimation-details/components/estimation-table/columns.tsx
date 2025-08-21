@@ -21,7 +21,15 @@ export interface Item {
 export const itemColumns: ColumnDef<Item>[] = [
   {
     accessorKey: 'name',
-    header: 'Item Name'
+    header: 'Item Name',
+    cell: ({ row }) => {
+      const item = row.original;
+      return (
+        <div className='max-w-xs'>
+          <p className='truncate font-medium text-gray-900'>{item.name}</p>
+        </div>
+      );
+    }
   },
   {
     accessorKey: 'sku',
@@ -33,7 +41,11 @@ export const itemColumns: ColumnDef<Item>[] = [
   },
   {
     accessorKey: 'cost',
-    header: 'Estimated Cost'
+    header: 'Estimated Cost',
+    cell: ({ row }) => {
+      const cost = row.original.cost;
+      return <span className='font-medium text-green-700'>{cost}</span>;
+    }
   },
   {
     accessorKey: 'status',
@@ -59,40 +71,8 @@ export const itemColumns: ColumnDef<Item>[] = [
           <span className='text-sm text-[#101828]'>{contractor.name}</span>
         </div>
       ) : (
-        <span className='text-sm text-[#101828]'>___</span>
+        <span className='text-sm text-gray-400'>Unassigned</span>
       );
     }
   }
-  // {
-  //   id: 'actions',
-  //   header: 'Actions',
-  //   cell: ({ row }) => {
-  //     const item = row.original;
-  //     return (
-  //       <div className='flex items-center gap-2'>
-  //         <Button
-  //           size='sm'
-  //           variant='ghost'
-  //           onClick={() => console.log('View', item)}
-  //         >
-  //           <Eye className='h-4 w-4' />
-  //         </Button>
-  //         <Button
-  //           size='sm'
-  //           variant='ghost'
-  //           onClick={() => console.log('Edit', item)}
-  //         >
-  //           <Pencil className='h-4 w-4' />
-  //         </Button>
-  //         <Button
-  //           size='sm'
-  //           variant='ghost'
-  //           onClick={() => console.log('Delete', item)}
-  //         >
-  //           <Trash className='h-4 w-4 text-red-500' />
-  //         </Button>
-  //       </div>
-  //     );
-  //   }
-  // }
 ];
