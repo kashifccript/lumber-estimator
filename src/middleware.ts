@@ -1,13 +1,21 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
-import { NextRequest } from 'next/server';
+// Remove Clerk middleware completely - comment out for now per user preference
+// import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+// import { NextRequest } from 'next/server';
 
 // Temporarily disable dashboard protection for development
 // const isProtectedRoute = createRouteMatcher(['/dashboard(.*)']);
 
-export default clerkMiddleware(async (auth, req: NextRequest) => {
-  // Temporarily disable auth protection
-  // if (isProtectedRoute(req)) await auth.protect();
-});
+// export default clerkMiddleware(async (auth, req: NextRequest) => {
+//   // Temporarily disable auth protection
+//   // if (isProtectedRoute(req)) await auth.protect();
+// });
+
+// Simple middleware without Clerk
+import { NextRequest, NextResponse } from 'next/server';
+
+export default function middleware(req: NextRequest) {
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [

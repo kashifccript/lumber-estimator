@@ -22,12 +22,7 @@ export default function SignUpViewPage() {
             subtitle='Enter all required information to discover more'
           />
           <SignupForm />
-          {/* Form
-          <ClerkSignUpForm
-            initialValues={{
-              emailAddress: 'your_mail+clerk_test@example.com'
-            }}
-          /> */}
+          
         </div>
       </div>
     </div>

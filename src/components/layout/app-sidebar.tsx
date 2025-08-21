@@ -31,7 +31,7 @@ import {
 import { UserAvatarProfile } from '@/components/user-avatar-profile';
 import { navItems } from '@/constants/data';
 import { useMediaQuery } from '@/hooks/use-media-query';
-import { useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 import {
   IconBell,
   IconChevronRight,
@@ -41,9 +41,8 @@ import {
   IconPhotoUp,
   IconUserCircle
 } from '@tabler/icons-react';
-import { SignOutButton } from '@clerk/nextjs';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
 import { OrgSwitcher } from '../org-switcher';
@@ -59,13 +58,28 @@ const tenants = [
   { id: '3', name: 'Gamma Ltd' }
 ];
 
+// Mock user data - replace with your authentication solution
+const mockUser = {
+  fullName: 'John Doe',
+  emailAddresses: [{ emailAddress: 'john@example.com' }],
+  imageUrl: ''
+};
+
 export default function AppSidebar() {
   const pathname = usePathname();
   const { isOpen } = useMediaQuery();
-  const { user } = useUser();
+  // Remove Clerk user hook
+  // const { user } = useUser();
+  const user = mockUser; // Use mock data for now
   const router = useRouter();
+
   const handleSwitchTenant = (_tenantId: string) => {
     // Tenant switching functionality would be implemented here
+  };
+
+  const handleSignOut = () => {
+    // Implement your sign out logic here
+    router.push('/auth/sign-in');
   };
 
   const activeTenant = tenants[0];
@@ -198,9 +212,10 @@ export default function AppSidebar() {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSignOut}>
                   <IconLogout className='mr-2 h-4 w-4' />
-                  <SignOutButton redirectUrl='/auth/sign-in' />
+                  {/* Replace SignOutButton with custom text */}
+                  Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
