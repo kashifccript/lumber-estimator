@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { UserNav } from './user-nav';
+import { ModeToggle } from './ThemeToggle/theme-toggle';
+import { ThemeSelector } from '../theme-selector';
 
 export default function Header() {
   const pathname = usePathname();
@@ -71,6 +73,8 @@ export default function Header() {
           <UserNav />
         </div>
       </div>
+      {/* <ModeToggle /> */}
+      {/* <ThemeSelector /> */}
     </header>
   );
 }
