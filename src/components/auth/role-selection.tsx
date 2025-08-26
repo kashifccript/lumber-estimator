@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Separator } from '../ui/separator';
 
-type Role = 'admin' | 'contractors' | 'estimators';
+type Role = 'admin' | 'contractor' | 'estimator';
 
 interface RoleOption {
   id: Role;
@@ -25,15 +25,15 @@ const roleOptions: RoleOption[] = [
     icon: '👨‍💼'
   },
   {
-    id: 'contractors',
-    title: 'Contractors',
+    id: 'contractor',
+    title: 'Contractor',
     description:
       'Add and manage team projects, and supervise final project estimates',
     icon: '👷‍♂️'
   },
   {
-    id: 'estimators',
-    title: 'Estimators',
+    id: 'estimator',
+    title: 'Estimator',
     description:
       'Upload project files to automatically generate detailed cost estimates',
     icon: '📊'
@@ -46,8 +46,8 @@ export function RoleSelection() {
 
   const handleContinue = () => {
     if (selectedRole) {
-      localStorage.setItem('user-role', selectedRole);
-      router.push('/dashboard/overview');
+      // Navigate to signup with role as URL parameter
+      router.push(`/sign-up?role=${selectedRole}`);
     }
   };
 
@@ -85,8 +85,9 @@ export function RoleSelection() {
         disabled={!selectedRole}
         type='submit'
         variant='default'
+        className='w-full'
       >
-        Continue
+        Continue to Sign Up
       </Button>
 
       {/* Separator */}
@@ -95,11 +96,12 @@ export function RoleSelection() {
         <span className='text-sm text-gray-500'>Or</span>
         <Separator className='flex-1' />
       </div>
+
       {/* Login Link */}
       <p className='text-center text-sm'>
         Already have an account?{' '}
-        <Link href='/auth/signin' className='text-primary hover:underline'>
-          Login
+        <Link href='/sign-in' className='text-primary hover:underline'>
+          Sign In
         </Link>
       </p>
     </div>

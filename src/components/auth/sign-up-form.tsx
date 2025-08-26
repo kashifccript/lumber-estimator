@@ -2,7 +2,8 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   Form,
   FormControl,
@@ -13,163 +14,294 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { FcGoogle } from 'react-icons/fc';
-import { FaApple } from 'react-icons/fa';
 import Link from 'next/link';
-
-// Zod validation schema
-const formSchema = z.object({
-  name: z.string().min(2, 'Name is required'),
-  email: z.string().email('Invalid email'),
-  phone: z.string().min(5, 'Invalid phone number'),
-  company: z.string().min(2, 'Company name is required'),
-  location: z.string().min(2, 'Location is required'),
-  password: z.string().min(6, 'Password must be at least 6 characters')
-});
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import {
+  SignUpFormData,
+  signUpSchema,
+  signUpUser
+} from '@/features/auth/actions/signup';
 
 export default function SignupForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const roleFromUrl = searchParams.get('role') as
+    | 'admin'
+    | 'contractor'
+    | 'estimator';
+
+  const form = useForm<SignUpFormData>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
-      name: '',
+      username: '',
       email: '',
+      password: '',
+      role: roleFromUrl || 'estimator', // Use role from URL
+      first_name: '',
+      last_name: '',
       phone: '',
-      company: '',
-      location: '',
-      password: ''
+      company_name: '',
+      business_license: '',
+      address: '',
+      city: '',
+      state: '',
+      zip_code: ''
     }
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  // Redirect to role selection if no role is provided
+  useEffect(() => {
+    if (!roleFromUrl) {
+      router.push('/role-selection');
+    }
+  }, [roleFromUrl, router]);
+
+  async function onSubmit(values: SignUpFormData) {
+    setIsLoading(true);
+
+    try {
+      const result = await signUpUser(values);
+
+      if (result.success) {
+        toast.success(result.body);
+        router.push('/sign-in');
+      } else {
+        toast.error(result.body);
+      }
+    } catch (error) {
+      toast.error('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  // Show loading or redirect if no role
+  if (!roleFromUrl) {
+    return (
+      <div className='flex items-center justify-center p-8'>
+        <div className='text-center'>
+          <p>Redirecting to role selection...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className='w-full space-y-5 pb-10'
-      >
-        {/* Name */}
-        <FormField
-          control={form.control}
-          name='name'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your Name</FormLabel>
-              <FormControl>
-                <Input placeholder='Enter your Name' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <div className='space-y-6 pb-8'>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='w-full space-y-4'
+        >
+          {/* First Name */}
+          <FormField
+            control={form.control}
+            name='first_name'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>First Name</FormLabel>
+                <FormControl>
+                  <Input placeholder='Enter your first name' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* Email */}
-        <FormField
-          control={form.control}
-          name='email'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your Email</FormLabel>
-              <FormControl>
-                <Input placeholder='Enter your email' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          {/* Last Name */}
+          <FormField
+            control={form.control}
+            name='last_name'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input placeholder='Enter your last name' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* Phone */}
-        <FormField
-          control={form.control}
-          name='phone'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your Phone No</FormLabel>
-              <FormControl>
-                <Input placeholder='Enter your phone No' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          {/* Username */}
+          <FormField
+            control={form.control}
+            name='username'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder='Enter your username' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* Company Name */}
-        <FormField
-          control={form.control}
-          name='company'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your Company Name</FormLabel>
-              <FormControl>
-                <Input placeholder='Enter your company name' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          {/* Email */}
+          <FormField
+            control={form.control}
+            name='email'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type='email'
+                    placeholder='Enter your email'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* Location */}
-        <FormField
-          control={form.control}
-          name='location'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Location</FormLabel>
-              <FormControl>
-                <Input placeholder='Enter Your Address' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          {/* Password */}
+          <FormField
+            control={form.control}
+            name='password'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type='password'
+                    placeholder='Enter your password'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* Password */}
-        <FormField
-          control={form.control}
-          name='password'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input type='password' placeholder='Your Password' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          {/* Phone */}
+          <FormField
+            control={form.control}
+            name='phone'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone Number</FormLabel>
+                <FormControl>
+                  <Input placeholder='Enter your phone number' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* Sign Up Button */}
-        <Button type='submit' variant='default'>
-          Sign Up
-        </Button>
+          {/* Company Name */}
+          <FormField
+            control={form.control}
+            name='company_name'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Company Name</FormLabel>
+                <FormControl>
+                  <Input placeholder='Enter your company name' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* Separator */}
-        <div className='flex items-center gap-2'>
-          <Separator className='flex-1' />
-          <span className='text-sm text-gray-500'>Or</span>
-          <Separator className='flex-1' />
-        </div>
+          {/* Business License */}
+          <FormField
+            control={form.control}
+            name='business_license'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Business License</FormLabel>
+                <FormControl>
+                  <Input placeholder='Enter your business license' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* Social Buttons */}
-        <Button type='button' variant='outline' className='flex w-full gap-2'>
-          <FcGoogle size={20} /> Continue with Google
-        </Button>
+          {/* Address */}
+          <FormField
+            control={form.control}
+            name='address'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Address</FormLabel>
+                <FormControl>
+                  <Input placeholder='Enter your address' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <Button type='button' variant='outline' className='flex w-full gap-2'>
-          <FaApple size={20} /> Continue with Apple
-        </Button>
+          {/* City */}
+          <FormField
+            control={form.control}
+            name='city'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>City</FormLabel>
+                <FormControl>
+                  <Input placeholder='Enter city' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* Login Link */}
-        <p className='text-center text-sm'>
-          Already have an account?{' '}
-          <Link href='/auth/signin' className='text-primary hover:underline'>
-            Login
-          </Link>
-        </p>
-      </form>
-    </Form>
+          {/* State */}
+          <FormField
+            control={form.control}
+            name='state'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>State</FormLabel>
+                <FormControl>
+                  <Input placeholder='Enter state' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* ZIP Code */}
+          <FormField
+            control={form.control}
+            name='zip_code'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>ZIP Code</FormLabel>
+                <FormControl>
+                  <Input placeholder='Enter ZIP code' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Sign Up Button */}
+          <Button
+            type='submit'
+            variant='default'
+            className='w-full'
+            disabled={isLoading}
+          >
+            {isLoading ? 'Creating Account...' : 'Create Account'}
+          </Button>
+
+          {/* Login Link */}
+          <p className='text-center text-sm'>
+            Already have an account?{' '}
+            <Link href='/sign-in' className='text-primary hover:underline'>
+              Sign In
+            </Link>
+          </p>
+        </form>
+      </Form>
+    </div>
   );
 }
