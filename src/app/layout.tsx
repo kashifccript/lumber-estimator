@@ -7,6 +7,7 @@ import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
 import NextTopLoader from 'nextjs-toploader';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { auth } from '../../auth';
 import './globals.css';
 import './theme.css';
 
@@ -32,6 +33,7 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const activeThemeValue = cookieStore.get('active_theme')?.value;
   const isScaled = activeThemeValue?.endsWith('-scaled');
+  const session = await auth();
 
   return (
     <html lang='en' suppressHydrationWarning>
@@ -67,7 +69,10 @@ export default async function RootLayout({
             enableColorScheme={false}
             forcedTheme='light'
           >
-            <Providers activeThemeValue={activeThemeValue as string}>
+            <Providers
+              activeThemeValue={activeThemeValue as string}
+              session={session}
+            >
               <Toaster />
               {children}
             </Providers>

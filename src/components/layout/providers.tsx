@@ -1,24 +1,24 @@
 'use client';
-import { useTheme } from 'next-themes';
+import { SessionProvider } from 'next-auth/react';
 import React from 'react';
 import { ActiveThemeProvider } from '../active-theme';
 
 export default function Providers({
   activeThemeValue,
-  children
+  children,
+  session
 }: {
   activeThemeValue: string;
   children: React.ReactNode;
+  session?: any;
 }) {
-  // Remove Clerk theme logic
-  // const { resolvedTheme } = useTheme();
-
   return (
     <>
-      <ActiveThemeProvider initialTheme={activeThemeValue}>
-        {/* Remove ClerkProvider wrapper */}
-        {children}
-      </ActiveThemeProvider>
+      <SessionProvider session={session}>
+        <ActiveThemeProvider initialTheme={activeThemeValue}>
+          {children}
+        </ActiveThemeProvider>
+      </SessionProvider>
     </>
   );
 }

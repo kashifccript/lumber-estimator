@@ -10,9 +10,11 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { UserAvatarProfile } from '@/components/user-avatar-profile';
+import { signOut, useSession } from 'next-auth/react';
 // Remove Clerk imports
 // import { SignOutButton, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 // Mock user data - replace with your authentication solution
 const mockUser = {
@@ -22,14 +24,54 @@ const mockUser = {
 };
 
 export function UserNav() {
-  // Remove Clerk user hook
-  // const { user } = useUser();
-  const user = mockUser; // Use mock data for now
+  const { data: session, status } = useSession();
   const router = useRouter();
 
-  const handleSignOut = () => {
-    // Implement your sign out logic here
-    router.push('/auth/sign-in');
+  const handleSignOut = async () => {
+    try {
+      await signOut({
+        callbackUrl: '/sign-in'
+      });
+      toast.success('Signed out successfully!', { id: 'signout' });
+    } catch (error) {
+      toast.error('Failed to sign out. Please try again.', { id: 'signout' });
+    }
+  };
+
+  // Show loading state
+  if (status === 'loading') {
+    return (
+      <div className='flex items-center space-x-2'>
+        <div className='bg-muted h-8 w-8 animate-pulse rounded-full' />
+      </div>
+    );
+  }
+
+  // Show sign in button if not authenticated
+  if (status === 'unauthenticated' || !session?.user?.user) {
+    return (
+      <Button
+        variant='outline'
+        size='sm'
+        onClick={() => router.push('/sign-in')}
+      >
+        Sign In
+      </Button>
+    );
+  }
+
+  // Extract user data from the nested structure
+  const userData = session.user.user;
+  const fullName =
+    userData.first_name && userData.last_name
+      ? `${userData.first_name} ${userData.last_name}`
+      : userData.username;
+
+  // Transform session user data to match UserAvatarProfile interface
+  const user = {
+    fullName: fullName,
+    emailAddresses: [{ emailAddress: userData.email || '' }],
+    imageUrl: '' // No image URL in your session data
   };
 
   if (user) {
@@ -51,10 +93,10 @@ export function UserNav() {
         >
           <DropdownMenuLabel className='font-normal'>
             <div className='flex flex-col space-y-1'>
-              <p className='text-sm font-medium leading-none'>
+              <p className='text-sm leading-none font-medium'>
                 {user.fullName}
               </p>
-              <p className='text-xs leading-none text-muted-foreground'>
+              <p className='text-muted-foreground text-xs leading-none'>
                 {user.emailAddresses[0].emailAddress}
               </p>
             </div>
@@ -64,9 +106,8 @@ export function UserNav() {
             <DropdownMenuItem onClick={() => router.push('/dashboard/profile')}>
               Profile
             </DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
+            {/* <DropdownMenuItem>Billing</DropdownMenuItem> */}
             <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>New Team</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleSignOut}>
