@@ -58,7 +58,6 @@ export default function SigninForm() {
           callbackUrl: callbackUrl ?? '/dashboard',
           redirect: false
         });
-        
 
         if (result?.error) {
           toast.error('Invalid Credentials!');
@@ -135,11 +134,11 @@ export default function SigninForm() {
         </Button>
 
         {/* Separator */}
-        <div className='flex items-center gap-2'>
+        {/* <div className='flex items-center gap-2'>
           <Separator className='flex-1' />
           <span className='text-sm text-gray-500'>Or</span>
           <Separator className='flex-1' />
-        </div>
+        </div> */}
 
         {/* Social Login Buttons - Commented out for now */}
         {/*
