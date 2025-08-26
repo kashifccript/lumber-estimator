@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useTransition } from 'react';
-import { signIn } from 'next-auth/react';
+import { getSession, signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import {
@@ -49,29 +49,57 @@ export default function SigninForm() {
     defaultValues
   });
 
+  // Function to determine redirect URL based on user role
+  const getRedirectUrl = (role: string) => {
+    switch (role) {
+      case 'admin':
+        return '/dashboard/admin';
+      case 'contractor':
+        return '/dashboard/overview'; // or '/dashboard/contractors' if you have a specific page
+      case 'estimator':
+        return '/dashboard/overview'; // or '/dashboard/estimates' if you have a specific page
+      default:
+        return '/dashboard/overview';
+    }
+  };
+
   const onSubmit = async (data: UserFormValue) => {
     startTransition(async () => {
       try {
         const result = await signIn('credentials', {
           username: data.username,
           password: data.password,
-          callbackUrl: callbackUrl ?? '/dashboard',
           redirect: false
         });
 
         if (result?.error) {
           toast.error('Invalid Credentials!');
-          router.push('/');
+        } else if (result?.ok) {
+          // Get the session to access user data
+          const session = await getSession();
+
+          if (session?.user?.user) {
+            const userRole = session.user.user.role;
+            const redirectUrl = callbackUrl || getRedirectUrl(userRole);
+
+            toast.success(
+              `Welcome back! Redirecting to ${userRole} dashboard...`
+            );
+            router.push(redirectUrl);
+          } else {
+            // Fallback if session is not available immediately
+            toast.success('Signed In Successfully!');
+            router.push(callbackUrl || '/dashboard/overview');
+          }
         } else {
-          toast.success('Signed In Successfully!');
-          router.push(result?.url || '/dashboard');
+          toast.error('Something went wrong. Please try again.');
         }
       } catch (error) {
+        console.error('Sign in error:', error);
         toast.error('Something went wrong. Please try again.');
       }
     });
   };
-
   return (
     <Form {...form}>
       <form
