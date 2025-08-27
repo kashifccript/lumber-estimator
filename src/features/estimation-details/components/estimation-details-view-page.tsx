@@ -95,7 +95,6 @@ export default function EstimationDetailsViewPage() {
         const parsedData = JSON.parse(storedApiData);
         setApiData(parsedData);
 
-       
         // Transform and set table data
         const tableItems = transformApiDataToTableItems(parsedData);
         setItems(tableItems);
@@ -126,7 +125,7 @@ export default function EstimationDetailsViewPage() {
 
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 20000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Redirect to estimates page after successful submission
       router.push('/dashboard/estimates');
@@ -154,8 +153,6 @@ export default function EstimationDetailsViewPage() {
             onSubmitEstimate={handleSubmitEstimate}
           />
         </div>
-
-      
 
         {/* Table */}
         <DataTable columns={itemColumns} data={items} />

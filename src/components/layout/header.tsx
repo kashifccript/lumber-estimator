@@ -23,7 +23,7 @@ export default function Header() {
     <header className='flex h-[52px] items-center justify-between overflow-hidden'>
       {/* Left: Logo + App Name */}
       <Link
-        href='/'
+        href='/dashboard/overview'
         className='flex h-full items-center gap-2 rounded-lg bg-white p-[5px]'
       >
         <Image

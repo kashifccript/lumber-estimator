@@ -1,6 +1,11 @@
 import { Card } from '@/components/ui/card';
 
 export function SummaryDetails({ data }: { data: any }) {
+  // Extract values from API data or use defaults
+  const totalCost = data?.results?.lumber_estimates?.total_lumber_cost || 0;
+  const totalItems = data?.results?.summary?.total_items_found || 0;
+  const itemsPriced = data?.accuracy_metrics?.matched_items || 0;
+  const itemsNeedingQuotation = data?.accuracy_metrics?.unmatched_items || 0;
 
   return (
     <Card>
@@ -13,7 +18,7 @@ export function SummaryDetails({ data }: { data: any }) {
                 Total Estimated Cost
               </p>
               <p className='text-secondary text-[32px] font-semibold'>
-                $127,500
+                ${totalCost.toLocaleString()}
               </p>
             </div>
           </div>
@@ -22,19 +27,25 @@ export function SummaryDetails({ data }: { data: any }) {
               <span className='text-secondary text-sm font-normal'>
                 Items Priced
               </span>
-              <span className='text-secondary text-sm font-bold'>23</span>
+              <span className='text-secondary text-sm font-bold'>
+                {itemsPriced}
+              </span>
             </div>
             <div className='flex items-center justify-between'>
               <span className='text-secondary text-sm font-normal'>
                 Items Needing Quotation
               </span>
-              <span className='text-sm font-bold text-[#D08700]'>8</span>
+              <span className='text-sm font-bold text-[#D08700]'>
+                {itemsNeedingQuotation}
+              </span>
             </div>
             <div className='border-secondary/17 flex items-center justify-between border-t pt-3'>
               <span className='text-secondary text-base font-semibold'>
                 Total Items
               </span>
-              <span className='text-secondary text-base font-bold'>31</span>
+              <span className='text-secondary text-base font-bold'>
+                {totalItems}
+              </span>
             </div>
           </div>
         </div>
