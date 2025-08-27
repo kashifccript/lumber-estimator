@@ -29,7 +29,7 @@ import {
   SidebarRail
 } from '@/components/ui/sidebar';
 import { UserAvatarProfile } from '@/components/user-avatar-profile';
-import { navItems } from '@/constants/data';
+import { navItems, adminNavItems } from '@/constants/data';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useRouter } from 'next/navigation';
 import {
@@ -46,6 +46,9 @@ import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
 import { OrgSwitcher } from '../org-switcher';
+import { useSession, signOut } from 'next-auth/react';
+import { toast } from 'sonner';
+
 export const company = {
   name: 'Acme Inc',
   logo: IconPhotoUp,
@@ -68,21 +71,45 @@ const mockUser = {
 export default function AppSidebar() {
   const pathname = usePathname();
   const { isOpen } = useMediaQuery();
-  // Remove Clerk user hook
-  // const { user } = useUser();
-  const user = mockUser; // Use mock data for now
+  const { data: session } = useSession();
   const router = useRouter();
 
   const handleSwitchTenant = (_tenantId: string) => {
     // Tenant switching functionality would be implemented here
   };
 
-  const handleSignOut = () => {
-    // Implement your sign out logic here
-    router.push('/auth/sign-in');
+  const handleSignOut = async () => {
+    try {
+      toast.loading('Signing out...', { id: 'signout' });
+      await signOut({
+        callbackUrl: '/sign-in'
+      });
+      toast.success('Signed out successfully!', { id: 'signout' });
+    } catch (error) {
+      toast.error('Failed to sign out. Please try again.', { id: 'signout' });
+    }
   };
 
   const activeTenant = tenants[0];
+
+  // Get user data from session
+  const userData = session?.user?.user;
+  const isAdmin = userData?.role === 'admin';
+
+  // Combine nav items - add admin items if user is admin
+  const allNavItems = isAdmin ? [...navItems, ...adminNavItems] : navItems;
+
+  // Transform user data for UserAvatarProfile component
+  const user = userData
+    ? {
+        fullName:
+          userData.first_name && userData.last_name
+            ? `${userData.first_name} ${userData.last_name}`
+            : userData.username,
+        emailAddresses: [{ emailAddress: userData.email || '' }],
+        imageUrl: ''
+      }
+    : null;
 
   React.useEffect(() => {
     // Side effects based on sidebar state changes
@@ -101,7 +128,7 @@ export default function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Overview</SidebarGroupLabel>
           <SidebarMenu>
-            {navItems.map((item) => {
+            {allNavItems.map((item) => {
               const Icon = item.icon ? Icons[item.icon] : Icons.logo;
               return item?.items && item?.items?.length > 0 ? (
                 <Collapsible
@@ -169,10 +196,22 @@ export default function AppSidebar() {
                   {user && (
                     <UserAvatarProfile
                       className='h-8 w-8 rounded-lg'
-                      showInfo
                       user={user}
                     />
                   )}
+                  <div className='grid flex-1 text-left text-sm leading-tight'>
+                    <span className='truncate font-semibold'>
+                      {user?.fullName || 'User'}
+                    </span>
+                    <span className='truncate text-xs'>
+                      {user?.emailAddresses[0]?.emailAddress || ''}
+                    </span>
+                    {isAdmin && (
+                      <span className='truncate text-xs font-medium text-red-600'>
+                        Administrator
+                      </span>
+                    )}
+                  </div>
                   <IconChevronsDown className='ml-auto size-4' />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -183,14 +222,26 @@ export default function AppSidebar() {
                 sideOffset={4}
               >
                 <DropdownMenuLabel className='p-0 font-normal'>
-                  <div className='px-1 py-1.5'>
+                  <div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
                     {user && (
                       <UserAvatarProfile
                         className='h-8 w-8 rounded-lg'
-                        showInfo
                         user={user}
                       />
                     )}
+                    <div className='grid flex-1 text-left text-sm leading-tight'>
+                      <span className='truncate font-semibold'>
+                        {user?.fullName || 'User'}
+                      </span>
+                      <span className='truncate text-xs'>
+                        {user?.emailAddresses[0]?.emailAddress || ''}
+                      </span>
+                      {isAdmin && (
+                        <span className='truncate text-xs font-medium text-red-600'>
+                          Administrator
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -210,6 +261,14 @@ export default function AppSidebar() {
                     <IconBell className='mr-2 h-4 w-4' />
                     Notifications
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem
+                      onClick={() => router.push('/dashboard/admin/users')}
+                    >
+                      <Icons.users className='mr-2 h-4 w-4' />
+                      User Management
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>

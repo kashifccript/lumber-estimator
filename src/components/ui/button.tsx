@@ -22,13 +22,16 @@ const buttonVariants = cva(
         ghost:
           'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
         link: 'text-primary underline-offset-4 hover:underline',
-        icon: 'h-12 w-12 items-center w-fit justify-center rounded-xl  bg-white hover:bg-gray-100'
+        icon: 'h-12 w-12 items-center w-fit justify-center rounded-xl  bg-white hover:bg-gray-100',
+        tableIcon:
+          'h-8 w-8 items-center w-fit justify-center rounded-md  bg-white hover:bg-gray-100 border border-gray-200'
       },
       size: {
         default: 'h-[52px] px-4 py-2 has-[>svg]:px-3',
         sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
         lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
         icon: '[&_svg]:size-5 [&_svg]:shrink-0 p-3.5',
+        tableIcon: '[&_svg]:size-4 [&_svg]:shrink-0 p-[7px]',
         secondary: 'h-[52px] px-5 py-3 [&_svg]:size-6'
       }
     },

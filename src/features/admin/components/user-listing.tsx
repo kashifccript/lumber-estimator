@@ -1,0 +1,55 @@
+'use client';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { PendingUser } from '../types/user';
+import { getPendingApprovals } from '../actions/users';
+import { UserTable } from './user-tables';
+import { createColumns } from './user-tables/columns';
+import { toast } from 'sonner';
+
+export default function UserListing() {
+  const [users, setUsers] = useState<PendingUser[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { data: session } = useSession();
+
+  const fetchUsers = async () => {
+    if (!session?.user?.access_token) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const data = await getPendingApprovals(session.user.access_token);
+      setUsers(data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      toast.error('Failed to fetch pending approvals');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [session]);
+
+  const handleRefresh = () => {
+    fetchUsers();
+  };
+
+  const columns = createColumns({ onRefresh: handleRefresh });
+
+  if (loading) {
+    return (
+      <div className='flex h-64 items-center justify-center'>
+        <div className='flex flex-col items-center space-y-4'>
+          <div className='h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600'></div>
+          <p className='text-gray-600'>Loading pending approvals...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return <UserTable data={users} columns={columns} itemsPerPage={10} />;
+}
