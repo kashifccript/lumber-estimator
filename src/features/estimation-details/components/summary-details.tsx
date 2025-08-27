@@ -1,6 +1,7 @@
 import { Card } from '@/components/ui/card';
 
-export function SummaryDetails() {
+export function SummaryDetails({ data }: { data: any }) {
+
   return (
     <Card>
       <div className='bg-background rounded-lg p-5'>

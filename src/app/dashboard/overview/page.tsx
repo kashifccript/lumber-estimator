@@ -9,16 +9,41 @@ import {
 } from '@/features/overview/components';
 import { CreateEstimateModal } from '@/components/modal/create-estimate-modal';
 import PageContainer from '@/components/layout/page-container';
+import { processEstimationPdf } from '@/actions/estimation';
+import { toast } from 'sonner';
 
 export default function OverviewPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const handleFileUpload = (file: File) => {
-    console.log('File uploaded:', file.name);
-    setTimeout(() => {
+  const handleFileUpload = async (file: File) => {
+    try {
+      // Call the estimation API
+      const result = await processEstimationPdf(file);
+
+      // Console log the full response in JSON format
+      console.log('API Response:', JSON.stringify(result.data, null, 2));
+
+      if (result.success) {
+        // Store the API response in localStorage to pass to estimation details page
+        localStorage.setItem('estimationApiData', JSON.stringify(result.data));
+
+        // Show success toast
+        toast.success(
+          `Estimation completed! Found ${result.data?.results?.summary?.total_items_found || 0} items`
+        );
+
+        // Close modal and redirect
+        setShowCreateModal(false);
+        window.location.href = '/dashboard/estimation-details';
+      } else {
+        toast.error(result.body || 'Failed to process PDF');
+        setShowCreateModal(false);
+      }
+    } catch (error) {
+      console.error('Error processing PDF:', error);
+      toast.error('An unexpected error occurred');
       setShowCreateModal(false);
-      window.location.href = '/dashboard/estimation-details';
-    }, 3000);
+    }
   };
 
   return (
