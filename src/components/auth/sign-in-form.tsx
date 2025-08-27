@@ -178,6 +178,13 @@ export default function SigninForm() {
           <FaApple size={20} /> Continue with Apple
         </Button>
         */}
+
+        <p className='text-center text-sm'>
+          Don&apos;t have an account?{' '}
+          <Link href='/role-selection' className='text-primary hover:underline'>
+            Sign Up
+          </Link>
+        </p>
       </form>
     </Form>
   );
