@@ -33,13 +33,18 @@ export const approveUser = async (
 ): Promise<UserApprovalResponse> => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/approve/${userId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/approve-user`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
-        }
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          approved: true,
+          rejection_reason: null
+        })
       }
     );
 
@@ -66,13 +71,18 @@ export const rejectUser = async (
 ): Promise<UserApprovalResponse> => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/reject/${userId}`,
+      `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/approve-user`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
-        }
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          approved: false,
+          rejection_reason: 'reject'
+        })
       }
     );
 

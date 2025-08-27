@@ -17,13 +17,13 @@ interface RoleOption {
 }
 
 const roleOptions: RoleOption[] = [
-  {
-    id: 'admin',
-    title: 'Admin',
-    description:
-      'Manage users, oversee system settings, and ensure data integrity',
-    icon: '👨‍💼'
-  },
+  // {
+  //   id: 'admin',
+  //   title: 'Admin',
+  //   description:
+  //     'Manage users, oversee system settings, and ensure data integrity',
+  //   icon: '👨‍💼'
+  // },
   {
     id: 'contractor',
     title: 'Contractor',

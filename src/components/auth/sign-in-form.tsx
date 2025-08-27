@@ -147,14 +147,14 @@ export default function SigninForm() {
           )}
         />
         {/* Forget Password link aligned right */}
-        <div className='flex justify-end'>
+        {/* <div className='flex justify-end'>
           <Link
             href='/auth/forgot-password'
             className='text-lg text-[#90A1B9] hover:underline'
           >
             Forgot Password
           </Link>
-        </div>
+        </div> */}
 
         {/* Submit Button */}
         <Button type='submit' variant='default' disabled={loading}>

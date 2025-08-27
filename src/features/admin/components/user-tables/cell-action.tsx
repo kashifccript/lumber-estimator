@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import { approveUser, rejectUser } from '../../actions/users';
-import { Button } from '@/components/ui/button';
 
 interface CellActionProps {
   data: PendingUser;
