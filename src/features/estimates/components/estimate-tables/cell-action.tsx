@@ -27,6 +27,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         onClose={() => setOpen(false)}
         onConfirm={onConfirm}
         loading={loading}
+        title='Are you sure you want to delete this estimate?'
+        description='This action cannot be undone.'
       />
       <div className='flex items-center gap-2.5'>
         <Link

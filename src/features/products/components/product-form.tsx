@@ -49,6 +49,9 @@ const formSchema = z.object({
     message: 'Product name must be at least 2 characters.'
   }),
   category: z.string(),
+  price: z.number().min(0, {
+    message: 'Price must be a positive number.'
+  }),
   description: z.string().min(10, {
     message: 'Description must be at least 10 characters.'
   })

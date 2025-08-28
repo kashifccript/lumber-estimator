@@ -31,6 +31,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         onClose={() => setOpen(false)}
         onConfirm={onConfirm}
         loading={loading}
+        title='Are you sure you want to delete this product?'
+        description='This action cannot be undone.'
       />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
