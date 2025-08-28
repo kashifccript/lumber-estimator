@@ -3,11 +3,16 @@ import { useEffect, useState } from 'react';
 import { X, Upload, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
+import { Progress } from '@/components/ui/progress';
+import { UploadProgress } from '@/features/estimation-details/types/estimation';
 
 interface CreateEstimateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onFileUpload?: (file: File) => void;
+  onFileUpload?: (
+    file: File,
+    onProgress?: (progress: UploadProgress) => void
+  ) => void;
 }
 
 export function CreateEstimateModal({
@@ -19,10 +24,19 @@ export function CreateEstimateModal({
   const [dragActive, setDragActive] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [fileSize, setFileSize] = useState(0);
+  const [uploadedSize, setUploadedSize] = useState(0);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // Helper function to format file size
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 MB';
+    const mb = bytes / (1024 * 1024);
+    return `${mb.toFixed(1)} MB`;
+  };
 
   if (!isMounted) {
     return null;
@@ -62,19 +76,17 @@ export function CreateEstimateModal({
 
     setUploading(true);
     setUploadProgress(0);
+    setFileSize(file.size);
+    setUploadedSize(0);
 
-    // Simulate upload progress
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 85) {
-          clearInterval(interval);
-          return 85;
-        }
-        return prev + Math.random() * 15;
-      });
-    }, 200);
+    // Real progress callback
+    const handleProgress = (progress: UploadProgress) => {
+      setUploadProgress(progress.percentage);
+      setUploadedSize(progress.loaded);
+      setFileSize(progress.total);
+    };
 
-    onFileUpload?.(file);
+    onFileUpload?.(file, handleProgress);
   };
 
   return (
@@ -127,15 +139,16 @@ export function CreateEstimateModal({
                   Processing your document...
                 </h3>
                 <div className='space-y-1'>
-                  <div className='h-3 w-full rounded-full bg-gray-300'>
-                    <div
-                      className='bg-primary h-3 rounded-full transition-all duration-300'
-                      style={{ width: `${uploadProgress}%` }}
-                    />
+                  <Progress value={uploadProgress} />
+                  <div className='flex items-center justify-between'>
+                    <p className='text-secondary text-base font-medium'>
+                      Processing document... {Math.round(uploadProgress)}%
+                    </p>
+                    <p className='text-secondary text-sm font-medium'>
+                      {formatFileSize(uploadedSize)} /{' '}
+                      {formatFileSize(fileSize)}
+                    </p>
                   </div>
-                  <p className='text-secondary text-base font-medium'>
-                    Processing document... {Math.round(uploadProgress)}%
-                  </p>
                 </div>
               </div>
             </div>

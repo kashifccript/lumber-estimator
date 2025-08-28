@@ -9,16 +9,24 @@ import {
 } from '@/features/overview/components';
 import { CreateEstimateModal } from '@/components/modal/create-estimate-modal';
 import PageContainer from '@/components/layout/page-container';
-import { processEstimationPdf } from '@/actions/estimation';
 import { toast } from 'sonner';
+import { processEstimationPdf } from '@/features/estimation-details/actions/estimation';
+import { UploadProgress } from '@/features/estimation-details/types/estimation';
 
 export default function OverviewPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const handleFileUpload = async (file: File) => {
+  const handleFileUpload = async (
+    file: File,
+    onProgress?: (progress: UploadProgress) => void
+  ) => {
     try {
-      // Call the estimation API
-      const result = await processEstimationPdf(file);
+      // Call the estimation API with progress callback
+      const result = await processEstimationPdf(
+        file,
+        'Lumber Project',
+        onProgress
+      );
 
       // Console log the full response in JSON format
       console.log('API Response:', JSON.stringify(result.data, null, 2));
