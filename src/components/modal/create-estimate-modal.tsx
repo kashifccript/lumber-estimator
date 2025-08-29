@@ -1,10 +1,9 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { X, Upload, FileText } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
 import { Progress } from '@/components/ui/progress';
 import { UploadProgress } from '@/features/estimation-details/types/estimation';
+import { FileText, Upload } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface CreateEstimateModalProps {
   isOpen: boolean;
