@@ -3,9 +3,18 @@ import { Card } from '@/components/ui/card';
 export function SummaryDetails({ data }: { data: any }) {
   // Extract values from API data or use defaults
   const totalCost = data?.results?.lumber_estimates?.total_lumber_cost || 0;
-  const totalItems = data?.results?.summary?.total_items_found || 0;
-  const itemsPriced = data?.accuracy_metrics?.matched_items || 0;
-  const itemsNeedingQuotation = data?.accuracy_metrics?.unmatched_items || 0;
+  const detailedItems = data?.results?.detailed_items || [];
+  // Count items priced (database_match === 'Available')
+  const itemsPriced = detailedItems.filter(
+    (item: any) => item.database_match === 'Available'
+  ).length;
+
+  // Count items needing quotation (database_match === 'Quotation needed')
+  const itemsNeedingQuotation = detailedItems.filter(
+    (item: any) => item.database_match === 'Quotation needed'
+  ).length;
+
+  const totalItems = itemsPriced + itemsNeedingQuotation;
 
   return (
     <Card>

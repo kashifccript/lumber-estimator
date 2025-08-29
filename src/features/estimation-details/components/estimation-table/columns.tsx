@@ -35,14 +35,14 @@ export const itemColumns: ColumnDef<Item>[] = [
     accessorKey: 'cost',
     header: 'Estimated Cost'
   },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => {
-      const item = row.original;
-      return <StatusBadge status={item.status}>{item.status}</StatusBadge>;
-    }
-  },
+  // {
+  //   accessorKey: 'status',
+  //   header: 'Status',
+  //   cell: ({ row }) => {
+  //     const item = row.original;
+  //     return <StatusBadge status={item.status}>{item.status}</StatusBadge>;
+  //   }
+  // },
   {
     accessorKey: 'contractor',
     header: 'Contractor',
