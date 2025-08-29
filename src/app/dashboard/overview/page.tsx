@@ -12,45 +12,64 @@ import PageContainer from '@/components/layout/page-container';
 import { toast } from 'sonner';
 import { processEstimationPdf } from '@/features/estimation-details/actions/estimation';
 import { UploadProgress } from '@/features/estimation-details/types/estimation';
+import { useEstimationStore } from '@/stores/estimation-store';
+import { useRouter } from 'next/navigation';
 
 export default function OverviewPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const router = useRouter();
+  // Get store actions
+  const {
+    setEstimationData,
+    setUploadProgress,
+    setUploading,
+    clearUploadProgress,
+    setError,
+    clearError
+  } = useEstimationStore();
 
   const handleFileUpload = async (
     file: File,
     onProgress?: (progress: UploadProgress) => void
   ) => {
     try {
+      setUploading(true);
+      clearError();
+      clearUploadProgress();
+
       // Call the estimation API with progress callback
       const result = await processEstimationPdf(
         file,
         'Lumber Project',
-        onProgress
+        (progress: UploadProgress) => {
+          setUploadProgress(progress);
+          onProgress?.(progress);
+        }
       );
 
-      // Console log the full response in JSON format
-      console.log('API Response:', JSON.stringify(result.data, null, 2));
-
       if (result.success) {
-        // Store the API response in localStorage to pass to estimation details page
-        localStorage.setItem('estimationApiData', JSON.stringify(result.data));
+        setEstimationData(result.data);
 
-        // Show success toast
         toast.success(
           `Estimation completed! Found ${result.data?.results?.summary?.total_items_found || 0} items`
         );
 
-        // Close modal and redirect
         setShowCreateModal(false);
-        window.location.href = '/dashboard/estimation-details';
+        router.push('/dashboard/estimation-details');
       } else {
         toast.error(result.body || 'Failed to process PDF');
         setShowCreateModal(false);
       }
     } catch (error) {
       console.error('Error processing PDF:', error);
+      setError(
+        error instanceof Error ? error.message : 'An unexpected error occurred'
+      );
       toast.error('An unexpected error occurred');
       setShowCreateModal(false);
+    } finally {
+      setUploading(false);
+      clearUploadProgress();
     }
   };
 

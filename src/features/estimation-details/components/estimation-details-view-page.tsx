@@ -8,6 +8,8 @@ import { EstimationActionBar } from './estimation-action-bar';
 import { DataTable } from './estimation-table';
 import { Item, itemColumns } from './estimation-table/columns';
 import { SummaryDetails } from './summary-details';
+import { useEstimationStore } from '@/stores/estimation-store';
+import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 
 const mockData: Item[] = [
   {
@@ -82,31 +84,30 @@ const transformApiDataToTableItems = (apiData: any): Item[] => {
 
 export default function EstimationDetailsViewPage() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
-  const [items, setItems] = useState<Item[]>(mockData);
+  const [items, setItems] = useState<Item[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [apiData, setApiData] = useState<any>(null);
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const router = useRouter();
+  const { currentEstimationData, clearEstimationData } = useEstimationStore();
 
   useEffect(() => {
-    // Load API data from localStorage
-    const storedApiData = localStorage.getItem('estimationApiData');
-    if (storedApiData) {
-      try {
-        const parsedData = JSON.parse(storedApiData);
-        setApiData(parsedData);
-
-        // Transform and set table data
-        const tableItems = transformApiDataToTableItems(parsedData);
-        setItems(tableItems);
-
-        // Clear localStorage after loading
-        localStorage.removeItem('estimationApiData');
-      } catch (error) {
-        console.error('Error parsing API data:', error);
-        setItems(mockData);
+    const loadData = async () => {
+      setIsLoadingData(true);
+      if (currentEstimationData) {
+        try {
+          const tableItems = transformApiDataToTableItems(
+            currentEstimationData
+          );
+          setItems(tableItems);
+        } catch (error) {
+          console.error('Error processing API data:', error);
+        }
       }
-    }
-  }, []);
+      setIsLoadingData(false);
+    };
+
+    loadData();
+  }, [currentEstimationData]);
 
   const handleAddItem = (newItem: { name: string; quantity: string }) => {
     const item: Item = {
@@ -154,11 +155,15 @@ export default function EstimationDetailsViewPage() {
           />
         </div>
 
-        {/* Table */}
-        <DataTable columns={itemColumns} data={items} />
+        {/* Conditional Table Rendering */}
+        {isLoadingData ? (
+          <DataTableSkeleton columnCount={6} rowCount={8} filterCount={0} />
+        ) : (
+          <DataTable columns={itemColumns} data={items} />
+        )}
 
         {/* Summary */}
-        <SummaryDetails data={apiData} />
+        <SummaryDetails data={currentEstimationData} />
       </div>
 
       <AddItemModal
