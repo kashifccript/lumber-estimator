@@ -5,6 +5,7 @@ export type EstimationResult = {
   error?: string;
 };
 
+// Keep UploadProgress for the simulated progress in modal
 export type UploadProgress = {
   loaded: number;
   total: number;

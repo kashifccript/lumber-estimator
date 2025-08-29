@@ -28,24 +28,14 @@ export default function OverviewPage() {
     clearError
   } = useEstimationStore();
 
-  const handleFileUpload = async (
-    file: File,
-    onProgress?: (progress: UploadProgress) => void
-  ) => {
+  const handleFileUpload = async (file: File) => {
     try {
       setUploading(true);
       clearError();
       clearUploadProgress();
 
-      // Call the estimation API with progress callback
-      const result = await processEstimationPdf(
-        file,
-        'Lumber Project',
-        (progress: UploadProgress) => {
-          setUploadProgress(progress);
-          onProgress?.(progress);
-        }
-      );
+      // Simple API call without progress callback
+      const result = await processEstimationPdf(file, 'Lumber Project');
 
       if (result.success) {
         setEstimationData(result.data);
@@ -54,11 +44,11 @@ export default function OverviewPage() {
           `Estimation completed! Found ${result.data?.results?.summary?.total_items_found || 0} items`
         );
 
-        setShowCreateModal(false);
+        setShowCreateModal(false); // Only close on success
         router.push('/dashboard/estimation-details');
       } else {
         toast.error(result.body || 'Failed to process PDF');
-        setShowCreateModal(false);
+        // Don't close modal on failure - let user try again
       }
     } catch (error) {
       console.error('Error processing PDF:', error);
@@ -66,7 +56,7 @@ export default function OverviewPage() {
         error instanceof Error ? error.message : 'An unexpected error occurred'
       );
       toast.error('An unexpected error occurred');
-      setShowCreateModal(false);
+      // Don't close modal on error - let user try again
     } finally {
       setUploading(false);
       clearUploadProgress();

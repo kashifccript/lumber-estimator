@@ -4,14 +4,13 @@ import { Progress } from '@/components/ui/progress';
 import { UploadProgress } from '@/features/estimation-details/types/estimation';
 import { FileText, Upload } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { useEstimationStore } from '@/stores/estimation-store';
 
 interface CreateEstimateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onFileUpload?: (
-    file: File,
-    onProgress?: (progress: UploadProgress) => void
-  ) => void;
+  onFileUpload?: (file: File) => void;
 }
 
 export function CreateEstimateModal({
@@ -26,9 +25,54 @@ export function CreateEstimateModal({
   const [fileSize, setFileSize] = useState(0);
   const [uploadedSize, setUploadedSize] = useState(0);
 
+  // Get store state to detect when upload completes
+  const { isUploading: storeIsUploading, error: storeError } =
+    useEstimationStore();
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // Reset state when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setUploading(false);
+      setUploadProgress(0);
+      setFileSize(0);
+      setUploadedSize(0);
+      setDragActive(false);
+    }
+  }, [isOpen]);
+
+  // Reset progress when store upload completes (success or failure)
+  useEffect(() => {
+    if (!storeIsUploading && uploading) {
+      // Upload completed in store, reset our progress
+      setUploading(false);
+      setUploadProgress(0);
+      setUploadedSize(0);
+      // Keep fileSize for next attempt
+    }
+  }, [storeIsUploading, uploading]);
+
+  // Simulated progress bar
+  useEffect(() => {
+    if (uploading && uploadProgress < 90) {
+      const timer = setTimeout(() => {
+        setUploadProgress((prev) => {
+          const increment = Math.random() * 15 + 5; // Random increment between 5-20
+          const newProgress = Math.min(prev + increment, 90); // Don't go above 90%
+
+          // Update uploaded size proportionally
+          setUploadedSize((newProgress / 100) * fileSize);
+
+          return newProgress;
+        });
+      }, 200); // Update every 200ms
+
+      return () => clearTimeout(timer);
+    }
+  }, [uploading, uploadProgress, fileSize]);
 
   // Helper function to format file size
   const formatFileSize = (bytes: number): string => {
@@ -69,23 +113,18 @@ export function CreateEstimateModal({
 
   const handleFileUpload = (file: File) => {
     if (file.type !== 'application/pdf') {
-      alert('Please upload a PDF file');
+      toast.error('Please upload a PDF file');
       return;
     }
 
+    // Reset and start progress
     setUploading(true);
     setUploadProgress(0);
     setFileSize(file.size);
     setUploadedSize(0);
 
-    // Real progress callback
-    const handleProgress = (progress: UploadProgress) => {
-      setUploadProgress(progress.percentage);
-      setUploadedSize(progress.loaded);
-      setFileSize(progress.total);
-    };
-
-    onFileUpload?.(file, handleProgress);
+    // Call the parent's upload function
+    onFileUpload?.(file);
   };
 
   return (
@@ -97,6 +136,7 @@ export function CreateEstimateModal({
     >
       <div className='max'>
         {!uploading ? (
+          // Upload UI - shows when not uploading or after reset
           <div
             className={`space-y-2.5 rounded-xl border-2 border-dashed p-12 text-center transition-colors ${
               dragActive
@@ -118,38 +158,44 @@ export function CreateEstimateModal({
               <label className='inline-block'>
                 <input
                   type='file'
+                  className='sr-only'
                   accept='.pdf'
                   onChange={handleFileSelect}
-                  className='hidden'
                 />
                 <span className='text-secondary cursor-pointer rounded-xl border border-gray-300 bg-white px-4 py-3.5 font-semibold transition-colors hover:bg-gray-50'>
                   Browse Files
                 </span>
               </label>
-              <p className='text-secondary'>Supports PDF files up to 50MB</p>
             </div>
           </div>
         ) : (
-          <div className='bg-background rounded-xl border-2 border-dashed border-[#FFD6A8] p-8'>
-            <div className='flex items-center gap-4'>
-              <FileText className='text-secondary h-10 w-10 flex-shrink-0' />
-              <div className='flex-1 space-y-3'>
-                <h3 className='text-secondary text-xl font-medium'>
-                  Processing your document...
-                </h3>
-                <div className='space-y-1'>
-                  <Progress value={uploadProgress} />
-                  <div className='flex items-center justify-between'>
-                    <p className='text-secondary text-base font-medium'>
-                      Processing document... {Math.round(uploadProgress)}%
-                    </p>
-                    <p className='text-secondary text-sm font-medium'>
-                      {formatFileSize(uploadedSize)} /{' '}
-                      {formatFileSize(fileSize)}
-                    </p>
-                  </div>
-                </div>
+          // Progress UI - shows during upload
+          <div className='space-y-6 rounded-xl border p-8 text-center'>
+            <div className='mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100'>
+              <FileText className='h-8 w-8 text-blue-600' />
+            </div>
+
+            <div className='space-y-2'>
+              <h3 className='text-lg font-medium'>Processing your PDF...</h3>
+              <p className='text-muted-foreground text-sm'>
+                Please wait while we analyze your design file
+              </p>
+            </div>
+
+            <div className='space-y-2'>
+              <div className='flex justify-between text-sm'>
+                <span>Progress</span>
+                <span>{Math.round(uploadProgress)}%</span>
               </div>
+              <Progress value={uploadProgress} />
+              <div className='text-muted-foreground flex justify-between text-xs'>
+                <span>{formatFileSize(uploadedSize)}</span>
+                <span>{formatFileSize(fileSize)}</span>
+              </div>
+            </div>
+
+            <div className='text-muted-foreground text-xs'>
+              This may take a few moments depending on your file size
             </div>
           </div>
         )}
