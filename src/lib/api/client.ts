@@ -1,8 +1,9 @@
+'use server';
 import { APIRequest, APIResponse } from './types';
 import { API_BASE_URL } from './constants';
-import { revalidateTag } from 'next/cache';
 import { isJsonString } from './utils';
 import { auth } from 'auth';
+import { revalidateTag } from 'next/cache';
 
 const getAuthToken = async () => {
   try {

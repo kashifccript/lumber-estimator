@@ -13,6 +13,7 @@ export type UploadProgress = {
 };
 
 export type EstimationApiData = {
+  project_id?: string; 
   results: {
     summary: {
       total_items_found: number;
@@ -37,4 +38,19 @@ export type EstimationApiData = {
       }>;
     };
   };
+};
+
+export type ManualItemData = {
+  project_id: string;
+  item_name: string;
+  quantity: number;
+  unit: string;
+  sku_id?: string;
+};
+
+export type AddManualItemResult = {
+  success: boolean;
+  data?: any;
+  message?: string;
+  error?: string;
 };

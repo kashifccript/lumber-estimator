@@ -13,16 +13,47 @@ import {
   FormMessage
 } from '../ui/form';
 import { Input } from '../ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '../ui/select';
 
 interface AddItemModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit?: (item: { name: string; quantity: string }) => void;
+  onSubmit?: (item: {
+    name: string;
+    quantity: number;
+    unit: string;
+    sku?: string;
+  }) => void;
 }
+
+// Available units for selection
+const UNITS = [
+  { value: 'each', label: 'Each' },
+  { value: 'sq_ft', label: 'Square Feet' },
+  { value: 'linear_ft', label: 'Linear Feet' },
+  { value: 'cubic_ft', label: 'Cubic Feet' },
+  { value: 'piece', label: 'Piece' },
+  { value: 'hour', label: 'Hour' },
+  { value: 'yard', label: 'Yard' },
+  { value: 'meter', label: 'Meter' }
+] as const;
 
 const formSchema = z.object({
   item: z.string().min(2, 'Item name is required'),
-  quantity: z.string().min(1, 'Quantity is required'),
+  quantity: z
+    .string()
+    .min(1, 'Quantity is required')
+    .refine(
+      (val) => !isNaN(Number(val)) && Number(val) > 0,
+      'Quantity must be a positive number'
+    ),
+  unit: z.string().min(1, 'Unit is required'),
   productCode: z.string().optional()
 });
 
@@ -32,6 +63,7 @@ export function AddItemModal({ isOpen, onClose, onSubmit }: AddItemModalProps) {
     defaultValues: {
       item: '',
       quantity: '',
+      unit: 'each',
       productCode: ''
     }
   });
@@ -39,7 +71,9 @@ export function AddItemModal({ isOpen, onClose, onSubmit }: AddItemModalProps) {
   function handleSubmit(values: z.infer<typeof formSchema>) {
     onSubmit?.({
       name: values.item,
-      quantity: values.quantity
+      quantity: Number(values.quantity),
+      unit: values.unit,
+      sku: values.productCode
     });
     form.reset();
     onClose();
@@ -78,23 +112,52 @@ export function AddItemModal({ isOpen, onClose, onSubmit }: AddItemModalProps) {
               </FormItem>
             )}
           />
-          {/* Quantity*/}
-          <FormField
-            control={form.control}
-            name='quantity'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Quantity</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder='e.g., 20 sq ft, 30 piece, 120 hour'
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
+          {/* Quantity and Unit */}
+          <div className='flex gap-2'>
+            <FormField
+              control={form.control}
+              name='quantity'
+              render={({ field }) => (
+                <FormItem className='flex-1'>
+                  <FormLabel>Quantity</FormLabel>
+                  <FormControl>
+                    <Input type='number' placeholder='e.g., 20' {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='unit'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Unit</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder='Select unit' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {UNITS.map((unit) => (
+                        <SelectItem key={unit.value} value={unit.value}>
+                          {unit.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           {/* SKU/Product Code */}
           <FormField
             control={form.control}
@@ -109,6 +172,7 @@ export function AddItemModal({ isOpen, onClose, onSubmit }: AddItemModalProps) {
               </FormItem>
             )}
           />
+
           {/* Actions */}
           <div className='mt-6 flex items-center justify-end gap-2'>
             <Button

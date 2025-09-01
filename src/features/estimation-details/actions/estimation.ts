@@ -1,3 +1,4 @@
+import { post } from '@/lib/api/client';
 import { EstimationResult } from '../types/estimation';
 
 export const processEstimationPdf = async (
@@ -40,6 +41,35 @@ export const processEstimationPdf = async (
       error:
         error instanceof Error ? error.message : 'An unexpected error occurred',
       body: 'Failed to process PDF'
+    };
+  }
+};
+
+export const addManualItem = async (
+  project_id: string,
+  item_name: string,
+  quantity: number,
+  unit: string,
+  sku_id?: string
+) => {
+  try {
+    const requestData = {
+      project_id,
+      item_name,
+      quantity,
+      unit,
+      sku_id: sku_id || ''
+    };
+
+    return await post({
+      endpoint: '/lumber/items/manual-add',
+      body: JSON.stringify(requestData)
+    });
+  } catch (error) {
+    console.error('Error adding manual item:', error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'Failed to add item'
     };
   }
 };
