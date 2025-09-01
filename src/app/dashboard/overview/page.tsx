@@ -34,8 +34,7 @@ export default function OverviewPage() {
       clearError();
       clearUploadProgress();
 
-      // Simple API call without progress callback
-      const result = await processEstimationPdf(file, 'Lumber Project');
+      const result = await processEstimationPdf(file);
 
       if (result.success) {
         setEstimationData(result.data);

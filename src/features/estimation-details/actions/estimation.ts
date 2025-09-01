@@ -2,13 +2,11 @@ import { post } from '@/lib/api/client';
 import { EstimationResult } from '../types/estimation';
 
 export const processEstimationPdf = async (
-  file: File,
-  projectName: string = 'Lumber Project'
+  file: File
 ): Promise<EstimationResult> => {
   try {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('project_name', projectName);
     formData.append('force_fresh', 'false');
 
     const response = await fetch(

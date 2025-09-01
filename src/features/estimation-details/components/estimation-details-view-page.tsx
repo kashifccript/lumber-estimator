@@ -13,6 +13,7 @@ import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 import { transformApiDataToTableItems } from '../utils/utils';
 import { toast } from 'sonner';
 import { addManualItem } from '../actions/estimation';
+import { useBreadcrumbs } from '@/hooks/use-breadcrumbs';
 
 export default function EstimationDetailsViewPage() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
@@ -21,7 +22,8 @@ export default function EstimationDetailsViewPage() {
   const [isLoadingData, setIsLoadingData] = useState(true);
   const router = useRouter();
   const { currentEstimationData } = useEstimationStore();
-
+  // Use dynamic breadcrumbs
+  const breadcrumbs = useBreadcrumbs();
   useEffect(() => {
     const loadData = async () => {
       setIsLoadingData(true);
@@ -104,12 +106,13 @@ export default function EstimationDetailsViewPage() {
     <PageContainer>
       <div className='flex flex-1 flex-col gap-3 pb-6'>
         <div className='flex items-center justify-between'>
-          {/* Breadcrumb */}
+          {/* Dynamic Breadcrumb */}
           <Breadcrumb
-            items={[
-              { label: 'Dashboard', href: '/dashboard' },
-              { label: 'Estimation Details', active: true }
-            ]}
+            items={breadcrumbs.map((crumb, index) => ({
+              label: crumb.title,
+              href: crumb.link,
+              active: index === breadcrumbs.length - 1
+            }))}
           />
 
           {/* Action Bar */}
