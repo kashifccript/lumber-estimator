@@ -12,7 +12,7 @@ import { useEstimationStore } from '@/stores/estimation-store';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 import { transformApiDataToTableItems } from '../utils/utils';
 import { toast } from 'sonner';
-import { addManualItem } from '../actions/estimation';
+import { addManualItem, fetchProjectData } from '../actions/estimation';
 import { useBreadcrumbs } from '@/hooks/use-breadcrumbs';
 
 export default function EstimationDetailsViewPage() {
@@ -20,28 +20,45 @@ export default function EstimationDetailsViewPage() {
   const [items, setItems] = useState<Item[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
+  const [projectData, setProjectData] = useState<any>(null);
   const router = useRouter();
   const { currentEstimationData } = useEstimationStore();
   // Use dynamic breadcrumbs
   const breadcrumbs = useBreadcrumbs();
+
   useEffect(() => {
     const loadData = async () => {
       setIsLoadingData(true);
-      if (currentEstimationData) {
+
+      // Get project ID from current estimation data
+      const projectId = currentEstimationData?.project_id;
+
+      if (projectId) {
         try {
-          const tableItems = transformApiDataToTableItems(
-            currentEstimationData
-          );
-          setItems(tableItems);
+          // Fetch project data from API
+          const response = await fetchProjectData(projectId.toString());
+
+          if (response && response.project_id) {
+            setProjectData(response);
+
+            // Transform API data to table items
+            const tableItems = transformApiDataToTableItems(response);
+            setItems(tableItems);
+          } else {
+            toast.error('Failed to load project data');
+          }
         } catch (error) {
-          console.error('Error processing API data:', error);
+          toast.error('Error loading project data');
         }
+      } else {
+        toast.error('No project ID found. Please upload a PDF first.');
       }
+
       setIsLoadingData(false);
     };
 
     loadData();
-  }, [currentEstimationData]);
+  }, [currentEstimationData?.project_id]);
 
   const handleAddItem = async (newItem: {
     name: string;
@@ -93,12 +110,12 @@ export default function EstimationDetailsViewPage() {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Redirect to estimates page after successful submission
+      toast.success('Estimate submitted successfully');
       router.push('/dashboard/estimates');
     } catch (error) {
       console.error('Error submitting estimate:', error);
       setIsSubmitting(false);
+      toast.error('Error submitting estimate');
     }
   };
 
@@ -129,8 +146,8 @@ export default function EstimationDetailsViewPage() {
           <DataTable columns={itemColumns} data={items} />
         )}
 
-        {/* Summary */}
-        <SummaryDetails data={currentEstimationData} />
+        {/* Summary - Use projectData instead of currentEstimationData */}
+        <SummaryDetails data={projectData} />
       </div>
 
       <AddItemModal

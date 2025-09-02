@@ -11,7 +11,6 @@ import { CreateEstimateModal } from '@/components/modal/create-estimate-modal';
 import PageContainer from '@/components/layout/page-container';
 import { toast } from 'sonner';
 import { processEstimationPdf } from '@/features/estimation-details/actions/estimation';
-import { UploadProgress } from '@/features/estimation-details/types/estimation';
 import { useEstimationStore } from '@/stores/estimation-store';
 import { useRouter } from 'next/navigation';
 
@@ -21,7 +20,6 @@ export default function OverviewPage() {
   // Get store actions
   const {
     setEstimationData,
-    setUploadProgress,
     setUploading,
     clearUploadProgress,
     setError,
@@ -37,25 +35,28 @@ export default function OverviewPage() {
       const result = await processEstimationPdf(file);
 
       if (result.success) {
-        setEstimationData(result.data);
-
-        toast.success(
-          `Estimation completed! Found ${result.data?.results?.summary?.total_items_found || 0} items`
+        // Store only the project_id from upload response
+        const projectId = String(
+          result.data?.project_id || result.data?.id || ''
         );
 
-        setShowCreateModal(false); // Only close on success
-        router.push('/dashboard/estimation-details');
+        if (projectId) {
+          // Store just the project_id, we'll fetch full data on details page
+          setEstimationData({ project_id: projectId });
+          toast.success('PDF uploaded successfully! Loading project data...');
+          setShowCreateModal(false);
+          router.push('/dashboard/estimation-details');
+        } else {
+          toast.error('Upload succeeded but project ID was not returned');
+        }
       } else {
-        toast.error(result.body || 'Failed to process PDF');
-        // Don't close modal on failure - let user try again
+        toast.error(result.body || 'Failed to submit PDF');
       }
     } catch (error) {
-      console.error('Error processing PDF:', error);
       setError(
         error instanceof Error ? error.message : 'An unexpected error occurred'
       );
       toast.error('An unexpected error occurred');
-      // Don't close modal on error - let user try again
     } finally {
       setUploading(false);
       clearUploadProgress();

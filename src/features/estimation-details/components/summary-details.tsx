@@ -1,20 +1,27 @@
 import { Card } from '@/components/ui/card';
 
 export function SummaryDetails({ data }: { data: any }) {
-  // Extract values from API data or use defaults
-  const totalCost = data?.results?.lumber_estimates?.total_lumber_cost || 0;
-  const detailedItems = data?.results?.detailed_items || [];
-  // Count items priced (database_match === 'Available')
-  const itemsPriced = detailedItems.filter(
-    (item: any) => item.database_match === 'Available'
+  // Handle new API response format
+  const totalCost = data?.total_cost || 0;
+  const items = data?.items || [];
+
+  // Count items priced (status === 'available' or database_match === 'Available')
+  const itemsPriced = items.filter(
+    (item: any) =>
+      item.status === 'available' ||
+      item.database_match === 'Available' ||
+      item.status === 'approved'
   ).length;
 
-  // Count items needing quotation (database_match === 'Quotation needed')
-  const itemsNeedingQuotation = detailedItems.filter(
-    (item: any) => item.database_match === 'Quotation needed'
+  // Count items needing quotation (status === 'quotation_needed' or database_match === 'Quotation needed')
+  const itemsNeedingQuotation = items.filter(
+    (item: any) =>
+      item.status === 'quotation_needed' ||
+      item.database_match === 'Quotation needed' ||
+      item.status === 'quotation-needed'
   ).length;
 
-  const totalItems = itemsPriced + itemsNeedingQuotation;
+  const totalItems = data?.total_items_count || items.length;
 
   return (
     <Card>

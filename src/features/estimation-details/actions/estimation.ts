@@ -22,14 +22,14 @@ export const processEstimationPdf = async (
     if (response.ok) {
       return {
         success: true,
-        data: data,
-        body: data.message || 'Estimation completed'
+        data,
+        body: data.message || 'Estimation submitted'
       };
     } else {
       return {
         success: false,
-        data: data,
-        body: data.message || 'Failed to process PDF'
+        data,
+        body: data.message || 'Failed to submit PDF'
       };
     }
   } catch (error) {
@@ -38,7 +38,33 @@ export const processEstimationPdf = async (
       success: false,
       error:
         error instanceof Error ? error.message : 'An unexpected error occurred',
-      body: 'Failed to process PDF'
+      body: 'Failed to submit PDF'
+    };
+  }
+};
+
+export const fetchProjectData = async (projectId: string) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_HOST}/projects/${projectId}`,
+      { method: 'GET' }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data?.message || 'Failed to fetch project data'
+      };
+    }
+
+    return data;
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : 'Failed to fetch project data'
     };
   }
 };
