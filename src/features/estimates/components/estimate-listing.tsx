@@ -1,7 +1,7 @@
 'use client';
 import { EstimateTable } from './estimate-tables';
 import { columns } from './estimate-tables/columns';
-import { fetchProjects } from '../actions/estimates';
+import { getAllProjects } from '../actions/estimates';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -15,7 +15,7 @@ export default function EstimateListing() {
       setIsLoadingData(true);
 
       try {
-        const response = await fetchProjects();
+        const response = await getAllProjects();
 
         if (response.success) {
           setProjects(response.projects);

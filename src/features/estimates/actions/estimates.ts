@@ -1,6 +1,6 @@
 import { get } from '@/lib/api/client';
 
-export async function fetchProjects() {
+export async function getAllProjects() {
   try {
     const response = await get({
       endpoint: '/projects/all'
