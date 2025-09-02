@@ -6,10 +6,10 @@ export async function fetchProjects() {
       endpoint: '/projects/all'
     });
     return {
-        success: true,
-        projects: response.projects,
-        message: response.message || 'Projects fetched successfully'
-    }
+      success: true,
+      projects: response.projects,
+      message: response.message || 'Projects fetched successfully'
+    };
   } catch (error) {
     return {
       success: false,
