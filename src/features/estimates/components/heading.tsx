@@ -2,18 +2,11 @@
 import { CreateEstimateModal } from '@/components/modal/create-estimate-modal';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import { useState } from 'react';
+import { usePdfUpload } from '@/hooks/use-pdf-upload';
 
 export default function Heading() {
-  const [showCreateModal, setShowCreateModal] = useState(false);
-
-  const handleFileUpload = (file: File) => {
-    console.log('File uploaded:', file.name);
-    setTimeout(() => {
-      setShowCreateModal(false);
-      window.location.href = '/dashboard/estimation-details';
-    }, 3000);
-  };
+  const { showCreateModal, setShowCreateModal, handleFileUpload } =
+    usePdfUpload();
   return (
     <div className='flex items-center justify-between'>
       <h1 className='text-secondary text-2xl font-semibold'>
