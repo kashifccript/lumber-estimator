@@ -23,7 +23,7 @@ export const columns: ColumnDef<Estimate>[] = [
   {
     accessorKey: 'total_cost',
     header: 'Total Cost',
-    cell: ({ cell }) => <div>{cell.getValue<string>()}</div>
+    cell: ({ cell }) => <div>${cell.getValue<number>()?.toLocaleString()}</div>
   },
   // {
   //   accessorKey: 'status',
