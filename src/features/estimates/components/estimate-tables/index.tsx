@@ -53,7 +53,7 @@ export function EstimateTable<TData, TValue>({
     <div className='overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm'>
       <Table>
         <TableHeader>
-          <TableRow className='max-h-[64px] bg-[#F1F5F9]'>
+          <TableRow>
             {table
               .getHeaderGroups()
               .map((headerGroup) =>
