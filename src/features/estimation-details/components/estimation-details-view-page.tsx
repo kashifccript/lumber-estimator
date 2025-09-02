@@ -83,6 +83,16 @@ export default function EstimationDetailsViewPage() {
       );
 
       if (result.success) {
+        // Use unit_price from API response if available
+        const totalCost = result.estimated_cost || 0;
+        let costPerUnit = '$0';
+
+        if (typeof result.estimated_unit_price === 'number') {
+          costPerUnit = `$ ${result.estimated_unit_price.toFixed(2)}`;
+        } else if (typeof result.unit_price === 'number') {
+          costPerUnit = `$ ${result.unit_price.toFixed(2)}`;
+        }
+
         // Use the rich data from API response instead of form data
         const item: Item = {
           id: result.item_id,
@@ -90,7 +100,8 @@ export default function EstimationDetailsViewPage() {
           sku: result.sku_id,
           quantity: `${result.quantity} ${result.unit}`,
           status: 'approved', // API processed it successfully
-          cost: `$ ${result.estimated_cost?.toLocaleString() || '0'}`
+          cost: `$ ${totalCost.toLocaleString()}`,
+          costPerUnit
         };
         setItems([...items, item]);
 

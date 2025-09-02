@@ -21,12 +21,24 @@ export const transformApiDataToTableItems = (apiData: any): Item[] => {
 
       // Format cost - handle both string and number values
       let cost = '$0';
+      let costPerUnit = '$0';
+
       if (typeof item.total_price === 'number') {
         cost = `$ ${item.total_price.toLocaleString()}`;
       } else if (typeof item.estimated_cost === 'number') {
         cost = `$ ${item.estimated_cost.toLocaleString()}`;
       } else if (item.total_price === 'Quotation needed') {
         cost = 'Quotation needed';
+        costPerUnit = 'Quotation needed';
+      }
+
+      // Use unit_price from API response if available
+      if (typeof item.unit_price === 'number') {
+        costPerUnit = `$ ${item.unit_price.toFixed(2)}`;
+      } else if (typeof item.estimated_unit_price === 'number') {
+        costPerUnit = `$ ${item.estimated_unit_price.toFixed(2)}`;
+      } else if (item.unit_price === 'Quotation needed') {
+        costPerUnit = 'Quotation needed';
       }
 
       // Format quantity
@@ -41,6 +53,7 @@ export const transformApiDataToTableItems = (apiData: any): Item[] => {
         quantity,
         status,
         cost,
+        costPerUnit,
         contractor: {
           name:
             item.contractor_name ||
@@ -56,19 +69,33 @@ export const transformApiDataToTableItems = (apiData: any): Item[] => {
   // Fallback for old API format (from upload response)
   if (apiData.results?.lumber_estimates?.detailed_lumber_specs) {
     return apiData.results.lumber_estimates.detailed_lumber_specs.map(
-      (item: any, index: number) => ({
-        id: item.item_id || `api-item-${index}`,
-        name: item.item_name || 'Unknown Item',
-        sku: item.sku || 'N/A',
-        quantity: `${item.quantity.needed || 0} ${item.quantity.unit || ''}`,
-        status: 'approved' as const,
-        cost: `$ ${item.pricing.total_price?.toLocaleString() || '0'}`,
-        contractor: {
-          name: item.sourcing.available_contractors[0] || 'No contractor',
-          avatar:
-            'https://api.builder.io/api/v1/image/assets/TEMP/c621edd36a0654de255120825ca63122a262c93a?width=64'
+      (item: any, index: number) => {
+        const totalCost = item.pricing.total_price || 0;
+        const quantity = item.quantity.needed || 0;
+
+        // Use unit_price from API if available, otherwise calculate
+        let costPerUnit = '$0';
+        if (typeof item.pricing.unit_price === 'number') {
+          costPerUnit = `$ ${item.pricing.unit_price.toFixed(2)}`;
+        } else if (quantity > 0) {
+          costPerUnit = `$ ${(totalCost / quantity).toFixed(2)}`;
         }
-      })
+
+        return {
+          id: item.item_id || `api-item-${index}`,
+          name: item.item_name || 'Unknown Item',
+          sku: item.sku || 'N/A',
+          quantity: `${quantity} ${item.quantity.unit || ''}`,
+          status: 'approved' as const,
+          cost: `$ ${totalCost.toLocaleString()}`,
+          costPerUnit,
+          contractor: {
+            name: item.sourcing.available_contractors[0] || 'No contractor',
+            avatar:
+              'https://api.builder.io/api/v1/image/assets/TEMP/c621edd36a0654de255120825ca63122a262c93a?width=64'
+          }
+        };
+      }
     );
   }
 
