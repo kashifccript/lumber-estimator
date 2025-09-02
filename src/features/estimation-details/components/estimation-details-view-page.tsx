@@ -130,6 +130,10 @@ export default function EstimationDetailsViewPage() {
     }
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <PageContainer>
       <div className='flex flex-1 flex-col gap-3 pb-6'>
@@ -147,6 +151,7 @@ export default function EstimationDetailsViewPage() {
           <EstimationActionBar
             onAddNewItem={() => setShowAddItemModal(true)}
             onSubmitEstimate={handleSubmitEstimate}
+            onPrint={handlePrint}
           />
         </div>
 
