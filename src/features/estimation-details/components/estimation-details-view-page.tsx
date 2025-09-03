@@ -149,6 +149,7 @@ export default function EstimationDetailsViewPage() {
 
           {/* Action Bar */}
           <EstimationActionBar
+            projectId={currentEstimationData?.project_id}
             onAddNewItem={() => setShowAddItemModal(true)}
             onSubmitEstimate={handleSubmitEstimate}
             onPrint={handlePrint}

@@ -88,6 +88,70 @@ export function EstimationActionBar({
     }
   };
 
+  const handleExportCsv = async () => {
+    if (!projectId) {
+      toast.error('No project ID available for Excel export');
+      return;
+    }
+
+    if (!session?.user?.access_token) {
+      toast.error('Authentication token not found');
+      return;
+    }
+
+    try {
+      // Create form data for application/x-www-form-urlencoded
+      const formData = new URLSearchParams();
+      formData.append('project_id', projectId);
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/lumber/export/excel`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Accept:
+              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            Authorization: `Bearer ${session.user.access_token}`
+          },
+          body: formData.toString()
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.message || 'Failed to export Excel file');
+        return;
+      }
+
+      // Get the filename from the response headers
+      const contentDisposition = response.headers.get('content-disposition');
+      const filename = contentDisposition
+        ? contentDisposition.split('filename=')[1]?.replace(/"/g, '')
+        : `estimation_${projectId}_${new Date().toISOString().split('T')[0]}.xlsx`;
+
+      // Create blob from response
+      const blob = await response.blob();
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success('Excel file exported successfully');
+    } catch (error) {
+      console.error('Error exporting Excel file:', error);
+      toast.error('Failed to export Excel file');
+    }
+  };
+
   return (
     <div className={`flex items-center justify-end gap-1.5 ${className ?? ''}`}>
       <Button onClick={handleExportPdf} variant='icon' size='icon'>
@@ -100,7 +164,7 @@ export function EstimationActionBar({
           quality={100}
         />
       </Button>
-      <Button variant='icon' size='icon' onClick={onExportCsv}>
+      <Button variant='icon' size='icon' onClick={handleExportCsv}>
         <Image
           src='/assets/icons/csv.png'
           alt='CSV'
