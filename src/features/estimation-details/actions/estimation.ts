@@ -1,5 +1,7 @@
 import { post } from '@/lib/api/client';
 import { EstimationResult } from '../types/estimation';
+import { get } from 'http';
+import { getSession } from 'next-auth/react';
 
 export const processEstimationPdf = async (
   file: File
@@ -9,27 +11,22 @@ export const processEstimationPdf = async (
     formData.append('file', file);
     formData.append('force_fresh', 'false');
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_HOST}/lumber/estimate/pdf`,
-      {
-        method: 'POST',
-        body: formData
-      }
-    );
+    const response = await post({
+      endpoint: '/lumber/estimate/pdf',
+      body: formData
+    });
 
-    const data = await response.json();
-
-    if (response.ok) {
+    if (response.success) {
       return {
         success: true,
-        data,
-        body: data.message || 'Estimation submitted'
+        data: response,
+        body: response.message || 'Estimation submitted'
       };
     } else {
       return {
         success: false,
-        data,
-        body: data.message || 'Failed to submit PDF'
+        data: response.data,
+        body: response.message || 'Failed to submit PDF'
       };
     }
   } catch (error) {
@@ -45,9 +42,18 @@ export const processEstimationPdf = async (
 
 export const fetchProjectData = async (projectId: string) => {
   try {
+    const session = await getSession();
+    const token = session?.user?.access_token;
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_SERVER_HOST}/projects/${projectId}`,
-      { method: 'GET' }
+      {
+        method: 'GET',
+        headers: {
+          Authorization: token ? `Bearer ${token}` : '',
+          Accept: 'application/json'
+        }
+      }
     );
 
     const data = await response.json();

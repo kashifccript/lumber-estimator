@@ -24,7 +24,7 @@ export function usePdfUpload() {
       clearUploadProgress();
 
       const result = await processEstimationPdf(file);
-
+      console.log('result is', result);
       if (result.success) {
         // Store only the project_id from upload response
         const projectId = String(
