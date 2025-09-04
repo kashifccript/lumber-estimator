@@ -26,15 +26,17 @@ export interface RoleContent {
 export const roleContent: Record<UserRole, RoleContent> = {
   contractor: {
     hero: {
-      title: 'Build Better Quotation',
-      subtitle: 'Create your first quotation to unlock powerful insights and analytics for your projects.',
+      title: 'Build Better Quotation',
+      subtitle:
+        'Create your first quotation to unlock powerful insights and analytics for your projects.',
       buttonText: 'Create Your First Quotation'
     },
     features: [
       {
         icon: '/assets/icons/building.svg',
         title: 'Fast Estimates',
-        description: 'Estimators can price project using your material database.'
+        description:
+          'Estimators can price project using your material database.'
       },
       {
         icon: '/assets/icons/fast.svg',
@@ -44,25 +46,29 @@ export const roleContent: Record<UserRole, RoleContent> = {
       {
         icon: '/assets/icons/checkmark.svg',
         title: 'Better Margins',
-        description: 'Keep track of current market prices and maintain profitability.'
+        description:
+          'Keep track of current market prices and maintain profitability.'
       }
     ],
     cta: {
       title: 'Ready to Get Started',
-      description: 'Join thousands of contractors who are saving time and improving accuracy.',
-      buttonText: 'Create Your First Estimate'
+      description:
+        'Join thousands of contractors who are saving time and improving accuracy.',
+      buttonText: 'Create Your First Quotation'
     },
     quickTips: [
       {
         title: 'Add Your Own Materials',
-        description: 'Add specific materials and prices that are unique to your business.'
+        description:
+          'Add specific materials and prices that are unique to your business.'
       }
     ]
   },
   estimator: {
     hero: {
       title: 'Build Better Estimates',
-      subtitle: 'Create your first estimate to unlock powerful insights and analytics for your projects.',
+      subtitle:
+        'Create your first estimate to unlock powerful insights and analytics for your projects.',
       buttonText: 'Create Your First Estimate'
     },
     features: [
@@ -84,13 +90,15 @@ export const roleContent: Record<UserRole, RoleContent> = {
     ],
     cta: {
       title: 'Ready to Get Started',
-      description: 'Join thousands of construction professionals who are saving time and improving accuracy with EstimatorPro.',
+      description:
+        'Join thousands of construction professionals who are saving time and improving accuracy with EstimatorPro.',
       buttonText: 'Create Your First Estimate'
     },
     quickTips: [
       {
         title: 'Quick Tip',
-        description: 'Start with a simple project to get familiar with the tools'
+        description:
+          'Start with a simple project to get familiar with the tools'
       }
     ]
   }

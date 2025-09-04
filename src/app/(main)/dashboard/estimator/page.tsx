@@ -1,6 +1,9 @@
-import { redirect } from 'next/navigation';
+import RoleOverview from "../role.overview";
 
-export default async function Page() {
-  // Direct redirect without auth check
-  redirect('estimator/overview');
+export const metadata = {
+  title: 'Estimator Dashboard'
+};
+
+export default function EstimatorPage() {
+  return <RoleOverview role='estimator' />;
 }

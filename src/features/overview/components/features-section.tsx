@@ -1,27 +1,14 @@
 import Image from 'next/image';
+import { RoleContent } from '@/config/role-content';
 
-export function FeaturesSection() {
-  const features = [
-    {
-      icon: '/assets/icons/building.svg',
-      title: 'Upload Your Plans',
-      description: 'Simply upload your design PDF or blueprints'
-    },
-    {
-      icon: '/assets/icons/fast.svg',
-      title: 'Upload Your Plans',
-      description: 'Simply upload your design PDF or blueprints'
-    },
-    {
-      icon: '/assets/icons/checkmark.svg',
-      title: 'Upload Your Plans',
-      description: 'Simply upload your design PDF or blueprints'
-    }
-  ];
+interface FeaturesSectionProps {
+  content: RoleContent['features'];
+}
 
+export function FeaturesSection({ content }: FeaturesSectionProps) {
   return (
     <div className='grid grid-cols-1 gap-2.5 md:grid-cols-3'>
-      {features.map((feature, index) => (
+      {content.map((feature, index) => (
         <div
           key={index}
           className='flex items-center justify-start gap-3 rounded-lg bg-white p-2.5'

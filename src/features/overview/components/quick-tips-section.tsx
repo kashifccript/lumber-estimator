@@ -1,12 +1,11 @@
 import Image from 'next/image';
+import { RoleContent } from '@/config/role-content';
 
-export function QuickTipsSection() {
-  const tips = [
-    'Upload high-resolution PDF plans for the most accurate results.',
-    'Review the generated material list and adjust quantities if needed.',
-    'Set up contractor profiles to track performance across projects'
-  ];
+interface QuickTipsSectionProps {
+  content: RoleContent['quickTips'];
+}
 
+export function QuickTipsSection({ content }: QuickTipsSectionProps) {
   return (
     <div className='flex flex-col gap-2.5 rounded-xl bg-white p-2.5'>
       <div className='flex items-center justify-start gap-3'>
@@ -24,7 +23,7 @@ export function QuickTipsSection() {
       </div>
 
       <div className='bg-background space-y-3 rounded-sm p-2.5'>
-        {tips.map((tip, index) => (
+        {content.map((tip, index) => (
           <div key={index} className='flex items-start gap-3'>
             <Image
               src={'/assets/icons/boardcheck.svg'}
@@ -32,7 +31,9 @@ export function QuickTipsSection() {
               width={20}
               height={20}
             />
-            <p className='text-secondary text-[13px] font-light'>{tip}</p>
+            <p className='text-secondary text-[13px] font-light'>
+              {tip.description}
+            </p>
           </div>
         ))}
       </div>

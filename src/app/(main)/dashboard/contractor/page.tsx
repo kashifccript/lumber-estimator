@@ -1,3 +1,9 @@
-export default function ContractorsPage() {
-  return <div>Contractors</div>;
+import RoleOverview from "../role.overview";
+
+export const metadata = {
+  title: 'Contractor Dashboard'
+};
+
+export default function ContractorPage() {
+  return <RoleOverview role='contractor' />;
 }
