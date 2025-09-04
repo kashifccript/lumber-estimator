@@ -102,3 +102,28 @@ export const rejectUser = async (
     };
   }
 };
+
+export const getUsers = async (token: string, query?:string): Promise<PendingUser[]> => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/users?query=${query}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error('Failed to fetch pending approvals');
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching pending approvals:', error);
+    return [];
+  }
+};

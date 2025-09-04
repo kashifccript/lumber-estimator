@@ -1,7 +1,7 @@
 import PageContainer from '@/components/layout/page-container';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 import { Suspense } from 'react';
-import UserListing from './user-listing';
+import {UserListing} from './user-listing';
 
 export default function AdminDashboardViewPage() {
   return (

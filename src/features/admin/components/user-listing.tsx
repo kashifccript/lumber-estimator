@@ -1,14 +1,18 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { PendingUser } from '../types/user';
-import { getPendingApprovals } from '../actions/users';
+import { User } from '../types/user';
+import { getPendingApprovals, getUsers } from '../actions/users';
 import { UserTable } from './user-tables';
 import { createColumns } from './user-tables/columns';
 import { toast } from 'sonner';
+import { sampleUsers } from '../data/sample-users';
+interface UserListingProps {
+  query?: string;
+}
 
-export default function UserListing() {
-  const [users, setUsers] = useState<PendingUser[]>([]);
+export const UserListing: React.FC<UserListingProps> = ({ query }) => {
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const { data: session } = useSession();
 
@@ -20,8 +24,9 @@ export default function UserListing() {
 
     try {
       setLoading(true);
-      const data = await getPendingApprovals(session.user.access_token);
-      setUsers(data);
+      const data = await getUsers(session.user.access_token, query);
+      // setUsers(data);
+      setUsers(sampleUsers);
     } catch (error) {
       console.error('Error fetching users:', error);
       toast.error('Failed to fetch pending approvals');
@@ -52,4 +57,4 @@ export default function UserListing() {
   }
 
   return <UserTable data={users} columns={columns} itemsPerPage={10} />;
-}
+};

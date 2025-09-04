@@ -1,5 +1,5 @@
 'use client';
-import { PendingUser } from '../../types/user';
+import { User } from '../../types/user';
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
 
@@ -9,7 +9,7 @@ interface ColumnsProps {
 
 export const createColumns = ({
   onRefresh
-}: ColumnsProps): ColumnDef<PendingUser>[] => [
+}: ColumnsProps): ColumnDef<User>[] => [
   {
     accessorKey: 'first_name',
     header: 'User Name',

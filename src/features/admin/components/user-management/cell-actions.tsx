@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import { approveUser, rejectUser } from '../../actions/users';
+import UserDetails from '../../modals/user-detail';
 
 interface CellActionProps {
   data: User;
@@ -84,6 +85,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
         title='Reject User'
         description={`Are you sure you want to reject ${data.first_name} ${data.last_name}?`}
       />
+
+
       <div className='flex items-center gap-2.5'>
         <button
           onClick={() => setOpenApprove(true)}
