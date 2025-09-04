@@ -21,10 +21,6 @@ export interface RoleContent {
     title: string;
     description: string;
   }>;
-  modal: {
-    title: string;
-    // Add other modal-specific props
-  };
 }
 
 export const roleContent: Record<UserRole, RoleContent> = {
@@ -58,7 +54,7 @@ export const roleContent: Record<UserRole, RoleContent> = {
       title: 'Ready to Get Started',
       description:
         'Join thousands of contractors who are saving time and improving accuracy.',
-      buttonText: 'Create Your First Estimate'
+      buttonText: 'Create Your First Quotation'
     },
     quickTips: [
       {
@@ -66,10 +62,7 @@ export const roleContent: Record<UserRole, RoleContent> = {
         description:
           'Add specific materials and prices that are unique to your business.'
       }
-    ],
-    modal: {
-      title: 'Create Your First Quotation'
-    }
+    ]
   },
   estimator: {
     hero: {
@@ -107,9 +100,6 @@ export const roleContent: Record<UserRole, RoleContent> = {
         description:
           'Start with a simple project to get familiar with the tools'
       }
-    ],
-    modal: {
-      title: 'Create New Estimate'
-    }
+    ]
   }
 };

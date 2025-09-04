@@ -1,4 +1,4 @@
-// src/components/dashboard/role-overview.tsx
+// src/app/(main)/dashboard/role.overview.tsx
 'use client';
 
 import {
@@ -8,6 +8,7 @@ import {
   QuickTipsSection
 } from '@/features/overview/components';
 import { CreateEstimateModal } from '@/components/modal/create-estimate-modal';
+import { CreateQuotationModal } from '@/components/modal/create-quotation-modal';
 import PageContainer from '@/components/layout/page-container';
 import { usePdfUpload } from '@/hooks/use-pdf-upload';
 import { roleContent, UserRole } from '@/config/role-content';
@@ -35,12 +36,19 @@ export default function RoleOverview({ role }: RoleOverviewProps) {
           content={content.cta}
         />
 
-        <CreateEstimateModal
-          isOpen={showCreateModal}
-          onClose={() => setShowCreateModal(false)}
-          onFileUpload={handleFileUpload}
-          role={role}
-        />
+        {/* Render different modals based on role */}
+        {role === 'contractor' ? (
+          <CreateQuotationModal
+            isOpen={showCreateModal}
+            onClose={() => setShowCreateModal(false)}
+          />
+        ) : (
+          <CreateEstimateModal
+            isOpen={showCreateModal}
+            onClose={() => setShowCreateModal(false)}
+            onFileUpload={handleFileUpload}
+          />
+        )}
       </div>
     </PageContainer>
   );
