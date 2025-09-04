@@ -6,18 +6,17 @@ import { FileText, Upload } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useEstimationStore } from '@/stores/estimation-store';
+import { roleContent, UserRole } from '@/config/role-content';
 
 interface CreateEstimateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onFileUpload?: (file: File) => void;
+  onFileUpload: (file: File) => void;
+  role?: UserRole;
 }
 
-export function CreateEstimateModal({
-  isOpen,
-  onClose,
-  onFileUpload
-}: CreateEstimateModalProps) {
+export function CreateEstimateModal({ isOpen, onClose, onFileUpload, role }: CreateEstimateModalProps) {
+  const content = role ? roleContent[role].modal : { title: 'Create Estimate' };
   const [isMounted, setIsMounted] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -124,12 +123,12 @@ export function CreateEstimateModal({
     setUploadedSize(0);
 
     // Call the parent's upload function
-    onFileUpload?.(file);
+    onFileUpload(file);
   };
 
   return (
     <Modal
-      title='Create New Estimate'
+      title={content.title}
       description='Upload Your design PDF to begin the estimation process'
       isOpen={isOpen}
       onClose={onClose}
