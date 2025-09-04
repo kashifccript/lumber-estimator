@@ -24,7 +24,6 @@ export function usePdfUpload() {
       clearUploadProgress();
 
       const result = await processEstimationPdf(file);
-      console.log('result is', result);
       if (result.success) {
         // Store only the project_id from upload response
         const projectId = String(
@@ -36,7 +35,7 @@ export function usePdfUpload() {
           setEstimationData({ project_id: projectId });
           toast.success('PDF uploaded successfully! Loading project data...');
           setShowCreateModal(false);
-          router.push('/dashboard/estimation-details');
+          router.push('/dashboard/estimator/estimation-details');
         } else {
           toast.error('Upload succeeded but project ID was not returned');
         }

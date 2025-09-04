@@ -31,7 +31,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       />
       <div className='flex items-center gap-2.5'>
         <Link
-          href={`/dashboard/project-details/${data.id}`}
+          href={`/dashboard/estimator/project-details/${data.id}`}
           className='flex h-8 w-8 items-center justify-center rounded-sm border border-gray-200 bg-white shadow-sm transition-colors hover:bg-gray-50'
         >
           <Eye className='h-4 w-4 text-[#8896AB]' />

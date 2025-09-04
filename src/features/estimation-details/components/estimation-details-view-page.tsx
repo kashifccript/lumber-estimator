@@ -122,7 +122,7 @@ export default function EstimationDetailsViewPage() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
       toast.success('Estimate submitted successfully');
-      router.push('/dashboard/estimates');
+      router.push('/dashboard/estimator/estimates');
     } catch (error) {
       console.error('Error submitting estimate:', error);
       setIsSubmitting(false);

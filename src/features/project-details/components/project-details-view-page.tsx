@@ -30,10 +30,10 @@ export default function ProjectDetailsViewPage() {
   // Dynamic breadcrumbs
   const breadcrumbs = [
     { title: 'Dashboard', link: '/dashboard' },
-    { title: 'Estimates', link: '/dashboard/estimates' },
+    { title: 'Estimates', link: '/dashboard/estimator/estimates' },
     {
       title: projectData?.name || 'Project Details',
-      link: `/dashboard/project-details/${projectId}`
+      link: `/dashboard/estimator/project-details/${projectId}`
     }
   ];
 
@@ -128,7 +128,7 @@ export default function ProjectDetailsViewPage() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
       toast.success('Estimate submitted successfully');
-      router.push('/dashboard/estimates');
+      router.push('/dashboard/estimator/estimates');
     } catch (error) {
       console.error('Error submitting estimate:', error);
       setIsSubmitting(false);
