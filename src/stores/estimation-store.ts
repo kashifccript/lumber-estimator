@@ -21,7 +21,7 @@ export type EstimationState = {
 
 export type EstimationActions = {
   // Main data actions
-  setEstimationData: (data: EstimationApiData) => void;
+  setEstimationData: (data: any) => void;
   clearEstimationData: () => void;
 
   // Upload progress actions
@@ -44,7 +44,7 @@ export const useEstimationStore = create(
       error: null,
 
       // actions
-      setEstimationData: (data: EstimationApiData) => {
+      setEstimationData: (data: any) => {
         set({
           currentEstimationData: data,
           error: null

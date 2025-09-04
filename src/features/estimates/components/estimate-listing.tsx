@@ -1,33 +1,45 @@
-import { Estimate } from '../types/estimate';
+'use client';
 import { EstimateTable } from './estimate-tables';
 import { columns } from './estimate-tables/columns';
-import { mockEstimates } from '../constants/mock-estimates';
+import { getAllProjects } from '../actions/estimates';
+import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
-type EstimateListingProps = {};
+export default function EstimateListing() {
+  const [projects, setProjects] = useState([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
 
-export default async function EstimateListing({}: EstimateListingProps) {
-  // Get search params from cache (for future server-side implementation)
-  // const page = searchParamsCache.get('page');
-  // const projectNameSearch = searchParamsCache.get('projectName');
-  // const estimateIdSearch = searchParamsCache.get('estimateId');
-  // const pageLimit = searchParamsCache.get('perPage');
+  useEffect(() => {
+    const loadProjects = async () => {
+      setIsLoadingData(true);
 
-  // Combine search terms
-  // const search = projectNameSearch || estimateIdSearch;
+      try {
+        const response = await getAllProjects();
 
-  // const filters = {
-  //   page,
-  //   limit: pageLimit,
-  //   ...(search && { search })
-  // };
+        if (response.success) {
+          setProjects(response.projects);
+        } else {
+          toast.error(response.message || 'Failed to load projects');
+        }
+      } catch (error) {
+        toast.error('Error loading projects');
+      }
 
-  // Server-side data fetching (commented for future use)
-  // const data = await getEstimates(filters);
-  // const totalEstimates = data.total_estimates;
-  // const estimates: Estimate[] = data.estimates;
+      setIsLoadingData(false);
+    };
 
-  // For now, use mock data directly
-  const estimates: Estimate[] = mockEstimates;
+    loadProjects();
+  }, []);
 
-  return <EstimateTable data={estimates} itemsPerPage={5} columns={columns} />;
+  return (
+    <>
+      {/* Conditional Table Rendering */}
+      {isLoadingData ? (
+        <DataTableSkeleton columnCount={5} rowCount={8} filterCount={0} />
+      ) : (
+        <EstimateTable data={projects} itemsPerPage={5} columns={columns} />
+      )}
+    </>
+  );
 }

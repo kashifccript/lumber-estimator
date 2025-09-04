@@ -53,7 +53,7 @@ export function EstimateTable<TData, TValue>({
     <div className='overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm'>
       <Table>
         <TableHeader>
-          <TableRow className='max-h-[64px] bg-[#F1F5F9]'>
+          <TableRow>
             {table
               .getHeaderGroups()
               .map((headerGroup) =>
@@ -71,15 +71,23 @@ export function EstimateTable<TData, TValue>({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-              ))}
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id} className=''>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className='h-24 text-center'>
+                No results.
+              </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
 

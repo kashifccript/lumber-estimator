@@ -1,5 +1,7 @@
+'use client';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface BreadcrumbProps {
   items: Array<{
@@ -10,14 +12,21 @@ interface BreadcrumbProps {
 }
 
 export function Breadcrumb({ items }: BreadcrumbProps) {
+  const router = useRouter();
+
+  const handleBackClick = () => {
+    // Go back to previous page in browser history
+    router.back();
+  };
+
   return (
     <div className='flex items-center gap-3'>
-      <Link
-        href='/dashboard'
-        className='flex h-12 w-12 items-center justify-center rounded-xl border border-gray-100 bg-white transition-colors hover:bg-gray-50'
+      <button
+        onClick={handleBackClick}
+        className='flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-gray-100 bg-white transition-colors hover:bg-gray-50'
       >
         <ChevronLeft className='h-6 w-6 text-[#1F1F1F]' />
-      </Link>
+      </button>
       <div className='text-2xl'>
         {items.map((item, index) => (
           <span key={index}>

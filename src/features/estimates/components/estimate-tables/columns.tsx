@@ -11,25 +11,25 @@ export const columns: ColumnDef<Estimate>[] = [
     cell: ({ cell }) => <div>{cell.getValue<string>()}</div>
   },
   {
-    accessorKey: 'projectName',
+    accessorKey: 'name',
     header: 'Project Name',
     cell: ({ cell }) => <div>{cell.getValue<string>()}</div>
   },
   {
-    accessorKey: 'material',
+    accessorKey: 'materials',
     header: 'Material',
     cell: ({ cell }) => <div>{cell.getValue<string>()}</div>
   },
   {
-    accessorKey: 'totalCost',
+    accessorKey: 'total_cost',
     header: 'Total Cost',
-    cell: ({ cell }) => <div>{cell.getValue<string>()}</div>
+    cell: ({ cell }) => <div>${cell.getValue<number>()?.toLocaleString()}</div>
   },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => <StatusProgress data={row.original.status} />
-  },
+  // {
+  //   accessorKey: 'status',
+  //   header: 'Status',
+  //   cell: ({ row }) => <StatusProgress data={row.original.status} />
+  // },
   {
     id: 'actions',
     header: 'Actions',

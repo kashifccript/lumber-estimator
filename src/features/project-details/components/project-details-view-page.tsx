@@ -2,41 +2,49 @@
 import { Breadcrumb } from '@/components/breadcrumbs';
 import PageContainer from '@/components/layout/page-container';
 import { AddItemModal } from '@/components/modal/add-estimation-modal';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { EstimationActionBar } from './estimation-action-bar';
-import { DataTable } from './estimation-table';
-import { Item, itemColumns } from './estimation-table/columns';
-import { SummaryDetails } from './summary-details';
-import { useEstimationStore } from '@/stores/estimation-store';
+import { EstimationActionBar } from '@/features/estimation-details/components/estimation-action-bar';
+import { DataTable } from '@/features/estimation-details/components/estimation-table';
+import {
+  Item,
+  itemColumns
+} from '@/features/estimation-details/components/estimation-table/columns';
+import { SummaryDetails } from '@/features/estimation-details/components/summary-details';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
-import { transformApiDataToTableItems } from '../utils/utils';
+import { transformApiDataToTableItems } from '@/features/estimation-details/utils/utils';
 import { toast } from 'sonner';
-import { addManualItem, fetchProjectData } from '../actions/estimation';
-import { useBreadcrumbs } from '@/hooks/use-breadcrumbs';
+import { addManualItem } from '@/features/estimation-details/actions/estimation';
+import { fetchProjectById } from '../actions/project';
 
-export default function EstimationDetailsViewPage() {
+export default function ProjectDetailsViewPage() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [projectData, setProjectData] = useState<any>(null);
   const router = useRouter();
-  const { currentEstimationData } = useEstimationStore();
-  // Use dynamic breadcrumbs
-  const breadcrumbs = useBreadcrumbs();
+  const params = useParams();
+  const projectId = params.projectId as string;
+
+  // Dynamic breadcrumbs
+  const breadcrumbs = [
+    { title: 'Dashboard', link: '/dashboard' },
+    { title: 'Estimates', link: '/dashboard/estimator/estimates' },
+    {
+      title: projectData?.name || 'Project Details',
+      link: `/dashboard/estimator/project-details/${projectId}`
+    }
+  ];
 
   useEffect(() => {
     const loadData = async () => {
       setIsLoadingData(true);
 
-      // Get project ID from current estimation data
-      const projectId = currentEstimationData?.project_id;
-
       if (projectId) {
         try {
           // Fetch project data from API
-          const response = await fetchProjectData(projectId.toString());
+          const response = await fetchProjectById(projectId);
 
           if (response && response.project_id) {
             setProjectData(response);
@@ -51,14 +59,14 @@ export default function EstimationDetailsViewPage() {
           toast.error('Error loading project data');
         }
       } else {
-        toast.error('No project ID found. Please upload a PDF first.');
+        toast.error('No project ID found.');
       }
 
       setIsLoadingData(false);
     };
 
     loadData();
-  }, [currentEstimationData?.project_id]);
+  }, [projectId]);
 
   const handleAddItem = async (newItem: {
     name: string;
@@ -66,10 +74,8 @@ export default function EstimationDetailsViewPage() {
     unit: string;
     sku?: string;
   }) => {
-    const projectId = currentEstimationData?.project_id;
-
     if (!projectId) {
-      toast.error('No project ID found. Please upload a PDF first.');
+      toast.error('No project ID found.');
       return;
     }
 
@@ -149,7 +155,6 @@ export default function EstimationDetailsViewPage() {
 
           {/* Action Bar */}
           <EstimationActionBar
-            projectId={currentEstimationData?.project_id}
             onAddNewItem={() => setShowAddItemModal(true)}
             onSubmitEstimate={handleSubmitEstimate}
             onPrint={handlePrint}
@@ -163,7 +168,7 @@ export default function EstimationDetailsViewPage() {
           <DataTable columns={itemColumns} data={items} />
         )}
 
-        {/* Summary - Use projectData instead of currentEstimationData */}
+        {/* Summary */}
         <SummaryDetails data={projectData} />
       </div>
 

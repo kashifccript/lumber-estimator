@@ -1,27 +1,58 @@
-// Remove Clerk middleware completely - comment out for now per user preference
-// import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
-// import { NextRequest } from 'next/server';
-
-// Temporarily disable dashboard protection for development
-// const isProtectedRoute = createRouteMatcher(['/dashboard(.*)']);
-
-// export default clerkMiddleware(async (auth, req: NextRequest) => {
-//   // Temporarily disable auth protection
-//   // if (isProtectedRoute(req)) await auth.protect();
-// });
-
-// Simple middleware without Clerk
+import { auth } from 'auth';
 import { NextRequest, NextResponse } from 'next/server';
 
-export default function middleware(req: NextRequest) {
+export default async function middleware(req: NextRequest) {
+  const session = await auth();
+  const url = req.nextUrl;
+  const pathname = url.pathname;
+
+  // Allowed unauthenticated paths (auth pages)
+  const allowedAuthPaths = new Set([
+   '/sign-in',
+   '/sign-up',
+   '/role-selection',
+  ]);
+
+  // If unauthenticated and hitting an allowed auth page, continue
+  if (!session && allowedAuthPaths.has(pathname)) {
+    return NextResponse.next();
+  }
+
+  // If unauthenticated and not on auth pages, redirect to sign-in
+  if (!session) {
+    return NextResponse.redirect(new URL('/sign-in', url));
+  }
+
+  // Resolve role as lowercase for matching
+  const role = (session.user?.user?.role || '').toString().toLowerCase();
+
+  // Role-based root dashboards
+  const roleHomes: Record<string, string> = {
+    admin: '/dashboard/admin',
+    contractor: '/dashboard/contractors',
+    estimator: '/dashboard/estimator',
+  };
+
+  // If role known and user is outside their area, redirect to role home
+  const roleHome = roleHomes[role];
+  if (roleHome) {
+    const isInRoleArea =
+      (role === 'admin' && pathname.startsWith('/dashboard/admin')) ||
+      (role === 'contractor' &&
+        pathname.startsWith('/dashboard/contractors')) ||
+      (role === 'estimator' && pathname.startsWith('/dashboard/estimator'));
+
+    if (!isInRoleArea && !allowedAuthPaths.has(pathname)) {
+      return NextResponse.redirect(new URL(roleHome, url));
+    }
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)'
+    // Run on dashboard and auth pages
+    '/(dashboard|sign-in|sign-up|role-selection)(.*)'
   ]
 };

@@ -14,16 +14,16 @@ export default function Header() {
   const pathname = usePathname();
 
   const navItems = [
-    { name: 'Dashboard', href: '/dashboard/overview', icon: LayoutGrid },
-    { name: 'Estimates', href: '/dashboard/estimates', icon: FileText },
-    { name: 'Settings', href: '/dashboard/settings', icon: Settings }
+    { name: 'Dashboard', href: '/dashboard/estimator/overview', icon: LayoutGrid },
+    { name: 'Estimates', href: '/dashboard/estimator/estimates', icon: FileText },
+    { name: 'Settings', href: '/dashboard/estimator/settings', icon: Settings }
   ];
 
   return (
     <header className='flex h-[52px] items-center justify-between overflow-hidden'>
       {/* Left: Logo + App Name */}
       <Link
-        href='/dashboard/overview'
+        href='/dashboard/estimator/overview'
         className='flex h-full items-center gap-2 rounded-lg bg-white p-[5px]'
       >
         <Image
