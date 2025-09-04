@@ -7,11 +7,7 @@ export default async function middleware(req: NextRequest) {
   const pathname = url.pathname;
 
   // Allowed unauthenticated paths (auth pages)
-  const allowedAuthPaths = new Set([
-   '/sign-in',
-   '/sign-up',
-   '/role-selection',
-  ]);
+  const allowedAuthPaths = new Set(['/sign-in', '/sign-up', '/role-selection']);
 
   // If unauthenticated and hitting an allowed auth page, continue
   if (!session && allowedAuthPaths.has(pathname)) {
@@ -29,8 +25,8 @@ export default async function middleware(req: NextRequest) {
   // Role-based root dashboards
   const roleHomes: Record<string, string> = {
     admin: '/dashboard/admin',
-    contractor: '/dashboard/contractors',
-    estimator: '/dashboard/estimator',
+    contractor: '/dashboard/contractor',
+    estimator: '/dashboard/estimator'
   };
 
   // If role known and user is outside their area, redirect to role home
@@ -38,8 +34,7 @@ export default async function middleware(req: NextRequest) {
   if (roleHome) {
     const isInRoleArea =
       (role === 'admin' && pathname.startsWith('/dashboard/admin')) ||
-      (role === 'contractor' &&
-        pathname.startsWith('/dashboard/contractors')) ||
+      (role === 'contractor' && pathname.startsWith('/dashboard/contractor')) ||
       (role === 'estimator' && pathname.startsWith('/dashboard/estimator'));
 
     if (!isInRoleArea && !allowedAuthPaths.has(pathname)) {
