@@ -2,28 +2,143 @@
 
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Bell, LayoutGrid, FileText, Settings } from 'lucide-react';
+import {
+  Bell,
+  LayoutGrid,
+  FileText,
+  Settings,
+  Users,
+  Building2,
+  Calculator,
+  BarChart3,
+  UserCheck
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { UserNav } from './user-nav';
 import { ModeToggle } from './ThemeToggle/theme-toggle';
 import { ThemeSelector } from '../theme-selector';
+import { useSession } from 'next-auth/react';
+
+type UserRole = 'admin' | 'contractor' | 'estimator';
+
+interface NavItem {
+  name: string;
+  href: string;
+  icon: any;
+}
+
+const getRoleNavItems = (role: UserRole): NavItem[] => {
+  switch (role) {
+    case 'admin':
+      return [
+        { name: 'Dashboard', href: '/dashboard/admin', icon: LayoutGrid },
+
+        {
+          name: 'User Management',
+          href: '/dashboard/admin/user-management',
+          icon: BarChart3
+        },
+        {
+          name: 'Contractors',
+          href: '/dashboard/admin/contractors',
+          icon: BarChart3
+        },
+        {
+          name: 'Estimators',
+          href: '/dashboard/admin/estimators',
+          icon: BarChart3
+        },
+        { name: 'Settings', href: '/dashboard/admin/settings', icon: Settings }
+      ];
+    case 'contractor':
+      return [
+        { name: 'Dashboard', href: '/dashboard/contractor', icon: LayoutGrid },
+        {
+          name: 'Quotations',
+          href: '/dashboard/contractor/quotations',
+          icon: FileText
+        },
+        {
+          name: 'Estimates Management',
+          href: '/dashboard/contractors/estimates-management',
+          icon: Building2
+        },
+        {
+          name: 'Settings',
+          href: '/dashboard/contractor/settings',
+          icon: Settings
+        }
+      ];
+    case 'estimator':
+      return [
+        {
+          name: 'Dashboard',
+          href: '/dashboard/estimator',
+          icon: LayoutGrid
+        },
+        {
+          name: 'Estimates',
+          href: '/dashboard/estimator/estimates',
+          icon: FileText
+        },
+
+        {
+          name: 'Settings',
+          href: '/dashboard/estimator/settings',
+          icon: Settings
+        }
+      ];
+    default:
+      return [
+        {
+          name: 'Dashboard',
+          href: '/dashboard/estimator/overview',
+          icon: LayoutGrid
+        },
+        {
+          name: 'Estimates',
+          href: '/dashboard/estimator/estimates',
+          icon: FileText
+        },
+        {
+          name: 'Settings',
+          href: '/dashboard/estimator/settings',
+          icon: Settings
+        }
+      ];
+  }
+};
+
+const getRoleHomeUrl = (role: UserRole): string => {
+  switch (role) {
+    case 'admin':
+      return '/dashboard/admin';
+    case 'contractor':
+      return '/dashboard/contractor';
+    case 'estimator':
+      return '/dashboard/estimator';
+    default:
+      return '/dashboard/estimator/overview';
+  }
+};
 
 export default function Header() {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
-  const navItems = [
-    { name: 'Dashboard', href: '/dashboard/estimator/overview', icon: LayoutGrid },
-    { name: 'Estimates', href: '/dashboard/estimator/estimates', icon: FileText },
-    { name: 'Settings', href: '/dashboard/estimator/settings', icon: Settings }
-  ];
+  // Get role from session, fallback to estimator for development
+  const role =
+    (session?.user?.user?.role?.toLowerCase() as UserRole) || 'estimator';
+  const navItems = getRoleNavItems(role);
+  const homeUrl = getRoleHomeUrl(role);
 
   return (
     <header className='flex h-[52px] items-center justify-between overflow-hidden'>
       {/* Left: Logo + App Name */}
       <Link
-        href='/dashboard/estimator/overview'
+        href={homeUrl}
         className='flex h-full items-center gap-2 rounded-lg bg-white p-[5px]'
       >
         <Image
@@ -36,6 +151,7 @@ export default function Header() {
           Lumber Estimator
         </span>
       </Link>
+
       {/* Center: Navigation */}
       <nav className='flex items-center gap-2 rounded-lg bg-white p-[5px]'>
         {navItems.map((item) => {
@@ -73,8 +189,6 @@ export default function Header() {
           <UserNav />
         </div>
       </div>
-      {/* <ModeToggle /> */}
-      {/* <ThemeSelector /> */}
     </header>
   );
 }
