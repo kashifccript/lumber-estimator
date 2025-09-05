@@ -18,7 +18,6 @@ export const createColumns = ({
       return (
         <div className='flex items-center'>
           <div className='h-8 w-8 flex-shrink-0'>{quotation.id}</div>
-
         </div>
       );
     }
