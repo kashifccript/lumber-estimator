@@ -41,7 +41,9 @@ export default function UserDetails({ isOpen, onClose }: UserDetailsProps) {
       setIsLoading(false);
     }
   }
-
+  const [profileImage, setProfileImage] = useState<string>(
+    '/assets/icons/profile.png'
+  );
   return (
     <Modal
       title={'  Contractor Details'}
@@ -51,19 +53,14 @@ export default function UserDetails({ isOpen, onClose }: UserDetailsProps) {
     >
       <div className='rounded-lg bg-white'>
         <div className='py-6'>
-          <div className='flex items-center gap-4'>
-            <Avatar className='h-16 w-16'>
-              <AvatarImage
-                src={mockUserData.avatar || '/placeholder.svg'}
-                alt={mockUserData.name}
+          <div className='flex flex-row items-center justify-center gap-4'>
+            <div className='relative h-[90px] w-[90px] overflow-hidden rounded-full bg-gray-200'>
+              <img
+                src={profileImage || '/placeholder.svg'}
+                alt='Profile Avatar'
+                className='h-full w-full object-cover'
               />
-              <AvatarFallback className='text-lg'>
-                {mockUserData.name
-                  .split(' ')
-                  .map((n) => n[0])
-                  .join('')}
-              </AvatarFallback>
-            </Avatar>
+            </div>
             <div className='flex-1'>
               <h3 className='text-lg font-semibold text-[#1F1F1F]'>
                 {mockUserData.name}
