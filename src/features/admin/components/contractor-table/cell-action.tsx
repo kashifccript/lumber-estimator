@@ -1,6 +1,5 @@
 'use client';
 import { AlertModal } from '@/components/modal/alert-modal';
-import { User } from '../../types/user';
 import { Check, Trash, X } from 'lucide-react';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';

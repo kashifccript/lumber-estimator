@@ -87,7 +87,7 @@ export const createColumns = ({
       return (
         <div className='text-sm'>
           <span
-            className={`inline-flex rounded-full px-2.5 py-2 font-medium ${statusColors[status as keyof typeof statusColors] || 'bg-[#E3A00833]/20 text-[#E3A008]'}`}
+            className={`inline-flex rounded-full px-2.5 py-2 font-medium capitalize ${statusColors[status as keyof typeof statusColors] || 'bg-[#E3A00833]/20 text-[#E3A008]'}`}
           >
             {status || 'Pending'}
           </span>
