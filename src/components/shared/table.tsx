@@ -25,7 +25,7 @@ interface UserTableProps<TData, TValue> {
   itemsPerPage?: number;
 }
 
-export function UserTable<TData, TValue>({
+export function CustomTable<TData, TValue>({
   data,
   columns,
   itemsPerPage = 10
@@ -102,7 +102,7 @@ export function UserTable<TData, TValue>({
       {data.length > 0 && (
         <div className='flex h-[64px] items-center justify-between border-t border-gray-200 bg-[#F1F5F9] p-6'>
           <span className='text-secondary text-sm font-medium'>
-            Showing {startIndex + 1}-{endIndex} of {data.length} entries
+            Page {startIndex + 1}-{endIndex} of {data.length}
           </span>
           <div className='flex items-center gap-2'>
             <Button

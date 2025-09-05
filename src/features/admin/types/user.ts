@@ -26,7 +26,7 @@ export interface User {
   company_name: string;
   business_license: string;
   created_at: string;
-  status?: UserStatus;
+  status?:string;
 }
 export type UserRole = 'admin' | 'estimator' | 'contractor';
 export type UserStatus = 'pending' | 'active' | 'rejected';

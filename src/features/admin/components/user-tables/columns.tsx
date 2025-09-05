@@ -79,9 +79,9 @@ export const createColumns = ({
     cell: ({ cell }) => {
       const status = cell.getValue<string>();
       const statusColors = {
-        pending: 'bg-[#E3A00833]/20 text-[#E3A008]',
-        approved: 'bg-[#00A42E33]/20 text-[#00A42E]',
-        rejected: 'bg-[#C81E1E33]/20 text-[#C81E1E]'
+        pending: 'bg-[#E3A00833] text-[#E3A008]',
+        approved: 'bg-[#00A42E33] text-[#00A42E]',
+        rejected: 'bg-[#C81E1E33] text-[#C81E1E]'
       };
 
       return (

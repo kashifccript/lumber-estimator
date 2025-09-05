@@ -1,9 +1,13 @@
-import AdminDashboardViewPage from "@/features/admin/components/admin-dashboard-view-page";
+import AdminDashboardViewPage from '@/features/admin/components/dashboard/index';
 
 export const metadata = {
   title: 'Admin'
 };
 
 export default function page() {
-  return <AdminDashboardViewPage />;
+  return (
+    <div>
+      <AdminDashboardViewPage />
+    </div>
+  );
 }
