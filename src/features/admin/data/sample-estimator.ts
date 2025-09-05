@@ -1,4 +1,4 @@
-export const sample_contractors = [
+export const sample_estimators = [
   {
     name: 'Name',
     totalQuestions: 3,

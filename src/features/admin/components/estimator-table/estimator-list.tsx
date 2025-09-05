@@ -3,19 +3,19 @@ import { CustomTable } from '@/components/shared/table';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { getPendingApprovals, getUsers } from '../../actions/users';
-import { createColumns } from '../contractor-table/columns';
+import { createColumns } from './columns';
 import { toast } from 'sonner';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Contractor } from '../../types/contractor';
-import { sample_contractors } from '../../data/sample-contractor';
+import { Estimator } from '../../types/estimator';
+import { sample_estimators } from '../../data/sample-estimator';
 
 interface UserListingProps {
   query?: string;
 }
 
 export const EstimatorListing: React.FC<UserListingProps> = ({ query }) => {
-  const [users, setUsers] = useState<Contractor[]>([]);
+  const [users, setUsers] = useState<Estimator[]>([]);
   const [loading, setLoading] = useState(true);
   const { data: session } = useSession();
 
@@ -29,7 +29,7 @@ export const EstimatorListing: React.FC<UserListingProps> = ({ query }) => {
       setLoading(true);
       const data = await getUsers(session.user.access_token, query);
       // setUsers(data);
-      setUsers(sample_contractors);
+      setUsers(sample_estimators);
     } catch (error) {
       console.error('Error fetching users:', error);
       toast.error('Failed to fetch pending approvals');

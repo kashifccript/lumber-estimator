@@ -6,3 +6,12 @@ export const statusColors = {
   approved: 'bg-[#00A42E33] text-[#00A42E]',
   rejected: 'bg-[#C81E1E33] text-[#C81E1E]'
 };
+
+export const dropdownList = [
+  'All',
+  'pending',
+  'approved',
+  'rejected',
+  'estimator',
+  'contractor'
+];

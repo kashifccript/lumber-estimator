@@ -9,6 +9,7 @@ import { approveUser, rejectUser } from '../../actions/users';
 import { Icon } from '@iconify/react';
 import UserDetails from '../../modals/user-detail';
 import { Contractor } from '../../types/contractor';
+import { redirect } from 'next/navigation';
 
 interface CellActionProps {
   data: Contractor;
@@ -92,7 +93,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
       <div className='flex items-center gap-2.5'>
         <>
           <button
-            onClick={() => setIsOpen(true)}
+            onClick={() => redirect('/dashboard/admin/contractors/2')}
             disabled={loading}
             className='flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border-[0.3px] border-[#1F1F1F1A] transition-colors disabled:opacity-50'
           >
