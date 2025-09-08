@@ -3,35 +3,26 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { createColumns } from './columns';
 import { toast } from 'sonner';
-import { Quotation } from '../../types/quotation';
 import { CustomTable } from '@/components/shared/table';
-import { Button } from '@/components/ui/button';
+import { useContractorApis } from '@/features/admin/actions/contractor';
+import { Item } from '@/features/admin/types/contractor';
+import { redirect, useParams } from 'next/navigation';
 import { Icon } from '@iconify/react';
-import { useContractorApis } from '../../actions/contractor';
-interface UserListingProps {
-  query?: string;
-  showButton?: boolean;
-  status?: string;
-  user_id?: string;
+interface ItemListingProps {
+  quotation_id?: string;
 }
 
-export const QuotationListing: React.FC<UserListingProps> = ({
-  showButton = true,
-  user_id,
-  status
-}) => {
-  const [quotations, setQuotations] = useState<Quotation[]>([]);
+export const ItemListing: React.FC<ItemListingProps> = ({ quotation_id }) => {
+  const [quotations, setQuotations] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const { data: session } = useSession();
-  const { fetchAllQuotationsbyUser } = useContractorApis();
+  const { fetchAllItemsWithinQuotation } = useContractorApis();
+  const params = useParams<{ id: string }>();
 
   const fetchQuotations = async () => {
     try {
       setLoading(true);
-      const response = await fetchAllQuotationsbyUser(
-        user_id,
-        status === 'all' || status === 'All' ? '' : status
-      );
+      const response = await fetchAllItemsWithinQuotation(quotation_id);
       setQuotations(response);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -42,10 +33,10 @@ export const QuotationListing: React.FC<UserListingProps> = ({
   };
 
   useEffect(() => {
-    if (user_id) {
+    if (quotation_id) {
       fetchQuotations();
     }
-  }, [session, status, user_id]);
+  }, [session, quotation_id]);
 
   const handleRefresh = () => {
     fetchQuotations();
@@ -76,22 +67,20 @@ export const QuotationListing: React.FC<UserListingProps> = ({
   return (
     <div>
       <div className='flex flex-row justify-between py-4'>
-        <div className='text-[24px] font-semibold text-[#1F1F1F]'>
-          Quotations
+        <div className='flex flex-row gap-3 text-[24px] font-semibold text-[#1F1F1F]'>
+          <Icon
+            icon='weui:back-filled'
+            width='12'
+            height='24'
+            className='mt-1.5 cursor-pointer'
+            color='#1F1F1F73'
+            onClick={() => {
+              redirect(`/dashboard/admin/contractors/${params.id}`);
+            }}
+          />
+          <span className='!text-[#1F1F1F73]'> Contractors/ {params.id}/</span>
+          {quotation_id}
         </div>
-        {showButton && (
-          <Button
-            variant={'outline'}
-            className='w-full max-w-[129px] rounded-[8px] border-[#E2624B] text-[#E2624B] hover:text-[#E2624B]'
-          >
-            <Icon
-              icon='meteor-icons:arrow-up-right'
-              color='#E2624B'
-              className='h-6 w-6'
-            />
-            View All
-          </Button>
-        )}
       </div>
       <CustomTable data={quotations} columns={columns} itemsPerPage={2} />
     </div>

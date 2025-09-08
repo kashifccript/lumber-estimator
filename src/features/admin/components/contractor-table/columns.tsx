@@ -12,7 +12,7 @@ export const createColumns = ({
   onRefresh
 }: ColumnsProps): ColumnDef<Contractor>[] => [
   {
-    accessorKey: 'contractor',
+    accessorKey: 'name',
     header: 'Contractor',
     cell: ({ row }) => {
       const contractor = row.original;
@@ -20,7 +20,7 @@ export const createColumns = ({
         <div className='flex items-center'>
           <div className='ml-3'>
             <div className='text-sm font-medium text-gray-900'>
-              {contractor.contractor}
+              {contractor.name}
             </div>
           </div>
         </div>
@@ -28,22 +28,22 @@ export const createColumns = ({
     }
   },
   {
-    accessorKey: 'totalQuestions',
-    header: 'Total Questions',
+    accessorKey: 'total_quotations',
+    header: 'Total Quotations',
     cell: ({ cell }) => <div>{cell.getValue<string>()}</div>
   },
   {
-    accessorKey: 'approvedQuestions',
-    header: 'Approved Questions',
+    accessorKey: 'approved_quotations',
+    header: 'Approved Quotations',
     cell: ({ cell }) => <div>{cell.getValue<string>()}</div>
   },
   {
-    accessorKey: 'pendingQuestions',
+    accessorKey: 'pending_quotations',
     header: 'Pending Questions',
     cell: ({ cell }) => <div>{cell.getValue<string>()}</div>
   },
   {
-    accessorKey: 'declined',
+    accessorKey: 'declined_quotations',
     header: 'Declined',
     cell: ({ cell }) => <div>{cell.getValue<string>()}</div>
   },

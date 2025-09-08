@@ -1,30 +1,48 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Icon } from '@iconify/react';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CustomDropdown } from '@/components/shared/custom-dropdown';
 import ContractorQuotations from './contract-quotations';
 import { redirect } from 'next/navigation';
+import { useUserApis } from '@/features/admin/actions/users';
+import { UserData } from '@/features/admin/types/user';
 
 type TabType = 'profile' | 'quotations';
-
-export function ContractorInfo() {
+interface ContractorInfoProps {
+  id?: string;
+}
+export default function ContractorInfo({ id }: ContractorInfoProps) {
   const [activeTab, setActiveTab] = useState<TabType>('profile');
-  const mockUserData = {
-    name: 'Dianne Russell',
-    email: 'diannerussell@gmail.com',
-    phone: '+1 239 3423 234',
-    company: 'Dianne Constructions',
-    role: 'Contractor',
-    location: 'New York, NY',
-    status: 'pending',
-    avatar: '/professional-woman-contractor.png'
+  const [isLoading, setIsLoading] = useState(false);
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  const fetchUsers = async () => {
+    if (!id) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetchUser(id);
+      if (response) {
+        setUserData(response);
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const { fetchUser } = useUserApis();
+  useEffect(() => {
+    if (id) {
+      fetchUsers();
+    }
+  }, [id]);
 
   const tabs = [
     {
@@ -40,9 +58,27 @@ export function ContractorInfo() {
   ];
   const [selectedStatus, setSelectedStatus] = useState('All');
   const dropdownList = ['all', 'pending', 'approved', 'rejected'];
+
   const [profileImage, setProfileImage] = useState<string>(
     '/assets/icons/profile.png'
   );
+
+  const getFullName = () => {
+    if (!userData) return '';
+    return `${userData?.first_name} ${userData?.last_name}`.trim();
+  };
+
+  const getFullAddress = () => {
+    if (!userData) return '';
+    return `${userData?.city}, ${userData?.state}`.trim();
+  };
+
+  if (isLoading)
+    return (
+      <div className='flex items-center justify-center py-8'>
+        <div className='text-center'>Loading...</div>
+      </div>
+    );
   return (
     <div className='w-full'>
       <div className='mb-8 flex flex-col gap-3'>
@@ -58,28 +94,8 @@ export function ContractorInfo() {
               }}
             />
             <span className='!text-[#1F1F1F73]'> Contractors/</span>
-            John
+            {getFullName()}
           </div>
-          {activeTab === 'quotations' && (
-            <div className='flex flex-row gap-4'>
-              <div className='relative w-full max-w-sm'>
-                {/* Search Icon */}
-                <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32]' />
-
-                {/* Input */}
-                <Input
-                  type='text'
-                  placeholder='Searchl'
-                  className='h-[48px] rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0'
-                />
-              </div>
-              <CustomDropdown
-                value={selectedStatus}
-                onValueChange={setSelectedStatus}
-                options={dropdownList}
-              />
-            </div>
-          )}
         </div>
 
         <div className='px-4 py-6'>
@@ -108,40 +124,60 @@ export function ContractorInfo() {
 
             <div className='flex-1'>
               <h3 className='text-lg font-semibold text-[#1F1F1F]'>
-                {mockUserData.name}
+                {getFullName()}
               </h3>
               <p className='mb-2 text-[12px] font-[400] text-[#1F1F1F]'>
-                {mockUserData.email}
+                {userData?.email}
               </p>
               <div className='flex flex-row gap-3'>
                 <Badge
                   variant='secondary'
-                  className={`h-[22px] rounded-[2px] bg-[#00A42E33] px-2 text-[#00A42E] capitalize`}
+                  className={`h-[22px] rounded-[2px] ${userData?.role == 'Contractor' ? 'bg-[#3DD598]' : 'bg-[#3B81F5]'} px-2 text-white capitalize`}
                 >
-                  {mockUserData.role}
+                  {userData?.role}
                 </Badge>
               </div>
             </div>
           </div>
         </div>
-        <nav className='flex gap-2'>
-          {tabs.map((tab) => {
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={cn(
-                  'flex cursor-pointer items-center gap-2 rounded-[5px] px-4 py-2 text-sm font-medium transition-colors',
-                  activeTab === tab.id
-                    ? 'bg-[#E2624B] font-medium text-white'
-                    : 'text-[16px] font-semibold text-[#1F1F1F] hover:bg-gray-200'
-                )}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
-        </nav>
+        <div className='flex flex-row justify-between'>
+          <nav className='flex gap-2'>
+            {tabs.map((tab) => {
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    'flex cursor-pointer items-center gap-2 rounded-[5px] px-4 py-2 text-sm font-medium transition-colors',
+                    activeTab === tab.id
+                      ? 'bg-[#E2624B] font-medium text-white'
+                      : 'text-[16px] font-semibold text-[#1F1F1F] hover:bg-gray-200'
+                  )}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
+          </nav>
+          {activeTab === 'quotations' && (
+            <div className='flex flex-row gap-4'>
+              {/* <div className='relative w-full max-w-sm'>
+                <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32]' />
+
+                <Input
+                  type='text'
+                  placeholder='Search'
+                  className='h-[48px] rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0'
+                />
+              </div> */}
+              <CustomDropdown
+                value={selectedStatus}
+                onValueChange={setSelectedStatus}
+                options={dropdownList}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Tab Content */}
@@ -159,7 +195,7 @@ export function ContractorInfo() {
                     Name
                   </label>
                   <p className='text-[24px] font-medium text-[#1F1F1F]'>
-                    {mockUserData.name}
+                    {getFullName()}
                   </p>
                 </div>
 
@@ -168,7 +204,7 @@ export function ContractorInfo() {
                     Email
                   </label>
                   <p className='text-[24px] font-medium text-[#1F1F1F]'>
-                    {mockUserData.email}
+                    {userData?.email}
                   </p>
                 </div>
 
@@ -177,7 +213,7 @@ export function ContractorInfo() {
                     Phone Number
                   </label>
                   <p className='text-[24px] font-medium text-[#1F1F1F]'>
-                    {mockUserData.phone}
+                    {userData?.phone}
                   </p>
                 </div>
 
@@ -186,7 +222,7 @@ export function ContractorInfo() {
                     Role
                   </label>
                   <p className='text-[24px] font-bold text-[#3DD598]'>
-                    {mockUserData.role}
+                    {userData?.role}
                   </p>
                 </div>
 
@@ -195,7 +231,7 @@ export function ContractorInfo() {
                     Company
                   </label>
                   <p className='text-[24px] font-medium text-[#1F1F1F]'>
-                    {mockUserData.company}
+                    {userData?.company_name}
                   </p>
                 </div>
 
@@ -204,7 +240,7 @@ export function ContractorInfo() {
                     Location
                   </label>
                   <p className='text-[24px] font-medium text-[#1F1F1F]'>
-                    {mockUserData.location}
+                    {getFullAddress()}
                   </p>
                 </div>
               </div>
@@ -214,7 +250,7 @@ export function ContractorInfo() {
 
         {activeTab === 'quotations' && (
           <div className='space-y-6'>
-            <ContractorQuotations />
+            <ContractorQuotations status={selectedStatus} user_id={id} />
           </div>
         )}
       </div>

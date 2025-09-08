@@ -1,10 +1,15 @@
-import { ContractorInfo } from '@/features/admin/components/contractors/contractor-detail';
-import React from 'react';
+import ContractorInfo from '@/features/admin/components/contractors/contractor-detail';
 
-const page = () => {
-  return <div className='py-8'>
-<ContractorInfo/>
-  </div>;
-};
+interface PageProps {
+  params: { id: string };
+}
 
-export default page;
+export default function Page({ params }: PageProps) {
+  const { id } = params; // 👈 here’s your id
+
+  return (
+    <div className='py-8'>
+      <ContractorInfo id={id} />
+    </div>
+  );
+}

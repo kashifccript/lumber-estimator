@@ -2,6 +2,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
 import { Quotation } from '../../types/quotation';
+import { formatDateTime } from '@/lib/format';
 
 interface ColumnsProps {
   onRefresh: () => void;
@@ -11,27 +12,35 @@ export const createColumns = ({
   onRefresh
 }: ColumnsProps): ColumnDef<Quotation>[] => [
   {
-    accessorKey: 'id',
+    accessorKey: 'quotation_id',
     header: 'Quotation ID',
     cell: ({ row }) => {
       const quotation = row.original;
       return (
         <div className='flex items-center'>
-          <div className='h-8 w-8 flex-shrink-0'>{quotation.id}</div>
+          <div className='h-8 w-8 flex-shrink-0'>
+            {' '}
+            #{quotation.quotation_id}
+          </div>
         </div>
       );
     }
   },
   {
-    accessorKey: 'items',
+    accessorKey: 'created_at',
+    header: 'Date & Time',
+    cell: ({ cell }) => <div>{formatDateTime(cell.getValue<string>())} </div>
+  },
+  {
+    accessorKey: 'item_count',
     header: 'Items',
-    cell: ({ cell }) => <div>{cell.getValue<string>()} </div>
+    cell: ({ cell }) => <div>{`${cell.getValue<string>()} Items`} </div>
   },
 
   {
-    accessorKey: 'cost',
+    accessorKey: 'total_cost',
     header: 'Total Cost',
-    cell: ({ cell }) => <div>{cell.getValue<string>()} </div>
+    cell: ({ cell }) => <div>{`$ ${cell.getValue<string>()}`} </div>
   },
   {
     accessorKey: 'status',

@@ -77,7 +77,6 @@ export function useUserApis() {
     if (!session?.user?.access_token) return [];
 
     try {
-      let id =8;
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/users/${user_id}/action`,
         {

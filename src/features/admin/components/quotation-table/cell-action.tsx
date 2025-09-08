@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import { Icon } from '@iconify/react';
 import { Quotation } from '../../types/quotation';
+import { redirect, useParams } from 'next/navigation';
 
 interface CellActionProps {
   data: Quotation;
@@ -65,6 +66,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
     //   setOpenReject(false);
     // }
   };
+  const params = useParams<{ id: string }>();
 
   return (
     <>
@@ -88,7 +90,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
         {data.status === 'pending' && (
           <>
             <button
-              onClick={() => setOpenApprove(true)}
+              onClick={() => redirect(`/dashboard/admin/contractors/${params.id}/${data.quotation_id}`)}
               disabled={loading}
               className='flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border-[0.3px] border-[#1F1F1F1A] transition-colors disabled:opacity-50'
             >
@@ -123,7 +125,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
               disabled={loading}
               className='flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border-[0.3px] border-[#1F1F1F1A] transition-colors disabled:opacity-50'
             >
-              {/* <Check className='h-4 w-4 text-green-600' /> */}
               <Icon
                 icon='proicons:eye'
                 width='18'

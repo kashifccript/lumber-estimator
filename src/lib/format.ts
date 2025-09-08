@@ -15,3 +15,21 @@ export function formatDate(
     return '';
   }
 }
+
+export const formatDateTime = (dateString: string) => {
+  const date = new Date(dateString);
+
+  const day = date.getDate(); // 20
+  const month = date.toLocaleString('en-US', { month: 'short' }); // Dec
+  const year = date.getFullYear(); // 2025
+
+  const time = date.toLocaleString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  }); // 10:30 PM
+
+  return `${day}, ${month} ${year} / ${time}`;
+};
+
+// Example

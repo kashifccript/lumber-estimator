@@ -1,0 +1,82 @@
+import { useSession } from 'next-auth/react';
+
+export function useContractorApis() {
+  const { data: session } = useSession();
+
+  const fetchAllContractors = async (query?: string) => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/admin/contractors
+?search=${query}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          }
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to fetch users');
+      const { data } = await res.json();
+      return data?.contractors || [];
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      return [];
+    }
+  };
+  const fetchAllQuotationsbyUser = async (user_id?: string, query?: string) => {
+    if (!session?.user?.access_token) return [];
+    let queryString = ``;
+    if (query)
+      queryString = `${process.env.NEXT_PUBLIC_SERVER_HOST}/contractors/quotations/user/${user_id}?status=${query}`;
+    else
+      queryString = `${process.env.NEXT_PUBLIC_SERVER_HOST}/contractors/quotations/user/${user_id}`;
+    try {
+      const res = await fetch(queryString, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.user.access_token}`
+        }
+      });
+
+      if (!res.ok) throw new Error('Failed to fetch Quotations');
+      const { data } = await res.json();
+      return data?.quotations || [];
+    } catch (error) {
+      console.error('Error fetching Quotations:', error);
+      return [];
+    }
+  };
+  const fetchAllItemsWithinQuotation = async (quotation_id?: string) => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/contractors/quotations/${quotation_id}/items`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          }
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to fetch Quotations');
+      const { data } = await res.json();
+      return data?.items || [];
+    } catch (error) {
+      console.error('Error fetching Quotations:', error);
+      return [];
+    }
+  };
+  return {
+    fetchAllContractors,
+    fetchAllQuotationsbyUser,
+    fetchAllItemsWithinQuotation
+  };
+}

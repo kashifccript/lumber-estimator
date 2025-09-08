@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Contractor } from '../../types/contractor';
-import { sample_contractors } from '../../data/sample-contractor';
+import { useContractorApis } from '../../actions/contractor';
 
 interface UserListingProps {
   query?: string;
@@ -17,21 +17,17 @@ export const ContractorListing: React.FC<UserListingProps> = ({ query }) => {
   const [users, setUsers] = useState<Contractor[]>([]);
   const [loading, setLoading] = useState(true);
   const { data: session } = useSession();
+  const [search, setSearch] = useState('');
+  const { fetchAllContractors } = useContractorApis();
 
   const fetchUsers = async () => {
-    if (!session?.user?.access_token) {
-      setLoading(false);
-      return;
-    }
-
     try {
       setLoading(true);
-      // const data = await getUsers(session.user.access_token, query);
-      // setUsers(data);
-      setUsers(sample_contractors);
+      const response = await fetchAllContractors(search);
+      setUsers(response);
     } catch (error) {
       console.error('Error fetching users:', error);
-      toast.error('Failed to fetch pending approvals');
+      toast.error('Failed to fetch users');
     } finally {
       setLoading(false);
     }
@@ -39,12 +35,11 @@ export const ContractorListing: React.FC<UserListingProps> = ({ query }) => {
 
   useEffect(() => {
     fetchUsers();
-  }, [session]);
+  }, [session, search]);
 
   const handleRefresh = () => {
     fetchUsers();
   };
-  const [selectedStatus, setSelectedStatus] = useState('All');
 
   const columns = createColumns({ onRefresh: handleRefresh });
   return (
@@ -52,7 +47,9 @@ export const ContractorListing: React.FC<UserListingProps> = ({ query }) => {
       <div className='flex flex-row justify-between py-4'>
         <div className='text-[24px] font-semibold text-[#1F1F1F]'>
           All Contractors{' '}
-          <span className='font-normal text-[#1F1F1FCC]'>(24)</span>
+          <span className='font-normal text-[#1F1F1FCC]'>
+            ({users?.length})
+          </span>
         </div>
 
         <div className='flex flex-row gap-4'>
@@ -65,6 +62,8 @@ export const ContractorListing: React.FC<UserListingProps> = ({ query }) => {
               type='text'
               placeholder='Search'
               className='h-[48px] rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0'
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
         </div>
