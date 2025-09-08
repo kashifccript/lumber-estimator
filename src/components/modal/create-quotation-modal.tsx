@@ -23,6 +23,8 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 import { redirect } from 'next/navigation';
+import { createQuotation } from '@/features/quotations/actions/actions';
+import { useSession } from 'next-auth/react';
 
 interface CreateQuotationModalProps {
   isOpen: boolean;
@@ -51,6 +53,9 @@ const formSchema = z.object({
   }),
   cost: z.string().min(1, {
     message: 'Cost is required.'
+  }),
+  unit: z.string().min(1, {
+    message: 'Unit is required.'
   })
 });
 
@@ -60,6 +65,9 @@ export function CreateQuotationModal({
   isOpen,
   onClose
 }: CreateQuotationModalProps) {
+  const { data: session } = useSession();
+  const userId = Number(session?.user?.user?.id);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -70,13 +78,37 @@ export function CreateQuotationModal({
     }
   });
 
-  const onSubmit = (values: FormValues) => {
-    console.log('Form submitted:', values);
-    toast.success('Custom item added successfully!');
-    redirect('/dashboard/contractor/quotation-details');
-    form.reset();
-    onClose();
-  };
+  async function onSubmit(values: {
+    itemName: string;
+    sku?: string;
+    unitOfMeasure: string;
+    cost: string;
+  }) {
+    if (!userId) {
+      toast.error('User not found. Please log in again.');
+      return;
+    }
+
+    // Map frontend form values to backend payload
+    const payload = {
+      item_name: values.itemName,
+      sku: values.sku || null,
+      unit: values.cost,
+      unit_of_measure: values.unitOfMeasure,
+      cost: Number(values.cost) // convert string to number
+    };
+
+    const res = await createQuotation(userId, payload);
+
+    if (res.success) {
+      toast.success('Quotation created successfully!');
+      redirect('/dashboard/contractor/quotation-details');
+      form.reset();
+      onClose();
+    } else {
+      toast.error(res.message || 'Failed to create quotation');
+    }
+  }
 
   const handleCancel = () => {
     form.reset();
@@ -125,50 +157,61 @@ export function CreateQuotationModal({
             )}
           />
 
-          {/* Cost and Unit side by side */}
-          <div className='flex gap-2'>
-            <FormField
-              control={form.control}
-              name='cost'
-              render={({ field }) => (
-                <FormItem className='flex-1'>
-                  <FormLabel>Cost*</FormLabel>
-                  <FormControl>
-                    <Input type='number' placeholder='e.g., 25.50' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name='cost'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Cost*</FormLabel>
+                <FormControl>
+                  <Input type='number' placeholder='e.g., 25.50' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name='unitOfMeasure'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Unit of Measure*</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select unit' />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {UNITS.map((unit) => (
-                        <SelectItem key={unit.value} value={unit.value}>
-                          {unit.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name='unit'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Unit*</FormLabel>
+                <FormControl>
+                  <Input type='number' placeholder='e.g., 25.50' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='unitOfMeasure'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Unit of Measure*</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className='w-full'>
+                      <SelectValue placeholder='Select unit' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {UNITS.map((unit) => (
+                      <SelectItem key={unit.value} value={unit.value}>
+                        {unit.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           {/* Actions */}
           <div className='mt-4 flex items-center justify-end gap-2'>
