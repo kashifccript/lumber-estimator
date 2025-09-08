@@ -17,7 +17,7 @@ const authConfig: NextAuthConfig = {
         try {
           const { username, password } = credentials;
           const res = await fetch(
-            `http://127.0.0.1:8003/auth/login`,
+            `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/login`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
