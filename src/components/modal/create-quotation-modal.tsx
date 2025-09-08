@@ -22,6 +22,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { redirect } from 'next/navigation';
 
 interface CreateQuotationModalProps {
   isOpen: boolean;
@@ -72,6 +73,7 @@ export function CreateQuotationModal({
   const onSubmit = (values: FormValues) => {
     console.log('Form submitted:', values);
     toast.success('Custom item added successfully!');
+    redirect('/dashboard/contractor/quotation-details');
     form.reset();
     onClose();
   };
