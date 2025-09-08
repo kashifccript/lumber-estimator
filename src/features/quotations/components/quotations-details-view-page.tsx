@@ -4,95 +4,49 @@ import PageContainer from '@/components/layout/page-container';
 import { CreateQuotationModal } from '@/components/modal/create-quotation-modal';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 import { useBreadcrumbs } from '@/hooks/use-breadcrumbs';
-import { useState } from 'react';
-import { DataTable } from '@/components/ui/table/data-table';
-import { Item, itemColumns } from './quotation-table/columns';
-import {
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable
-} from '@tanstack/react-table';
+import { useEffect, useState } from 'react';
 import { QuotationDataTable } from './quotation-table';
+import { Item, itemColumns } from './quotation-table/columns';
 import { QuotationActionBar } from './quotations-action-bar';
+import { getUserQuotations } from '../actions/actions';
+import { useSession } from 'next-auth/react';
 
 export default function QuotationDetailsViewPage() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
+  const [quotationData, setQuotationData] = useState<Item[]>([]);
   // Use dynamic breadcrumbs
   const breadcrumbs = useBreadcrumbs();
+  const { data: session } = useSession();
+  const userId = Number(session?.user?.user?.id);
 
-  const mockQuotationData: Item[] = [
-    {
-      id: 'Q001',
-      name: 'Premium Oak Flooring',
-      sku: 'OAK-PREM-001',
-      unit: 'sq ft',
-      cost: '$12.50'
-    },
-    {
-      id: 'Q002',
-      name: 'Concrete Mix 4000 PSI',
-      sku: 'CONC-4000-50',
-      unit: 'cubic yard',
-      cost: '$125.00'
-    },
-    {
-      id: 'Q003',
-      name: 'Steel Rebar #4',
-      sku: 'REBAR-4-20',
-      unit: 'linear ft',
-      cost: '$2.85'
-    },
-    {
-      id: 'Q004',
-      name: 'Drywall 1/2 inch',
-      sku: 'DW-12-48',
-      unit: 'sheet',
-      cost: '$18.75'
-    },
-    {
-      id: 'Q005',
-      name: 'Insulation R-19',
-      sku: 'INS-R19-15',
-      unit: 'sq ft',
-      cost: '$0.85'
-    },
-    {
-      id: 'Q006',
-      name: 'Electrical Wire 12 AWG',
-      sku: 'WIRE-12-100',
-      unit: 'linear ft',
-      cost: '$1.25'
-    },
-    {
-      id: 'Q007',
-      name: 'PVC Pipe 4 inch',
-      sku: 'PVC-4-10',
-      unit: 'linear ft',
-      cost: '$8.50'
-    },
-    {
-      id: 'Q008',
-      name: 'Roofing Shingles',
-      sku: 'ROOF-ASPH-33',
-      unit: 'sq ft',
-      cost: '$3.25'
-    },
-    {
-      id: 'Q009',
-      name: 'Paint Primer',
-      sku: 'PAINT-PRIM-1',
-      unit: 'gallon',
-      cost: '$28.00'
-    },
-    {
-      id: 'Q010',
-      name: 'Hardware Kit',
-      sku: 'HW-KIT-STD',
-      unit: 'each',
-      cost: '$45.00'
-    }
-  ];
+  useEffect(() => {
+    const loadQuotations = async () => {
+      if (!userId) return;
+
+      setIsLoadingData(true);
+      const res = await getUserQuotations(userId);
+
+      if (res.success && res.data?.quotations) {
+        const mappedData: Item[] = res.data.quotations.map((q: any) => ({
+          id: `Q${q.quotation_id}`, 
+          name: q.quotation_name,
+          sku: q.client_name, // using client_name as sku (since mock data had SKU-like value)
+          unit: q.status, // using status as unit (adjust if needed)
+          cost: `$${q.total_cost}`
+        }));
+
+        setQuotationData(mappedData);
+      } else {
+        console.error(res.message);
+        setQuotationData([]);
+      }
+
+      setIsLoadingData(false);
+    };
+
+    loadQuotations();
+  }, [userId]);
 
   return (
     <PageContainer>
@@ -115,7 +69,7 @@ export default function QuotationDetailsViewPage() {
         {isLoadingData ? (
           <DataTableSkeleton columnCount={6} rowCount={8} filterCount={0} />
         ) : (
-          <QuotationDataTable data={mockQuotationData} columns={itemColumns} />
+          <QuotationDataTable data={quotationData} columns={itemColumns} />
         )}
       </div>
 
