@@ -22,17 +22,27 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
 
   const { data: session } = useSession();
   const [userId, setUserId] = useState<undefined | number | string>(undefined);
-  const { deleteUser } = useUserApis();
+  const { deleteUser, userAction } = useUserApis();
 
   const [isOpen, setIsOpen] = useState(false);
 
   const onApprove = async () => {
     if (!session?.user?.access_token) {
-      toast.error('Authentication required');
       return;
     }
 
-    setLoading(true);
+    try {
+      setLoading(true);
+      const response = await userAction(userId, true);
+      if (response) {
+        toast.success('User Approved Successfully!');
+      } else toast.error('Error approving users:');
+    } catch (error) {
+      toast.error('Error approving users:');
+    } finally {
+      setLoading(false);
+      setOpenApprove(false);
+    }
   };
 
   const onDeleteClick = async () => {
@@ -49,17 +59,27 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
       console.error('Error fetching users:', error);
     } finally {
       setLoading(false);
-      setIsOpen(false)
+      setIsOpen(false);
     }
   };
 
   const onReject = async () => {
     if (!session?.user?.access_token) {
-      toast.error('Authentication required');
       return;
     }
 
-    setLoading(true);
+    try {
+      setLoading(true);
+      const response = await userAction(userId, false);
+      if (response) {
+        toast.success('User Rejected Successfully!');
+      }
+    } catch (error) {
+      toast.error('Error rejecting users:');
+    } finally {
+      setLoading(false);
+      setOpenReject(false);
+    }
   };
   return (
     <>
@@ -107,14 +127,20 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
             </button>
 
             <button
-              onClick={() => setOpenApprove(true)}
+              onClick={() => {
+                setUserId(data.id);
+                setOpenApprove(true);
+              }}
               disabled={loading}
               className='flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border-[0.3px] border-[#1F1F1F1A] transition-colors disabled:opacity-50'
             >
               <Check className='h-4 w-4 text-[#8896AB]' />
             </button>
             <button
-              onClick={() => setOpenReject(true)}
+              onClick={() => {
+                setUserId(data.id);
+                setOpenReject(true);
+              }}
               disabled={loading}
               className='flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border-[0.3px] border-[#1F1F1F1A] transition-colors disabled:opacity-50'
             >

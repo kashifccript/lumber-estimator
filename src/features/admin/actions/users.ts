@@ -73,5 +73,30 @@ export function useUserApis() {
       return [];
     }
   };
-  return { fetchUsersList, fetchUser, deleteUser };
+  const userAction = async (user_id?: string | number, approved?: boolean) => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      let id =8;
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/users/${user_id}/action`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          },
+          body: JSON.stringify({ user_id, approved: approved,rejection_reason:'none' })
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to Update user');
+      const { data } = await res.json();
+      return data;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return [];
+    }
+  };
+  return { fetchUsersList, fetchUser, deleteUser, userAction };
 }
