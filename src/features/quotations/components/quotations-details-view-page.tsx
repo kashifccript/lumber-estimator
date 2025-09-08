@@ -21,19 +21,24 @@ export default function QuotationDetailsViewPage() {
   const userId = Number(session?.user?.user?.id);
 
   useEffect(() => {
-    const loadQuotations = async () => {
-      if (!userId) return;
+    const loadQuotationItems = async () => {
+      const quotationIdStr = sessionStorage.getItem('quotation_id');
+      if (!quotationIdStr) return;
+
+      const quotationId = Number(quotationIdStr);
+      if (!quotationId) return;
 
       setIsLoadingData(true);
-      const res = await getUserQuotations(userId);
 
-      if (res.success && res.data?.quotations) {
-        const mappedData: Item[] = res.data.quotations.map((q: any) => ({
-          id: `Q${q.quotation_id}`, 
-          name: q.quotation_name,
-          sku: q.client_name, // using client_name as sku (since mock data had SKU-like value)
-          unit: q.status, // using status as unit (adjust if needed)
-          cost: `$${q.total_cost}`
+      const res = await getUserQuotations(quotationId);
+
+      if (res.success && res.data?.items) {
+        const mappedData: Item[] = res.data.items.map((item: any) => ({
+          id: `I${item.item_id}`,
+          name: item.item_name,
+          sku: item.sku_id,
+          unit: item.unit,
+          cost: `$${item.total_cost}`
         }));
 
         setQuotationData(mappedData);
@@ -45,8 +50,8 @@ export default function QuotationDetailsViewPage() {
       setIsLoadingData(false);
     };
 
-    loadQuotations();
-  }, [userId]);
+    loadQuotationItems();
+  }, []);
 
   return (
     <PageContainer>

@@ -101,6 +101,10 @@ export function CreateQuotationModal({
     const res = await createQuotation(userId, payload);
 
     if (res.success) {
+      // Save quotation_id to sessionStorage
+      if (res.data?.quotation_id) {
+        sessionStorage.setItem('quotation_id', String(res.data.quotation_id));
+      }
       toast.success('Quotation created successfully!');
       redirect('/dashboard/contractor/quotation-details');
       form.reset();
