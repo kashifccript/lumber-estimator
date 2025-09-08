@@ -8,8 +8,9 @@ import { useEffect, useState } from 'react';
 import { QuotationDataTable } from './quotation-table';
 import { Item, itemColumns } from './quotation-table/columns';
 import { QuotationActionBar } from './quotations-action-bar';
-import { getUserQuotations } from '../actions/actions';
+import { addItemToQuotation, getUserQuotations } from '../actions/actions';
 import { useSession } from 'next-auth/react';
+import { toast } from 'sonner';
 
 export default function QuotationDetailsViewPage() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
@@ -19,18 +20,15 @@ export default function QuotationDetailsViewPage() {
   const breadcrumbs = useBreadcrumbs();
   const { data: session } = useSession();
   const userId = Number(session?.user?.user?.id);
+  const quotationId = sessionStorage.getItem('quotation_id');
+  const quotationIdStr = Number(quotationId);
 
   useEffect(() => {
     const loadQuotationItems = async () => {
-      const quotationIdStr = sessionStorage.getItem('quotation_id');
       if (!quotationIdStr) return;
-
-      const quotationId = Number(quotationIdStr);
-      if (!quotationId) return;
-
       setIsLoadingData(true);
 
-      const res = await getUserQuotations(quotationId);
+      const res = await getUserQuotations(quotationIdStr);
 
       if (res.success && res.data?.items) {
         const mappedData: Item[] = res.data.items.map((item: any) => ({
@@ -52,6 +50,31 @@ export default function QuotationDetailsViewPage() {
 
     loadQuotationItems();
   }, []);
+
+  const handleAddItem = async (data: {
+    itemName: string;
+    sku?: string;
+    unitOfMeasure: string;
+    cost: string;
+  }) => {
+    if (!quotationId) {
+      throw new Error('Quotation ID is required');
+    }
+
+    const res = await addItemToQuotation(quotationIdStr, {
+      item_name: data.itemName,
+      sku: data.sku || '',
+      unit: data.unitOfMeasure,
+      unit_of_measure: data.unitOfMeasure,
+      cost: parseFloat(data.cost)
+    });
+
+    if (res.success) {
+      toast.success('Item added successfully!');
+    } else {
+      throw new Error(res.message);
+    }
+  };
 
   return (
     <PageContainer>
@@ -81,6 +104,16 @@ export default function QuotationDetailsViewPage() {
       <CreateQuotationModal
         isOpen={showAddItemModal}
         onClose={() => setShowAddItemModal(false)}
+        mode='add-item'
+        quotationId={quotationIdStr}
+        onSubmit={handleAddItem}
+        onSuccess={() => {
+          // Additional success logic
+          console.log('Item added successfully');
+        }}
+        onError={(error) => {
+          console.error('Error adding item:', error);
+        }}
       />
     </PageContainer>
   );

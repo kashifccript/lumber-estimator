@@ -22,14 +22,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
-import { redirect } from 'next/navigation';
-import { createQuotation } from '@/features/quotations/actions/actions';
-import { useSession } from 'next-auth/react';
-
-interface CreateQuotationModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { useState } from 'react';
 
 // Available units for selection
 const UNITS = [
@@ -53,20 +46,34 @@ const formSchema = z.object({
   }),
   cost: z.string().min(1, {
     message: 'Cost is required.'
-  }),
-  unit: z.string().min(1, {
-    message: 'Unit is required.'
   })
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
+// Define the different modal modes
+export type QuotationModalMode = 'create' | 'add-item';
+
+interface CreateQuotationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  mode?: QuotationModalMode;
+  quotationId?: number; // Required for 'add-item' mode
+  onSubmit?: (data: FormValues) => Promise<void>; // Custom submit handler
+  onSuccess?: () => void; // Callback after successful submission
+  onError?: (error: string) => void; // Callback for errors
+}
+
 export function CreateQuotationModal({
   isOpen,
-  onClose
+  onClose,
+  mode = 'create',
+  quotationId,
+  onSubmit,
+  onSuccess,
+  onError
 }: CreateQuotationModalProps) {
-  const { data: session } = useSession();
-  const userId = Number(session?.user?.user?.id);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -78,57 +85,75 @@ export function CreateQuotationModal({
     }
   });
 
-  async function onSubmit(values: {
-    itemName: string;
-    sku?: string;
-    unitOfMeasure: string;
-    cost: string;
-  }) {
-    if (!userId) {
-      toast.error('User not found. Please log in again.');
-      return;
-    }
-
-    // Map frontend form values to backend payload
-    const payload = {
-      item_name: values.itemName,
-      sku: values.sku || null,
-      unit: values.cost,
-      unit_of_measure: values.unitOfMeasure,
-      cost: Number(values.cost) // convert string to number
-    };
-
-    const res = await createQuotation(userId, payload);
-
-    if (res.success) {
-      // Save quotation_id to sessionStorage
-      if (res.data?.quotation_id) {
-        sessionStorage.setItem('quotation_id', String(res.data.quotation_id));
-      }
-      toast.success('Quotation created successfully!');
-      redirect('/dashboard/contractor/quotation-details');
-      form.reset();
-      onClose();
-    } else {
-      toast.error(res.message || 'Failed to create quotation');
-    }
-  }
-
-  const handleCancel = () => {
+  // Reset form when modal opens/closes
+  const handleClose = () => {
     form.reset();
+    setIsSubmitting(false);
     onClose();
   };
 
+  const handleSubmit = async (values: FormValues) => {
+    if (!onSubmit) {
+      toast.error('No submit handler provided');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await onSubmit(values);
+      form.reset();
+      onSuccess?.();
+      handleClose();
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'An error occurred';
+      onError?.(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCancel = () => {
+    form.reset();
+    handleClose();
+  };
+
+  // Dynamic content based on mode
+  const getModalContent = () => {
+    switch (mode) {
+      case 'add-item':
+        return {
+          title: 'Add Item to Quotation',
+          description: `Add a new item to quotation #${quotationId}`,
+          buttonText: 'Add Item',
+          buttonLoadingText: 'Adding Item...'
+        };
+      case 'create':
+      default:
+        return {
+          title: 'Add Custom Item',
+          description:
+            'Add a construction material or services specific to your business',
+          buttonText: 'Add Item',
+          buttonLoadingText: 'Adding Item...'
+        };
+    }
+  };
+
+  const modalContent = getModalContent();
+
   return (
     <Modal
-      title='Add Custom Item'
-      description='Add a construction material or services specific to your business'
+      title={modalContent.title}
+      description={modalContent.description}
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
     >
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(handleSubmit)}
           className='flex flex-col gap-2.5 overflow-y-auto'
         >
           {/* Item Name */}
@@ -139,7 +164,11 @@ export function CreateQuotationModal({
               <FormItem>
                 <FormLabel>Item Name*</FormLabel>
                 <FormControl>
-                  <Input placeholder='e.g., Premium Oak Flooring' {...field} />
+                  <Input
+                    placeholder='e.g., Premium Oak Flooring'
+                    {...field}
+                    disabled={isSubmitting}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -154,68 +183,68 @@ export function CreateQuotationModal({
               <FormItem>
                 <FormLabel>SKU/Product Code (Optional)</FormLabel>
                 <FormControl>
-                  <Input placeholder='e.g., OAK-PREM-001' {...field} />
+                  <Input
+                    placeholder='e.g., OAK-PREM-001'
+                    {...field}
+                    disabled={isSubmitting}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <FormField
-            control={form.control}
-            name='cost'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Cost*</FormLabel>
-                <FormControl>
-                  <Input type='number' placeholder='e.g., 25.50' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='unit'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Unit*</FormLabel>
-                <FormControl>
-                  <Input type='number' placeholder='e.g., 25.50' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='unitOfMeasure'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Unit of Measure*</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+          {/* Cost and Unit side by side */}
+          <div className='flex gap-2'>
+            <FormField
+              control={form.control}
+              name='cost'
+              render={({ field }) => (
+                <FormItem className='flex-1'>
+                  <FormLabel>Cost*</FormLabel>
                   <FormControl>
-                    <SelectTrigger className='w-full'>
-                      <SelectValue placeholder='Select unit' />
-                    </SelectTrigger>
+                    <Input
+                      type='number'
+                      step='0.01'
+                      placeholder='e.g., 25.50'
+                      {...field}
+                      disabled={isSubmitting}
+                    />
                   </FormControl>
-                  <SelectContent>
-                    {UNITS.map((unit) => (
-                      <SelectItem key={unit.value} value={unit.value}>
-                        {unit.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='unitOfMeasure'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Unit of Measure*</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={isSubmitting}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder='Select unit' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {UNITS.map((unit) => (
+                        <SelectItem key={unit.value} value={unit.value}>
+                          {unit.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           {/* Actions */}
           <div className='mt-4 flex items-center justify-end gap-2'>
@@ -224,11 +253,19 @@ export function CreateQuotationModal({
               variant='secondary'
               size='secondary'
               type='button'
+              disabled={isSubmitting}
             >
               Cancel
             </Button>
-            <Button type='submit' variant='primary' size='secondary'>
-              Add Item
+            <Button
+              type='submit'
+              variant='primary'
+              size='secondary'
+              disabled={isSubmitting}
+            >
+              {isSubmitting
+                ? modalContent.buttonLoadingText
+                : modalContent.buttonText}
             </Button>
           </div>
         </form>
