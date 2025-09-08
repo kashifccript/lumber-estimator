@@ -4,7 +4,6 @@ import { Check, Trash, X } from 'lucide-react';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
-import { approveUser, rejectUser } from '../../actions/users';
 import { Icon } from '@iconify/react';
 import UserDetails from '../../modals/user-detail';
 import { Contractor } from '../../types/contractor';
@@ -31,14 +30,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
 
     setLoading(true);
     try {
-      const result = await approveUser(data.id || 0, session.user.access_token);
+      // const result = await approveUser(data.id || 0, session.user.access_token);
 
-      if (result.success) {
-        toast.success(result.message);
-        onRefresh();
-      } else {
-        toast.error(result.message);
-      }
+      // if (result.success) {
+      //   toast.success(result.message);
+      //   onRefresh();
+      // } else {
+      //   toast.error(result.message);
+      // }
     } catch (error) {
       toast.error('Failed to approve user');
     } finally {
@@ -55,14 +54,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
 
     setLoading(true);
     try {
-      const result = await rejectUser(data.id || 0, session.user.access_token);
+      // const result = await rejectUser(data.id || 0, session.user.access_token);
 
-      if (result.success) {
-        toast.success(result.message);
-        onRefresh();
-      } else {
-        toast.error(result.message);
-      }
+      // if (result.success) {
+      //   toast.success(result.message);
+      //   onRefresh();
+      // } else {
+      //   toast.error(result.message);
+      // }
     } catch (error) {
       toast.error('Failed to reject user');
     } finally {

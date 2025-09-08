@@ -87,7 +87,7 @@ export function CustomTable<TData, TValue>({
               <TableCell colSpan={columns.length} className='h-24 text-center'>
                 <div className='flex flex-col items-center justify-center'>
                   <div className='text-lg font-medium text-gray-900'>
-                    No pending approvals
+                    No data available
                   </div>
                   <div className='text-sm text-gray-500'>
                     All users have been processed

@@ -18,7 +18,7 @@ export interface UserApprovalResponse {
 }
 export interface User {
   id: number;
-  username: string;
+  user_name: string;
   email: string;
   role: string;
   first_name: string;
@@ -30,3 +30,26 @@ export interface User {
 }
 export type UserRole = 'admin' | 'estimator' | 'contractor';
 export type UserStatus = 'pending' | 'active' | 'rejected';
+export interface UserData {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
+  status: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  company_name: string;
+  business_license: string;
+  address: string;
+  city: string;
+  state: string;
+  zip_code: string;
+  profile_completed: number;
+  created_at: string;
+  updated_at: string | null;
+  last_login: string | null;
+  approved_by: string | null;
+  approved_at: string | null;
+  rejection_reason: string | null;
+}

@@ -1,129 +1,77 @@
-import { PendingUser, UserApprovalResponse } from '../types/user';
+import { useSession } from 'next-auth/react';
 
-export const getPendingApprovals = async (
-  token: string
-): Promise<PendingUser[]> => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/pending-approvals`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+export function useUserApis() {
+  const { data: session } = useSession();
+
+  const fetchUsersList = async (query?: string) => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/users?${query}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          }
         }
-      }
-    );
+      );
 
-    if (!res.ok) {
-      throw new Error('Failed to fetch pending approvals');
+      if (!res.ok) throw new Error('Failed to fetch users');
+      const { data } = await res.json();
+      return data?.users || [];
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      return [];
     }
+  };
 
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching pending approvals:', error);
-    return [];
-  }
-};
+  const fetchUser = async (id?: string | number) => {
+    if (!session?.user?.access_token) return [];
 
-export const approveUser = async (
-  userId: number,
-  token: string
-): Promise<UserApprovalResponse> => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/approve-user`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          user_id: userId,
-          approved: true,
-          rejection_reason: null
-        })
-      }
-    );
-
-    const response = await res.json();
-
-    return {
-      success: res.ok,
-      message:
-        response.message || response.detail || 'User approved successfully',
-      data: response
-    };
-  } catch (error) {
-    console.error('Error approving user:', error);
-    return {
-      success: false,
-      message: 'An unexpected error occurred while approving user'
-    };
-  }
-};
-
-export const rejectUser = async (
-  userId: number,
-  token: string
-): Promise<UserApprovalResponse> => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/approve-user`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          user_id: userId,
-          approved: false,
-          rejection_reason: 'reject'
-        })
-      }
-    );
-
-    const response = await res.json();
-
-    return {
-      success: res.ok,
-      message:
-        response.message || response.detail || 'User rejected successfully',
-      data: response
-    };
-  } catch (error) {
-    console.error('Error rejecting user:', error);
-    return {
-      success: false,
-      message: 'An unexpected error occurred while rejecting user'
-    };
-  }
-};
-
-export const getUsers = async (token: string, query?:string): Promise<PendingUser[]> => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/users?query=${query}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/users/${id}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          }
         }
-      }
-    );
+      );
 
-    if (!res.ok) {
-      throw new Error('Failed to fetch pending approvals');
+      if (!res.ok) throw new Error('Failed to fetch user');
+      const { data } = await res.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      return [];
     }
+  };
+  const deleteUser = async (id?: string | number) => {
+    if (!session?.user?.access_token) return [];
 
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching pending approvals:', error);
-    return [];
-  }
-};
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/users/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          }
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to fetch user');
+      const { data } = await res.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      return [];
+    }
+  };
+  return { fetchUsersList, fetchUser, deleteUser };
+}

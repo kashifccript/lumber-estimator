@@ -1,53 +1,108 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { X } from 'lucide-react';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { statusColors } from '@/lib/api/constants';
 import { Modal } from '@/components/ui/modal';
+import { useUserApis } from '../actions/users';
+import { UserData } from '../types/user';
 
 interface UserDetailsProps {
   isOpen: boolean;
   onClose: (setIsPasswordModalOpen: boolean) => void;
+  id?: string | number;
 }
 
 type StatusType = 'pending' | 'approved' | 'rejected';
 
-const mockUserData = {
-  name: 'Dianne Russell',
-  email: 'diannerussell@gmail.com',
-  phone: '+1 239 3423 234',
-  company: 'Dianne Constructions',
-  role: 'Contractor',
-  location: 'New York, NY',
-  status: 'pending' as StatusType,
-  avatar: '/professional-woman-contractor.png'
-};
-
-export default function UserDetails({ isOpen, onClose }: UserDetailsProps) {
+export default function UserDetails({ isOpen, onClose, id }: UserDetailsProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [profileImage, setProfileImage] = useState<string>(
+    '/assets/icons/profile.png'
+  );
+
+  const { fetchUser } = useUserApis();
+
+  useEffect(() => {
+    if (isOpen && id) {
+      fetchUsers();
+    }
+  }, [isOpen, id]);
+
   const handleClose = () => {
     onClose(false);
   };
 
   async function onSubmit() {
     setIsLoading(true);
-
     try {
+      // Implementation for submit logic
     } finally {
       setIsLoading(false);
     }
   }
-  const [profileImage, setProfileImage] = useState<string>(
-    '/assets/icons/profile.png'
-  );
+  const fetchUsers = async () => {
+    if (!id) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetchUser(id);
+      if (response) {
+        setUserData(response);
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getFullName = () => {
+    if (!userData) return '';
+    return `${userData.first_name} ${userData.last_name}`.trim();
+  };
+
+  const getFullAddress = () => {
+    if (!userData) return '';
+    return `${userData.city}, ${userData.state}`.trim();
+  };
+
+  if (isLoading) {
+    return (
+      <Modal
+        title='Contractor Details'
+        description='Loading contractor details...'
+        isOpen={isOpen}
+        onClose={handleClose}
+      >
+        <div className='flex items-center justify-center py-8'>
+          <div className='text-center'>Loading...</div>
+        </div>
+      </Modal>
+    );
+  }
+
+  if (!userData) {
+    return (
+      <Modal
+        title='Contractor Details'
+        description='Contractor details not found'
+        isOpen={isOpen}
+        onClose={handleClose}
+      >
+        <div className='flex items-center justify-center py-8'>
+          <div className='text-center'>No user data available</div>
+        </div>
+      </Modal>
+    );
+  }
+
   return (
     <Modal
-      title={'  Contractor Details'}
-      description={'  Details of the new contractor'}
+      title={` ${userData.role.charAt(0).toUpperCase() + userData.role.slice(1).toLowerCase()} Details`}
+      description={`Details of the new ${userData.role.charAt(0).toUpperCase() + userData.role.slice(1).toLowerCase()}`}
       isOpen={isOpen}
       onClose={handleClose}
     >
@@ -63,23 +118,23 @@ export default function UserDetails({ isOpen, onClose }: UserDetailsProps) {
             </div>
             <div className='flex-1'>
               <h3 className='text-lg font-semibold text-[#1F1F1F]'>
-                {mockUserData.name}
+                {getFullName()}
               </h3>
               <p className='mb-2 text-[12px] font-[400] text-[#1F1F1F]'>
-                {mockUserData.email}
+                {userData.email}
               </p>
               <div className='flex flex-row gap-3'>
                 <Badge
                   variant='secondary'
-                  className={`h-[22px] rounded-[2px] bg-[#00A42E33] px-2 text-[#00A42E] capitalize`}
+                  className={`h-[22px] rounded-[2px] ${userData.role == 'Contractor' ? 'bg-[#3DD598]' : 'bg-[#3B81F5]'} px-2 text-white capitalize`}
                 >
-                  {mockUserData.role}
+                  {userData.role}
                 </Badge>
                 <Badge
                   variant='secondary'
-                  className={`${statusColors[mockUserData.status]} hover:${statusColors[mockUserData.status]} h-[22px] rounded-[2px] px-2 capitalize`}
+                  className={`${statusColors[userData?.status?.toLowerCase() as StatusType]} hover:${statusColors[userData?.status?.toLowerCase() as StatusType]} h-[22px] rounded-[2px] px-2 capitalize`}
                 >
-                  {mockUserData.status}
+                  {userData.status}
                 </Badge>
               </div>
             </div>
@@ -100,7 +155,7 @@ export default function UserDetails({ isOpen, onClose }: UserDetailsProps) {
                 Name
               </label>
               <p className='text-[24px] font-medium text-[#1F1F1F]'>
-                {mockUserData.name}
+                {getFullName()}
               </p>
             </div>
 
@@ -109,7 +164,7 @@ export default function UserDetails({ isOpen, onClose }: UserDetailsProps) {
                 Email
               </label>
               <p className='text-[24px] font-medium text-[#1F1F1F]'>
-                {mockUserData.email}
+                {userData.email}
               </p>
             </div>
 
@@ -118,7 +173,7 @@ export default function UserDetails({ isOpen, onClose }: UserDetailsProps) {
                 Phone Number
               </label>
               <p className='text-[24px] font-medium text-[#1F1F1F]'>
-                {mockUserData.phone}
+                {userData.phone}
               </p>
             </div>
 
@@ -127,7 +182,7 @@ export default function UserDetails({ isOpen, onClose }: UserDetailsProps) {
                 Role
               </label>
               <p className='text-[24px] font-bold text-[#3DD598]'>
-                {mockUserData.role}
+                {userData.role}
               </p>
             </div>
 
@@ -136,7 +191,7 @@ export default function UserDetails({ isOpen, onClose }: UserDetailsProps) {
                 Company
               </label>
               <p className='text-[24px] font-medium text-[#1F1F1F]'>
-                {mockUserData.company}
+                {userData.company_name}
               </p>
             </div>
 
@@ -145,30 +200,35 @@ export default function UserDetails({ isOpen, onClose }: UserDetailsProps) {
                 Location
               </label>
               <p className='text-[24px] font-medium text-[#1F1F1F]'>
-                {mockUserData.location}
+                {getFullAddress()}
               </p>
             </div>
           </div>
         </div>
-        <div className='flex flex-row justify-between py-6'>
-          <Button
-            variant='secondary'
-            className='h-[48px] w-auto rounded-[8px] border-[#E2624B] text-[#E2624B]'
-          >
-            Close
-          </Button>
-          <div className='flex flex-row gap-4'>
-            <Button
-              variant={'destructive'}
-              className='h-[48px] w-auto rounded-[8px]'
-            >
-              Reject
-            </Button>
-            <Button className='h-[48px] w-auto rounded-[5px] bg-[#00A42E] text-white hover:bg-[#00A42E]'>
-              Approve
-            </Button>
-          </div>
-        </div>
+        {userData.status === 'pending' ||
+          (userData.status === 'Pending' && (
+            <div className='flex flex-row justify-between py-6'>
+              <Button
+                variant='secondary'
+                className='h-[48px] w-auto rounded-[8px] border-[#E2624B] text-[#E2624B]'
+                onClick={handleClose}
+              >
+                Close
+              </Button>
+
+              <div className='flex flex-row gap-4'>
+                <Button
+                  variant={'destructive'}
+                  className='h-[48px] w-auto rounded-[8px]'
+                >
+                  Reject
+                </Button>
+                <Button className='h-[48px] w-auto rounded-[5px] bg-[#00A42E] text-white hover:bg-[#00A42E]'>
+                  Approve
+                </Button>
+              </div>
+            </div>
+          ))}
       </div>
     </Modal>
   );

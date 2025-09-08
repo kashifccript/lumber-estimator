@@ -2,33 +2,31 @@
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { User } from '../../types/user';
-import { getPendingApprovals, getUsers } from '../../actions/users';
+import {
+  useUserApis
+} from '../../actions/users';
 import { CustomTable } from '@/components/shared/table';
 import { createColumns } from './columns';
 import { toast } from 'sonner';
-import { pendingUser, sampleUsers } from '../../data/sample-users';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify/react';
 interface UserListingProps {
-  query?: string;
+  // query?: string;
 }
 
-export const UserListing: React.FC<UserListingProps> = ({ query }) => {
+export const UserListing: React.FC<UserListingProps> = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState('status=pending');
   const { data: session } = useSession();
+  const { fetchUsersList } = useUserApis();
 
   const fetchUsers = async () => {
-    if (!session?.user?.access_token) {
-      setLoading(false);
-      return;
-    }
-
     try {
       setLoading(true);
-      const data = await getUsers(session.user.access_token, query);
-      // setUsers(data);
-      setUsers(pendingUser);
+      const response = await fetchUsersList(query);
+      console.log(response, 'data');
+      setUsers(response);
     } catch (error) {
       console.error('Error fetching users:', error);
       toast.error('Failed to fetch pending approvals');
@@ -76,7 +74,6 @@ export const UserListing: React.FC<UserListingProps> = ({ query }) => {
         </Button>
       </div>
       <CustomTable data={users} columns={columns} itemsPerPage={10} />
-
     </div>
   );
 };

@@ -4,13 +4,13 @@ import { Check, Trash, X } from 'lucide-react';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
-import { approveUser, rejectUser } from '../../actions/users';
 import { Icon } from '@iconify/react';
 import UserDetails from '../../modals/user-detail';
-import { Estimator } from '../../types/estimator';
+import { Estimator, EstimatorDetailsTable } from '../../types/estimator';
+import { redirect } from 'next/navigation';
 
 interface CellActionProps {
-  data: Estimator;
+  data: Estimator |EstimatorDetailsTable;
   onRefresh: () => void;
 }
 
@@ -30,14 +30,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
 
     setLoading(true);
     try {
-      const result = await approveUser(data.id || 0, session.user.access_token);
+      // const result = await approveUser(data.id || 0, session.user.access_token);
 
-      if (result.success) {
-        toast.success(result.message);
-        onRefresh();
-      } else {
-        toast.error(result.message);
-      }
+      // if (result.success) {
+      //   toast.success(result.message);
+      //   onRefresh();
+      // } else {
+      //   toast.error(result.message);
+      // }
     } catch (error) {
       toast.error('Failed to approve user');
     } finally {
@@ -54,14 +54,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
 
     setLoading(true);
     try {
-      const result = await rejectUser(data.id || 0, session.user.access_token);
+      // const result = await rejectUser(data.id || 0, session.user.access_token);
 
-      if (result.success) {
-        toast.success(result.message);
-        onRefresh();
-      } else {
-        toast.error(result.message);
-      }
+      // if (result.success) {
+      //   toast.success(result.message);
+      //   onRefresh();
+      // } else {
+      //   toast.error(result.message);
+      // }
     } catch (error) {
       toast.error('Failed to reject user');
     } finally {
@@ -91,7 +91,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
       <div className='flex items-center gap-2.5'>
         <>
           <button
-            onClick={() => setIsOpen(true)}
+            onClick={() => redirect('/dashboard/admin/estimators/7')}
             disabled={loading}
             className='flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border-[0.3px] border-[#1F1F1F1A] transition-colors disabled:opacity-50'
           >

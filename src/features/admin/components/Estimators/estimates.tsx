@@ -1,19 +1,19 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { createColumns } from './columns';
-import { toast } from 'sonner';
-import { Quotation } from '../../types/quotation';
-import { Quotations } from '../../data/sample-quotations';
+import { User } from '../../types/user';
 import { CustomTable } from '@/components/shared/table';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify/react';
+import { createColumns } from './estimates-column';
+import { estimator_data } from '../../data/sample-estimator';
 interface UserListingProps {
   query?: string;
 }
 
-export const QuotationListing: React.FC<UserListingProps> = ({ query }) => {
-  const [users, setUsers] = useState<Quotation[]>([]);
+export const EstimatesList: React.FC<UserListingProps> = ({ query }) => {
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const { data: session } = useSession();
 
@@ -27,7 +27,7 @@ export const QuotationListing: React.FC<UserListingProps> = ({ query }) => {
       setLoading(true);
       // const data = await getUsers(session.user.access_token, query);
       // setUsers(data);
-      setUsers(Quotations);
+      // setUsers(pendingUser);
     } catch (error) {
       console.error('Error fetching users:', error);
       toast.error('Failed to fetch pending approvals');
@@ -56,12 +56,11 @@ export const QuotationListing: React.FC<UserListingProps> = ({ query }) => {
       </div>
     );
   }
-
   return (
     <div>
       <div className='flex flex-row justify-between py-4'>
         <div className='text-[24px] font-semibold text-[#1F1F1F]'>
-          Quotations
+          Pending Users
         </div>
         <Button
           variant={'outline'}
@@ -75,7 +74,7 @@ export const QuotationListing: React.FC<UserListingProps> = ({ query }) => {
           View All
         </Button>
       </div>
-      <CustomTable data={users} columns={columns} itemsPerPage={2} />
+      <CustomTable data={estimator_data} columns={columns} itemsPerPage={10} />
     </div>
   );
 };

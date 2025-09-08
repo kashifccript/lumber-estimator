@@ -1,13 +1,9 @@
 'use client';
 import { CustomTable } from '@/components/shared/table';
-import { Button } from '@/components/ui/button';
-import { Icon } from '@iconify/react';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { getPendingApprovals, getUsers } from '../../actions/users';
 import { createColumns } from '../contractor-table/columns';
 import { toast } from 'sonner';
-import { CustomDropdown } from '@/components/shared/custom-dropdown';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Contractor } from '../../types/contractor';
@@ -30,7 +26,7 @@ export const ContractorListing: React.FC<UserListingProps> = ({ query }) => {
 
     try {
       setLoading(true);
-      const data = await getUsers(session.user.access_token, query);
+      // const data = await getUsers(session.user.access_token, query);
       // setUsers(data);
       setUsers(sample_contractors);
     } catch (error) {

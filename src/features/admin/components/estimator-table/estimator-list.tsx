@@ -2,7 +2,6 @@
 import { CustomTable } from '@/components/shared/table';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { getPendingApprovals, getUsers } from '../../actions/users';
 import { createColumns } from './columns';
 import { toast } from 'sonner';
 import { Search } from 'lucide-react';
@@ -27,7 +26,7 @@ export const EstimatorListing: React.FC<UserListingProps> = ({ query }) => {
 
     try {
       setLoading(true);
-      const data = await getUsers(session.user.access_token, query);
+      // const data = await getUsers(session.user.access_token, query);
       // setUsers(data);
       setUsers(sample_estimators);
     } catch (error) {
