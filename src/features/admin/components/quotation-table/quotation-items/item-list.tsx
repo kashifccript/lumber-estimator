@@ -20,18 +20,18 @@ export const ItemListing: React.FC<ItemListingProps> = ({ quotation_id }) => {
   const [openApprove, setOpenApprove] = useState(false);
   const [openReject, setOpenReject] = useState(false);
   const { data: session } = useSession();
-  const { fetchAllItemsWithinQuotation, updateQuotationStatus } = useContractorApis();
+  const { fetchAllItemsWithinQuotation, updateQuotationStatus } =
+    useContractorApis();
   const params = useParams<{ id: string }>();
 
   const fetchQuotations = async () => {
     try {
       setLoading(true);
       const response = await fetchAllItemsWithinQuotation(quotation_id);
-      console.log(response, 'response');
       setQuotations(response);
     } catch (error) {
       console.error('Error fetching users:', error);
-      toast.error('Failed to fetch users');
+      toast.error('Failed to fetch Quotation Items');
     } finally {
       setLoading(false);
     }
@@ -140,25 +140,27 @@ export const ItemListing: React.FC<ItemListingProps> = ({ quotation_id }) => {
         </div>
       </div>
       <CustomTable data={quotations} columns={columns} itemsPerPage={2} />
-      <div className='flex flex-row justify-between py-4'>
-        <div></div>
+      {quotations?.length > 0 && (
+        <div className='flex flex-row justify-between py-4'>
+          <div></div>
 
-        <div className='flex flex-row gap-4'>
-          <Button
-            variant={'destructive'}
-            className='h-[48px] w-auto rounded-[8px]'
-            onClick={() => setOpenReject(true)}
-          >
-            Reject
-          </Button>
-          <Button
-            className='h-[48px] w-auto rounded-[5px] bg-[#00A42E] text-white hover:bg-[#00A42E]'
-            onClick={() => setOpenApprove(true)}
-          >
-            Approve
-          </Button>
+          <div className='flex flex-row gap-4'>
+            <Button
+              variant={'destructive'}
+              className='h-[48px] w-auto rounded-[8px]'
+              onClick={() => setOpenReject(true)}
+            >
+              Reject
+            </Button>
+            <Button
+              className='h-[48px] w-auto rounded-[5px] bg-[#00A42E] text-white hover:bg-[#00A42E]'
+              onClick={() => setOpenApprove(true)}
+            >
+              Approve
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

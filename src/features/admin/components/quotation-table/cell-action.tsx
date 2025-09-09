@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { Icon } from '@iconify/react';
 import { Quotation } from '../../types/quotation';
 import { redirect, useParams } from 'next/navigation';
+import { useContractorApis } from '../../actions/contractor';
 
 interface CellActionProps {
   data: Quotation;
@@ -18,54 +19,45 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
   const [openApprove, setOpenApprove] = useState(false);
   const [openReject, setOpenReject] = useState(false);
   const { data: session } = useSession();
+  const {  updateQuotationStatus } = useContractorApis();
 
   const onApprove = async () => {
     if (!session?.user?.access_token) {
-      toast.error('Authentication required');
       return;
     }
 
-    setLoading(true);
-    // try {
-    //   const result = await approveUser(data.id, session.user.access_token);
-
-    //   if (result.success) {
-    //     toast.success(result.message);
-    //     onRefresh();
-    //   } else {
-    //     toast.error(result.message);
-    //   }
-    // } catch (error) {
-    //   toast.error('Failed to approve user');
-    // } finally {
-    //   setLoading(false);
-    //   setOpenApprove(false);
-    // }
+    try {
+      setLoading(true);
+      const response = await updateQuotationStatus(data.quotation_id, true);
+      if (response) {
+        toast.success('Quotation Approved Successfully!');
+      } else toast.error('Error approving quotation:');
+    } catch (error) {
+      toast.error('Error approving quotation');
+    } finally {
+      setLoading(false);
+      setOpenApprove(false);
+    }
   };
-
   const onReject = async () => {
     if (!session?.user?.access_token) {
-      toast.error('Authentication required');
       return;
     }
 
-    setLoading(true);
-    // try {
-    //   const result = await rejectUser(data.id, session.user.access_token);
-
-    //   if (result.success) {
-    //     toast.success(result.message);
-    //     onRefresh();
-    //   } else {
-    //     toast.error(result.message);
-    //   }
-    // } catch (error) {
-    //   toast.error('Failed to reject user');
-    // } finally {
-    //   setLoading(false);
-    //   setOpenReject(false);
-    // }
+    try {
+      setLoading(true);
+      const response = await updateQuotationStatus(data.quotation_id, false);
+      if (response) {
+        toast.success('Quotation Rejected Successfully!');
+      }
+    } catch (error) {
+      toast.error('Error rejecting Quotation');
+    } finally {
+      setLoading(false);
+      setOpenReject(false);
+    }
   };
+
   const params = useParams<{ id: string }>();
 
   return (
@@ -90,7 +82,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
         {data.status === 'pending' && (
           <>
             <button
-              onClick={() => redirect(`/dashboard/admin/contractors/${params.id}/${data.quotation_id}`)}
+              onClick={() =>
+                redirect(
+                  `/dashboard/admin/contractors/${params.id}/${data.quotation_id}`
+                )
+              }
               disabled={loading}
               className='flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border-[0.3px] border-[#1F1F1F1A] transition-colors disabled:opacity-50'
             >
@@ -121,7 +117,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
         {(data.status === 'approved' || data.status === 'rejected') && (
           <>
             <button
-              onClick={() => setOpenApprove(true)}
+              onClick={() =>
+                redirect(
+                  `/dashboard/admin/contractors/${params.id}/${data.quotation_id}`
+                )
+              }
               disabled={loading}
               className='flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border-[0.3px] border-[#1F1F1F1A] transition-colors disabled:opacity-50'
             >

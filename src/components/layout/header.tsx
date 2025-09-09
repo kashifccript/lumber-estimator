@@ -41,7 +41,6 @@ const getRoleNavItems = (role: UserRole): NavItem[] => {
           icon: 'mage:dashboard',
           isAdmin: true
         },
-
         {
           name: 'User Management',
           href: '/dashboard/admin/user-management',
@@ -71,13 +70,13 @@ const getRoleNavItems = (role: UserRole): NavItem[] => {
       return [
         {
           name: 'Dashboard',
-          href: '/dashboard/contractor/*',
+          href: '/dashboard/contractor',
           icon: LayoutGrid,
           isAdmin: true
         },
         {
           name: 'Quotations',
-          href: '/dashboard/contractor/quotations/*',
+          href: '/dashboard/contractor/quotations',
           icon: FileText,
           isAdmin: true
         },
@@ -108,7 +107,6 @@ const getRoleNavItems = (role: UserRole): NavItem[] => {
           icon: FileText,
           isAdmin: true
         },
-
         {
           name: 'Settings',
           href: '/dashboard/estimator/settings',
@@ -184,8 +182,10 @@ export default function Header() {
       {/* Center: Navigation */}
       <nav className='flex items-center gap-2 rounded-lg bg-white p-[5px]'>
         {navItems.map((item) => {
-          // const Icon = item.icon;
-          const isActive = pathname === item.href;
+          const isActive =
+            item.href === '/dashboard/admin'
+              ? pathname === item.href
+              : pathname === item.href || pathname.startsWith(item.href + '/');
           return (
             <Link key={item.name} href={item.href}>
               <Button
@@ -196,7 +196,6 @@ export default function Header() {
                     : 'bg-background text-secondary'
                 }`}
               >
-                {/* <Icon className='h-5 w-5' /> */}
                 <Icon icon={item.icon} width='24' height='24' />
                 {item.name}
               </Button>

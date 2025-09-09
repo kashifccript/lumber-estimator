@@ -5,7 +5,7 @@ interface PageProps {
 }
 
 export default function Page({ params }: PageProps) {
-  const { id } = params; // 👈 here’s your id
+  const { id } = params;
 
   return (
     <div className='py-8'>

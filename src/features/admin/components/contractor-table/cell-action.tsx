@@ -8,6 +8,7 @@ import { Icon } from '@iconify/react';
 import UserDetails from '../../modals/user-detail';
 import { Contractor } from '../../types/contractor';
 import { redirect } from 'next/navigation';
+import { useUserApis } from '../../actions/users';
 
 interface CellActionProps {
   data: Contractor;
@@ -16,82 +17,44 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
   const [loading, setLoading] = useState(false);
-  const [openApprove, setOpenApprove] = useState(false);
   const [openReject, setOpenReject] = useState(false);
   const { data: session } = useSession();
-
   const [isOpen, setIsOpen] = useState(false);
+  const { deleteUser } = useUserApis();
 
-  const onApprove = async () => {
+  const onDelete = async () => {
     if (!session?.user?.access_token) {
       toast.error('Authentication required');
       return;
     }
-
-    setLoading(true);
     try {
-      // const result = await approveUser(data.id || 0, session.user.access_token);
-
-      // if (result.success) {
-      //   toast.success(result.message);
-      //   onRefresh();
-      // } else {
-      //   toast.error(result.message);
-      // }
+      const response = await deleteUser(data?.id);
+      if (response) {
+        toast.success('User Deleted Successfully!');
+        onRefresh();
+      }
     } catch (error) {
-      toast.error('Failed to approve user');
+      console.error('Error fetching users:', error);
     } finally {
       setLoading(false);
-      setOpenApprove(false);
-    }
-  };
-
-  const onReject = async () => {
-    if (!session?.user?.access_token) {
-      toast.error('Authentication required');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      // const result = await rejectUser(data.id || 0, session.user.access_token);
-
-      // if (result.success) {
-      //   toast.success(result.message);
-      //   onRefresh();
-      // } else {
-      //   toast.error(result.message);
-      // }
-    } catch (error) {
-      toast.error('Failed to reject user');
-    } finally {
-      setLoading(false);
-      setOpenReject(false);
+      setIsOpen(false);
     }
   };
 
   return (
     <>
       <AlertModal
-        isOpen={openApprove}
-        onClose={() => setOpenApprove(false)}
-        onConfirm={onApprove}
-        loading={loading}
-        title='Approve User'
-        description={`Are you sure you want to approve ?`}
-      />
-      <AlertModal
         isOpen={openReject}
         onClose={() => setOpenReject(false)}
-        onConfirm={onReject}
+        onConfirm={onDelete}
         loading={loading}
-        title='Reject User'
+        title='Delete Contractor'
         description={`Are you sure you want to reject ?`}
       />
       <div className='flex items-center gap-2.5'>
         <>
           <button
-            onClick={() => redirect('/dashboard/admin/contractors/2')}
+            onClick={() => redirect(`/dashboard/admin/contractors/${data.id}`)}
             disabled={loading}
             className='flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border-[0.3px] border-[#1F1F1F1A] transition-colors disabled:opacity-50'
           >
