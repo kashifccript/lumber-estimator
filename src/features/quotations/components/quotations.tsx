@@ -2,19 +2,28 @@
 import PageContainer from '@/components/layout/page-container';
 import { CustomTable } from '@/components/shared/table';
 import { Button } from '@/components/ui/button';
-import { Plus, Printer } from 'lucide-react';
+import { Printer } from 'lucide-react';
 import Image from 'next/image';
+import { createColumns, Quotation } from './quotation-tables/columns';
+
+const mockData: Quotation[] = Array.from({ length: 10 }).map((_, idx) => {
+  const statuses: Quotation['status'][] = ['Pending', 'Approved', 'Rejected'];
+  const status = statuses[idx % statuses.length];
+  return {
+    id: `#RF1297370D${idx}`,
+    updatedOn: '20.Dec.2025 / 10 : 30 PM',
+    items: 45,
+    totalCost: '127,344',
+    status
+  };
+});
 
 export default function QuotationsViewPage() {
-  const handleExportPdf = () => {
-    console.log('Export PDF');
-  };
-  const handleExportCsv = () => {
-    console.log('Export CSV');
-  };
-  const onPrint = () => {
-    console.log('Print');
-  };
+  const handleExportPdf = () => {};
+  const handleExportCsv = () => {};
+  const onPrint = () => {};
+
+  const columns = createColumns({ onRefresh: () => {} });
 
   return (
     <PageContainer>
@@ -47,7 +56,7 @@ export default function QuotationsViewPage() {
             </Button>
           </div>
         </div>
-        <CustomTable data={[]} columns={[]} itemsPerPage={10} />
+        <CustomTable data={mockData} columns={columns} itemsPerPage={10} />
       </div>
     </PageContainer>
   );
