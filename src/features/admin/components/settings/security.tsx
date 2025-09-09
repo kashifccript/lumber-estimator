@@ -15,16 +15,19 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
+import { useUserApis } from '../../actions/users';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 const profileFormSchema = z
   .object({
-    newPassword: z
+    new_password: z
       .string()
       .min(6, { message: 'Password must be at least 6 characters.' }),
-    confirmPassword: z.string()
+    confirm_password: z.string()
   })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    path: ['confirmPassword'],
+  .refine((data) => data.new_password === data.confirm_password, {
+    path: ['confirm_password'],
     message: 'Passwords do not match.'
   });
 
@@ -34,14 +37,25 @@ const Security = () => {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      newPassword: '',
-      confirmPassword: ''
+      new_password: '',
+      confirm_password: ''
     }
   });
-
-  function onSubmit(data: ProfileFormValues) {
-    console.log('[v0] Form submitted with data:', data);
-  }
+  const { resetPassword } = useUserApis();
+  const [loading, setLoading] = useState(false);
+  const onSubmit = async (data: ProfileFormValues) => {
+    try {
+      setLoading(true);
+      const response = await resetPassword(data);
+      toast.success('Password updated successfully!');
+      console.log('[v0] Profile updated:', response);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update Password');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className='space-y-6 p-3'>
@@ -55,7 +69,7 @@ const Security = () => {
           {/* New Password */}
           <FormField
             control={form.control}
-            name='newPassword'
+            name='new_password'
             render={({ field }) => (
               <FormItem>
                 <FormLabel className='text-[18px] font-medium text-[#1F1F1F]'>
@@ -77,7 +91,7 @@ const Security = () => {
           {/* Confirm Password */}
           <FormField
             control={form.control}
-            name='confirmPassword'
+            name='confirm_password'
             render={({ field }) => (
               <FormItem>
                 <FormLabel className='text-[18px] font-medium text-[#1F1F1F]'>
@@ -104,7 +118,7 @@ const Security = () => {
               variant='outline'
               className='max-w-xs rounded-[10px] border-red-500 bg-transparent text-red-500 hover:bg-red-50'
             >
-              Update Password
+              {loading ? 'Saving...' : ' Update Password'}
             </Button>
           </div>
         </form>

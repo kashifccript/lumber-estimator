@@ -103,11 +103,19 @@ export function UserNav() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => router.push('/dashboard/profile')}>
+            <DropdownMenuItem
+              onClick={() => router.push('/dashboard/admin/settings')}
+              className='cursor-pointer'
+            >
               Profile
             </DropdownMenuItem>
             {/* <DropdownMenuItem>Billing</DropdownMenuItem> */}
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem
+              className='cursor-pointer'
+              onClick={() => router.push('/dashboard/admin/settings')}
+            >
+              Settings
+            </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleSignOut}>

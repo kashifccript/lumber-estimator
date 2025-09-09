@@ -151,5 +151,38 @@ export function useUserApis() {
       return error;
     }
   };
-  return { fetchUsersList, fetchUser, deleteUser, userAction, me ,upadteProfile};
+  const resetPassword = async (payload: any) => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/change-password`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          },
+          body: JSON.stringify(payload)
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to updaate the user');
+      const data = await res.json();
+      console.log(data, 'data');
+      return data;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return error;
+    }
+  };
+  return {
+    fetchUsersList,
+    fetchUser,
+    deleteUser,
+    userAction,
+    me,
+    upadteProfile,
+    resetPassword
+  };
 }

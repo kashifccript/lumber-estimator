@@ -211,7 +211,7 @@ export default function Header() {
           className='relative size-[50px] rounded-xl bg-white p-4'
         >
           <Bell className='text-black' />
-          <span className='bg-primary absolute top-1 right-1 h-2 w-2 rounded-full' />
+          <span className='bg-primary absolute top-[9px] right-[12px] h-2 w-2 rounded-full' />
         </Button>
 
         <div className='hover:hover:bg-accent flex h-full items-center rounded-xl bg-white px-[5px] py-[10px]'>
