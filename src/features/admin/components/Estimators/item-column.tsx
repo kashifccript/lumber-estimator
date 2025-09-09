@@ -1,6 +1,5 @@
 'use client';
 import type { ColumnDef } from '@tanstack/react-table';
-import StatusList from '@/components/shared/status-bar';
 import { CellAction } from './estimates-cell-actions';
 
 interface ColumnsProps {

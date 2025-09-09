@@ -1,7 +1,6 @@
 'use client';
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
-import { Contractor } from '../../types/contractor';
 import { Estimator } from '../../types/estimator';
 
 interface ColumnsProps {
@@ -28,22 +27,22 @@ export const createColumns = ({
     }
   },
   {
-    accessorKey: 'Total Questions',
-    header: 'totalQuestions',
+    accessorKey: 'total_projects',
+    header: '    Total Estimates',
     cell: ({ cell }) => <div>{cell.getValue<string>()}</div>
   },
   {
-    accessorKey: 'approved',
-    header: 'Approved Questions',
+    accessorKey: 'active_projects',
+    header: 'Approved Estimates',
     cell: ({ cell }) => <div>{cell.getValue<string>()}</div>
   },
   {
-    accessorKey: 'pending',
-    header: 'Pending Questions',
+    accessorKey: 'pending_projects',
+    header: 'Pending Estimates',
     cell: ({ cell }) => <div>{cell.getValue<string>()}</div>
   },
   {
-    accessorKey: 'rejected',
+    accessorKey: 'rejected_projects',
     header: 'Rejected',
     cell: ({ cell }) => <div>{cell.getValue<string>()}</div>
   },
