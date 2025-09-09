@@ -128,11 +128,43 @@ export function useContractorApis() {
       return error;
     }
   };
+  const fetchAllQuotations = async (search?: string, status?: string) => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      // Build query params dynamically
+      const params = new URLSearchParams();
+      if (search) params.append('search', search);
+      if (status) params.append('status', status);
+
+      const url = `${process.env.NEXT_PUBLIC_SERVER_HOST}/admin/quotations${
+        params.toString() ? `?${params.toString()}` : ''
+      }`;
+
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.user.access_token}`
+        }
+      });
+
+      if (!res.ok) throw new Error('Failed to fetch Quotations');
+
+      const { data } = await res.json();
+      return data?.quotations || [];
+    } catch (error) {
+      console.error('Error fetching Quotations:', error);
+      return [];
+    }
+  };
+
   return {
     fetchAllContractors,
     fetchAllQuotationsbyUser,
     fetchAllItemsWithinQuotation,
     updateQuotationStatus,
-    delteQuotation
+    delteQuotation,
+    fetchAllQuotations
   };
 }

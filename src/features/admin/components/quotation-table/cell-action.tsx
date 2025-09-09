@@ -7,10 +7,10 @@ import { toast } from 'sonner';
 import { Icon } from '@iconify/react';
 import { redirect, useParams } from 'next/navigation';
 import { useContractorApis } from '../../actions/contractor';
-import { Quotation } from '../../types/contractor';
+import { Quotation, QuotationDashboard } from '../../types/contractor';
 
 interface CellActionProps {
-  data: Quotation;
+  data: any ;
   onRefresh: () => void;
 }
 
@@ -115,7 +115,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
             <button
               onClick={() =>
                 redirect(
-                  `/dashboard/admin/contractors/${params.id}/${data.quotation_id}`
+                  `/dashboard/admin/contractors/${params.id || data.contractor?.id}/${data.quotation_id}`
                 )
               }
               disabled={loading}
@@ -150,7 +150,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
             <button
               onClick={() =>
                 redirect(
-                  `/dashboard/admin/contractors/${params.id}/${data.quotation_id}`
+                  `/dashboard/admin/contractors/${params.id || data.contractor?.id}/${data.quotation_id}`
                 )
               }
               disabled={loading}

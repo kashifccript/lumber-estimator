@@ -1,8 +1,7 @@
 'use client';
-import { ColumnDef } from '@tanstack/react-table';
-import { CellAction } from './cell-action';
-import { formatDateTime } from '@/lib/format';
-import { Quotation } from '../../types/contractor';
+import { QuotationDashboard } from '@/features/admin/types/contractor';
+import type { ColumnDef } from '@tanstack/react-table';
+import { CellAction } from '../../quotation-table/cell-action';
 
 interface ColumnsProps {
   onRefresh: () => void;
@@ -10,7 +9,7 @@ interface ColumnsProps {
 
 export const createColumns = ({
   onRefresh
-}: ColumnsProps): ColumnDef<Quotation>[] => [
+}: ColumnsProps): ColumnDef<QuotationDashboard>[] => [
   {
     accessorKey: 'quotation_id',
     header: 'Quotation ID',
@@ -18,29 +17,36 @@ export const createColumns = ({
       const quotation = row.original;
       return (
         <div className='flex items-center'>
-          <div className='h-8 w-8 flex-shrink-0'>
-            {' '}
-            #{quotation.quotation_id}
-          </div>
+          <div className='h-8 w-8 flex-shrink-0'>#{quotation.quotation_id}</div>
         </div>
       );
     }
   },
   {
-    accessorKey: 'created_at',
-    header: 'Date & Time',
-    cell: ({ cell }) => <div>{formatDateTime(cell.getValue<string>())} </div>
+    accessorKey: 'contractor',
+    header: 'Contractor',
+    cell: ({ row }) => {
+      const contractor = row.original.contractor;
+      return (
+        <div className='flex items-center gap-2'>
+          <div className='flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-sm font-medium'>
+            {contractor.first_name?.[0]}
+            {contractor.last_name?.[0]}
+          </div>
+          <span className='font-medium'>{contractor.name}</span>
+        </div>
+      );
+    }
   },
   {
     accessorKey: 'item_count',
     header: 'Items',
-    cell: ({ cell }) => <div>{`${cell.getValue<string>()} Items`} </div>
+    cell: ({ cell }) => <div>{`${cell.getValue<number>()} Items`}</div>
   },
-
   {
     accessorKey: 'total_cost',
     header: 'Total Cost',
-    cell: ({ cell }) => <div>{`$ ${cell.getValue<string>()}`} </div>
+    cell: ({ cell }) => <div>{`$ ${cell.getValue<number>()}`}</div>
   },
   {
     accessorKey: 'status',

@@ -26,3 +26,21 @@ export interface Item {
   quantity?: number;
   total_cost?: number;
 }
+
+export interface QuotationDashboard {
+  quotation_id: string;
+  quotation_name: string;
+  client_name: number;
+  total_cost: number;
+  created_at?: string;
+  item_count: number;
+  skus?: string[];
+  status?: string;
+  contractor: {
+    
+    name: string;
+    first_name: string;
+    id: string;
+    last_name: string;
+  };
+}
