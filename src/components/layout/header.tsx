@@ -206,13 +206,13 @@ export default function Header() {
 
       {/* Right: Notifications + User */}
       <div className='flex h-full gap-2'>
-        <Button
+        {/* <Button
           variant='ghost'
           className='relative size-[50px] rounded-xl bg-white p-4'
         >
           <Bell className='text-black' />
           <span className='bg-primary absolute top-[9px] right-[12px] h-2 w-2 rounded-full' />
-        </Button>
+        </Button> */}
 
         <div className='hover:hover:bg-accent flex h-full items-center rounded-xl bg-white px-[5px] py-[10px]'>
           <UserNav />

@@ -18,11 +18,11 @@ export function SettingsTabs() {
       label: 'Profile',
       icon: <Icon icon='lets-icons:user-light' width='24' height='24' />
     },
-    {
-      id: 'notifications' as TabType,
-      label: 'Notifications',
-      icon: <Icon icon='carbon:notification' width='32' height='32' />
-    },
+    // {
+    //   id: 'notifications' as TabType,
+    //   label: 'Notifications',
+    //   icon: <Icon icon='carbon:notification' width='32' height='32' />
+    // },
     {
       id: 'security' as TabType,
       label: 'Security',
@@ -74,11 +74,11 @@ export function SettingsTabs() {
           </div>
         )}
 
-        {activeTab === 'notifications' && (
+        {/* {activeTab === 'notifications' && (
           <div className='space-y-6'>
             <NotificationPreferences />
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
