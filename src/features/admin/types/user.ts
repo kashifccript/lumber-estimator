@@ -19,6 +19,8 @@ export interface UserApprovalResponse {
 export interface User {
   id: number;
   user_name: string;
+  username?: string;
+
   email: string;
   role: string;
   first_name: string;
@@ -27,6 +29,8 @@ export interface User {
   business_license: string;
   created_at: string;
   status?:string;
+  profile_picture?:string
+
 }
 export type UserRole = 'admin' | 'estimator' | 'contractor';
 export type UserStatus = 'pending' | 'active' | 'rejected';

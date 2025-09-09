@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Form,
   FormControl,
@@ -16,6 +16,10 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
+import { useSession } from 'next-auth/react';
+import { toast } from 'sonner';
+import { User } from '../../types/user';
+import { useUserApis } from '../../actions/users';
 
 const ProfileSettings = () => {
   const [profileImage, setProfileImage] = useState<string>(
@@ -25,7 +29,7 @@ const ProfileSettings = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const profileFormSchema = z.object({
-    name: z.string().min(2, {
+    username: z.string().min(2, {
       message: 'Name must be at least 2 characters.'
     }),
     email: z.string().email({
@@ -38,10 +42,15 @@ const ProfileSettings = () => {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      name: '',
+      username: '',
       email: ''
     }
   });
+  const { data: session } = useSession();
+
+  const { me, upadteProfile } = useUserApis();
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -77,11 +86,62 @@ const ProfileSettings = () => {
     fileInputRef.current?.click();
   };
 
-  function onSubmit(data: ProfileFormValues) {
-    console.log('[v0] Form submitted with data:', data);
-    console.log('[v0] Profile image:', profileImage);
-    // Handle form submission here - you can include the profileImage in your submission
-  }
+  const onSubmit = async (data: ProfileFormValues) => {
+    try {
+      setLoading(true);
+      const response = await upadteProfile(data);
+      setUser(response);
+      toast.success('Profile updated successfully!');
+      console.log('[v0] Profile updated:', response);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update profile');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await me();
+      setUser(response);
+
+      if (response) {
+        form.setValue('username', response.username || '');
+        form.setValue('email', response.email || '');
+
+        if (response.profileImage || response.avatar || response.image) {
+          setProfileImage(
+            response.profileImage || response.avatar || response.image
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      toast.error('Failed to fetch user data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (session) {
+      fetchUsers();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session]);
+
+  useEffect(() => {
+    if (user) {
+      form.setValue('username', user.username || '');
+      form.setValue('email', user.email || '');
+
+      if (user.profile_picture) {
+        setProfileImage(user.profile_picture);
+      }
+    }
+  }, [user, form]);
 
   return (
     <div className='space-y-6 p-3'>
@@ -125,7 +185,7 @@ const ProfileSettings = () => {
         >
           <FormField
             control={form.control}
-            name='name'
+            name='username'
             render={({ field }) => (
               <FormItem>
                 <FormLabel className='text-[18px] font-medium text-[#1F1F1F]'>
@@ -169,9 +229,10 @@ const ProfileSettings = () => {
             <Button
               type='submit'
               variant='outline'
-              className='max-w-xs rounded-[10px] border-red-500 bg-transparent text-red-500 hover:bg-red-50'
+              disabled={loading}
+              className='max-w-xs rounded-[10px] border-red-500 bg-transparent text-red-500 hover:bg-red-50 disabled:opacity-50'
             >
-              Save Changes
+              {loading ? 'Saving...' : 'Save Changes'}
             </Button>
           </div>
         </form>

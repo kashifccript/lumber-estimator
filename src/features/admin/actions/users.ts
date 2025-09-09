@@ -1,4 +1,5 @@
 import { useSession } from 'next-auth/react';
+import { User } from '../types/user';
 
 export function useUserApis() {
   const { data: session } = useSession();
@@ -85,7 +86,11 @@ export function useUserApis() {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${session.user.access_token}`
           },
-          body: JSON.stringify({ user_id, approved: approved,rejection_reason:'none' })
+          body: JSON.stringify({
+            user_id,
+            approved: approved,
+            rejection_reason: 'none'
+          })
         }
       );
 
@@ -97,5 +102,54 @@ export function useUserApis() {
       return [];
     }
   };
-  return { fetchUsersList, fetchUser, deleteUser, userAction };
+  const me = async () => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/me`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          }
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to fetch user');
+      const data = await res.json();
+      console.log(data, 'data');
+      return data;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return error;
+    }
+  };
+  const upadteProfile = async (payload: Partial<User>) => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/profile`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          },
+          body: JSON.stringify(payload)
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to fetch user');
+      const data = await res.json();
+      console.log(data, 'data');
+      return data;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return error;
+    }
+  };
+  return { fetchUsersList, fetchUser, deleteUser, userAction, me ,upadteProfile};
 }
