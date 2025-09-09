@@ -27,7 +27,7 @@ export default function RoleOverview({ role }: RoleOverviewProps) {
   const { showCreateModal, setShowCreateModal, handleFileUpload } =
     usePdfUpload();
   const content = roleContent[role];
-    const router = useRouter();
+  const router = useRouter();
 
   const handleCreateQuotation = async (data: {
     itemName: string;
@@ -43,14 +43,15 @@ export default function RoleOverview({ role }: RoleOverviewProps) {
       cost: parseFloat(data.cost)
     });
 
-
     if (res.success) {
-      // Save quotation_id to sessionStorage
-      if (res.data?.quotation_id) {
-        sessionStorage.setItem('quotation_id', String(res.data.quotation_id));
-      }
       toast.success('Quotation created successfully!');
-      router.push('/dashboard/contractor/quotation-details');
+      if (res.data.quotation_id) {
+        router.push(
+          `/dashboard/contractor/quotation-details/${res.data.quotation_id}`
+        );
+      } else {
+        router.push('/dashboard/contractor/quotations');
+      }
     } else {
       toast.error(res.message || 'Failed to create quotation');
     }

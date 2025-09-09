@@ -11,16 +11,18 @@ import { QuotationActionBar } from './quotations-action-bar';
 import { addItemToQuotation, getUserQuotations } from '../actions/actions';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
+import { useParams } from 'next/navigation';
 
 export default function QuotationDetailsViewPage() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [quotationData, setQuotationData] = useState<Item[]>([]);
   const breadcrumbs = useBreadcrumbs();
-  const { data: session } = useSession();
-  const userId = Number(session?.user?.user?.id);
-  const quotationId = sessionStorage.getItem('quotation_id');
-  const quotationIdStr = Number(quotationId);
+
+  // const { data: session } = useSession();
+  // const userId = Number(session?.user?.user?.id);
+  const params = useParams();
+  const quotationIdStr = Number(params?.id);
 
   const loadQuotationItems = async () => {
     if (!quotationIdStr) return;
@@ -48,7 +50,8 @@ export default function QuotationDetailsViewPage() {
 
   useEffect(() => {
     loadQuotationItems();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quotationIdStr]);
 
   const handleAddItem = async (data: {
     itemName: string;
