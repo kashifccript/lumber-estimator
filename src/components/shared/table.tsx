@@ -89,9 +89,6 @@ export function CustomTable<TData, TValue>({
                   <div className='text-lg font-medium text-gray-900'>
                     No data available
                   </div>
-                  <div className='text-sm text-gray-500'>
-                    All users have been processed
-                  </div>
                 </div>
               </TableCell>
             </TableRow>

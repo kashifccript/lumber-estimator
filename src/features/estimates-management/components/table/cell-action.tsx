@@ -13,9 +13,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
   const router = useRouter();
 
   const onView = () => {
-    router.push(`/dashboard/contractor/estimate-details/${data.id}`);
+    router.push(`/dashboard/contractor/estimates-management/${data.id}`);
   };
-
 
   return (
     <>
