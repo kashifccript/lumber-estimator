@@ -3,11 +3,11 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { createColumns } from './columns';
 import { toast } from 'sonner';
-import { Quotation } from '../../types/quotation';
 import { CustomTable } from '@/components/shared/table';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify/react';
 import { useContractorApis } from '../../actions/contractor';
+import { Quotation } from '../../types/contractor';
 interface UserListingProps {
   query?: string;
   showButton?: boolean;
@@ -93,7 +93,12 @@ export const QuotationListing: React.FC<UserListingProps> = ({
           </Button>
         )}
       </div>
-      <CustomTable data={quotations} columns={columns} itemsPerPage={2}  isLoading={loading}/>
+      <CustomTable
+        data={quotations}
+        columns={columns}
+        itemsPerPage={2}
+        isLoading={loading}
+      />
     </div>
   );
 };

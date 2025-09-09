@@ -16,6 +16,9 @@ interface ItemListingProps {
 
 export const ItemListing: React.FC<ItemListingProps> = ({ quotation_id }) => {
   const [quotations, setQuotations] = useState<Item[]>([]);
+  const [contractor, setContractor] = useState('');
+  const [status, setStatus] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [openApprove, setOpenApprove] = useState(false);
   const [openReject, setOpenReject] = useState(false);
@@ -28,7 +31,9 @@ export const ItemListing: React.FC<ItemListingProps> = ({ quotation_id }) => {
     try {
       setLoading(true);
       const response = await fetchAllItemsWithinQuotation(quotation_id);
-      setQuotations(response);
+      setQuotations(response?.items);
+      setContractor(response?.contractor_name);
+      setStatus(response?.quotation_status);
     } catch (error) {
       console.error('Error fetching users:', error);
       toast.error('Failed to fetch Quotation Items');
@@ -135,7 +140,10 @@ export const ItemListing: React.FC<ItemListingProps> = ({ quotation_id }) => {
               redirect(`/dashboard/admin/contractors/${params.id}`);
             }}
           />
-          <span className='!text-[#1F1F1F73]'> Contractors/ {params.id}/</span>
+          <span className='!text-[#1F1F1F73]'>
+            {' '}
+            Contractors / {contractor} /
+          </span>
           {quotation_id}
         </div>
       </div>
@@ -145,7 +153,7 @@ export const ItemListing: React.FC<ItemListingProps> = ({ quotation_id }) => {
         itemsPerPage={2}
         isLoading={loading}
       />
-      {quotations?.length > 0 && (
+      {quotations?.length > 0 && status === 'pending' && (
         <div className='flex flex-row justify-between py-4'>
           <div></div>
 

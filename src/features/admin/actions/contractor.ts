@@ -68,7 +68,7 @@ export function useContractorApis() {
 
       if (!res.ok) throw new Error('Failed to fetch Quotations');
       const { data } = await res.json();
-      return data?.items || [];
+      return data;
     } catch (error) {
       console.error('Error fetching Quotations:', error);
       return [];
@@ -105,10 +105,34 @@ export function useContractorApis() {
       return [];
     }
   };
+  const delteQuotation = async (quotation_id?: string) => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/contractors/quotations/${quotation_id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          }
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to delete Quotation');
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.error('Error delete Quotation', error);
+      return error;
+    }
+  };
   return {
     fetchAllContractors,
     fetchAllQuotationsbyUser,
     fetchAllItemsWithinQuotation,
-    updateQuotationStatus
+    updateQuotationStatus,
+    delteQuotation
   };
 }
