@@ -23,7 +23,7 @@ const buttonVariants = cva(
           'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
         link: 'text-primary underline-offset-4 hover:underline',
         reject:
-          'bg-white border border-[#C81E1E] text-[#C81E1E] rounded-lg px-5 py-3.5 w-fit font-normal text-base',
+          'bg-white border border-[#C81E1E] text-[#C81E1E] rounded-lg px-5 py-3.5 w-fit font-normal text-base ',
         approve:
           'bg-[#00A42E]  text-white rounded-lg px-5 py-3.5 w-fit font-normal text-base',
 
