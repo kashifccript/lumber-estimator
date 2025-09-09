@@ -7,6 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import Image from 'next/image';
 import { createColumns, Estimate } from './estimate-table/columns';
+import { SummarySection } from './summary-section';
+import { Button } from '@/components/ui/button';
+import { CallToAction } from './cta';
 
 export default function EstimatesManagementDetails() {
   // Mock data based on the image
@@ -154,7 +157,12 @@ export default function EstimatesManagementDetails() {
 
           {/* Custom Table */}
           <CustomTable data={mockData} columns={columns} itemsPerPage={10} />
-          
+
+          {/* SummarySection */}
+          <SummarySection />
+
+          {/* CTA */}
+          <CallToAction />
         </div>
       </div>
     </PageContainer>
