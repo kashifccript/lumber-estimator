@@ -47,11 +47,14 @@ const getCurrentMonthDateRange = () => {
   // First day of current month
   const startDate = new Date(year, month, 1);
   // Current date
-  const endDate = new Date();
+  const endDate = now;
 
-  // Format as YYYY-MM-DD
+  // Format as YYYY-MM-DD in local time
   const formatDate = (date: Date) => {
-    return date.toISOString().split('T')[0];
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
   };
 
   return {
@@ -109,8 +112,8 @@ export function DashboardCharts() {
     ? [
         {
           date: 'Current Month',
-          contractor: contractorStats.contractor || 0,
-          estimate: contractorStats.estimator || 0
+          contractor: contractorStats.contractors || 0,
+          estimate: contractorStats.estimators || 0
         }
       ]
     : [];
@@ -189,7 +192,7 @@ export function DashboardCharts() {
                   stroke='#3DD598'
                   strokeWidth={2}
                   dot={false}
-                  name={`${contractorStats?.contractor || 0} Contractor`}
+                  name={`${contractorStats?.contractors || 0} Contractor`}
                 />
                 <Line
                   type='monotone'
@@ -197,7 +200,7 @@ export function DashboardCharts() {
                   stroke='#3B82F6'
                   strokeWidth={4}
                   dot={false}
-                  name={`${contractorStats?.estimator || 0} Estimate`}
+                  name={`${contractorStats?.estimators || 0} Estimator`}
                 />
               </LineChart>
             </ResponsiveContainer>

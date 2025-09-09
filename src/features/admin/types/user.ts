@@ -65,8 +65,8 @@ export interface StatsCard {
 }
 
 export interface Estimator_Contractor {
-  estimator: number | 0;
-  contractor: number | 0;
+  estimators: number | 0;
+  contractors: number | 0;
   total: number | 0;
 }
 
