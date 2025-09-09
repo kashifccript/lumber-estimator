@@ -93,7 +93,7 @@ export const QuotationListing: React.FC<UserListingProps> = ({
           </Button>
         )}
       </div>
-      <CustomTable data={quotations} columns={columns} itemsPerPage={2} />
+      <CustomTable data={quotations} columns={columns} itemsPerPage={2}  isLoading={loading}/>
     </div>
   );
 };

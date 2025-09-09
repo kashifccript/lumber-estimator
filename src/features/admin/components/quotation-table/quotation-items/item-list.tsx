@@ -139,7 +139,12 @@ export const ItemListing: React.FC<ItemListingProps> = ({ quotation_id }) => {
           {quotation_id}
         </div>
       </div>
-      <CustomTable data={quotations} columns={columns} itemsPerPage={2} />
+      <CustomTable
+        data={quotations}
+        columns={columns}
+        itemsPerPage={2}
+        isLoading={loading}
+      />
       {quotations?.length > 0 && (
         <div className='flex flex-row justify-between py-4'>
           <div></div>

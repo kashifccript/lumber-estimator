@@ -2,9 +2,7 @@
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { User } from '../../types/user';
-import {
-  useUserApis
-} from '../../actions/users';
+import { useUserApis } from '../../actions/users';
 import { CustomTable } from '@/components/shared/table';
 import { createColumns } from './columns';
 import { toast } from 'sonner';
@@ -73,7 +71,12 @@ export const UserListing: React.FC<UserListingProps> = () => {
           View All
         </Button> */}
       </div>
-      <CustomTable data={users} columns={columns} itemsPerPage={10} />
+      <CustomTable
+        data={users}
+        columns={columns}
+        itemsPerPage={10}
+        isLoading={loading}
+      />
     </div>
   );
 };

@@ -68,7 +68,12 @@ export const ContractorListing: React.FC<UserListingProps> = ({ query }) => {
           </div>
         </div>
       </div>
-      <CustomTable data={users} columns={columns} itemsPerPage={10} />
+      <CustomTable
+        data={users}
+        columns={columns}
+        itemsPerPage={10}
+        isLoading={loading}
+      />
     </div>
   );
 };

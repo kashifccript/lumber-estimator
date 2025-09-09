@@ -18,16 +18,19 @@ import {
   flexRender
 } from '@tanstack/react-table';
 import { useState } from 'react';
+import TableLoader from './table-skeleton';
 
 interface UserTableProps<TData, TValue> {
   data: TData[];
   columns: ColumnDef<TData, TValue>[];
   itemsPerPage?: number;
+  isLoading?: boolean;
 }
 
 export function CustomTable<TData, TValue>({
   data,
   columns,
+  isLoading,
   itemsPerPage = 10
 }: UserTableProps<TData, TValue>) {
   const [pagination, setPagination] = useState({
@@ -48,7 +51,7 @@ export function CustomTable<TData, TValue>({
 
   const startIndex = table.getState().pagination.pageIndex * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, data.length);
-
+  if (isLoading) return <TableLoader />;
   return (
     <div className='overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm'>
       <Table>
