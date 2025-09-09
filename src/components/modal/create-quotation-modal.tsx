@@ -194,57 +194,55 @@ export function CreateQuotationModal({
             )}
           />
 
-          {/* Cost and Unit side by side */}
-          <div className='flex gap-2'>
-            <FormField
-              control={form.control}
-              name='cost'
-              render={({ field }) => (
-                <FormItem className='flex-1'>
-                  <FormLabel>Cost*</FormLabel>
-                  <FormControl>
-                    <Input
-                      type='number'
-                      step='0.01'
-                      placeholder='e.g., 25.50'
-                      {...field}
-                      disabled={isSubmitting}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='unitOfMeasure'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Unit of Measure*</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+          
+          <FormField
+            control={form.control}
+            name='cost'
+            render={({ field }) => (
+              <FormItem className='flex-1'>
+                <FormLabel>Cost*</FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    step='0.01'
+                    placeholder='e.g., 25.50'
+                    {...field}
                     disabled={isSubmitting}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select unit' />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {UNITS.map((unit) => (
-                        <SelectItem key={unit.value} value={unit.value}>
-                          {unit.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='unitOfMeasure'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Unit of Measure*</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={isSubmitting}
+                >
+                  <FormControl>
+                    <SelectTrigger className='w-full'>
+                      <SelectValue placeholder='Select unit' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {UNITS.map((unit) => (
+                      <SelectItem key={unit.value} value={unit.value}>
+                        {unit.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           {/* Actions */}
           <div className='mt-4 flex items-center justify-end gap-2'>
