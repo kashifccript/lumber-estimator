@@ -6,10 +6,60 @@ import { Input } from '@/components/ui/input';
 import { estimatesManagementDropdownList } from '@/lib/api/constants';
 import { Search } from 'lucide-react';
 import { useState } from 'react';
+import { createColumns, Estimate } from './table/columns';
 
 export default function EstimatesManagementViewPage() {
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [search, setSearch] = useState('');
+  // const [estimates, setEstimates] = useState<Estimate[]>([]);
+  // const [loading, setLoading] = useState(false);
+
+  // Mock data based on the image
+  const mockEstimates: Estimate[] = [
+    {
+      id: 'EST-001',
+      estimator: {
+        name: 'Dianne Russell',
+        avatar: '/assets/icons/profile.png'
+      },
+      projectName: 'Residential Complex',
+      material: { count: 45 },
+      totalCost: '127,344',
+      status: 'Approved',
+      updatedOn: '2024-01-15'
+    },
+    {
+      id: 'EST-002',
+      estimator: {
+        name: 'Dianne Russell',
+        avatar: '/assets/icons/profile.png'
+      },
+      projectName: 'Residential Complex',
+      material: { count: 45 },
+      totalCost: '127,344',
+      status: 'Pending',
+      updatedOn: '2024-01-14'
+    },
+    {
+      id: 'EST-003',
+      estimator: {
+        name: 'Dianne Russell',
+        avatar: '/assets/icons/profile.png'
+      },
+      projectName: 'Residential Complex',
+      material: { count: 45 },
+      totalCost: '127,344',
+      status: 'Rejected',
+      updatedOn: '2024-01-13'
+    }
+  ];
+
+  const handleRefresh = () => {
+    // Add refresh logic here
+    // console.log('Refreshing estimates...');
+  };
+
+  const columns = createColumns({ onRefresh: handleRefresh });
 
   return (
     <PageContainer>
@@ -39,7 +89,7 @@ export default function EstimatesManagementViewPage() {
           </div>
         </div>
         {/* Table */}
-        <CustomTable data={[]} columns={[]} itemsPerPage={10} />
+        <CustomTable data={mockEstimates} columns={columns} itemsPerPage={10} />
       </div>
     </PageContainer>
   );
