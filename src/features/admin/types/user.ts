@@ -28,9 +28,8 @@ export interface User {
   company_name: string;
   business_license: string;
   created_at: string;
-  status?:string;
-  profile_picture?:string
-
+  status?: string;
+  profile_picture?: string;
 }
 export type UserRole = 'admin' | 'estimator' | 'contractor';
 export type UserStatus = 'pending' | 'active' | 'rejected';
@@ -56,4 +55,23 @@ export interface UserData {
   approved_by: string | null;
   approved_at: string | null;
   rejection_reason: string | null;
+}
+
+export interface StatsCard {
+  estimates_created_this_month: number;
+  pending_requests: number;
+  quotations_added_this_month: number;
+  total_active_users: number;
+}
+
+export interface Estimator_Contractor {
+  estimator: number | 0;
+  contractor: number | 0;
+  total: number | 0;
+}
+
+export interface Estimattes_QuotationStats {
+  projects_created: number | 0;
+  quotations_created: number | 0;
+  total: number | 0;
 }

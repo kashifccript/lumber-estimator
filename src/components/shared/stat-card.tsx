@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { Skeleton } from '@/components/ui/skeleton'; // Adjust import path as needed
 
 interface MetricsCardProps {
   title: string;
@@ -7,6 +8,7 @@ interface MetricsCardProps {
   textColor?: string;
   className?: string;
   subtitle?: string;
+  isLoading?: boolean;
 }
 
 export function StatCard({
@@ -14,8 +16,31 @@ export function StatCard({
   value,
   textColor = 'text-black',
   className,
-  subtitle
+  subtitle,
+  isLoading = false
 }: MetricsCardProps) {
+  if (isLoading) {
+    return (
+      <div
+        className={cn(
+          'relative flex w-full max-w-sm flex-col justify-between gap-6 rounded-2xl bg-gray-50 p-6',
+          className
+        )}
+      >
+        <div className='flex flex-col gap-2'>
+          <div className='flex items-start justify-between'>
+            <div className='flex flex-col gap-2'>
+              <Skeleton className="h-6 w-32 bg-gray-200" />
+              {subtitle && <Skeleton className="h-4 w-24 bg-gray-200" />}
+            </div>
+            <Skeleton className="h-10 w-10 rounded-[5px] bg-gray-200" />
+          </div>
+          <Skeleton className="h-14 w-24 bg-gray-200" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn(

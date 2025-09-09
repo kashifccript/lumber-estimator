@@ -176,6 +176,75 @@ export function useUserApis() {
       return error;
     }
   };
+  const getStats = async () => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/admin/dashboard/stats`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          }
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to fetch user');
+      const { data } = await res.json();
+      return data;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return error;
+    }
+  };
+  const estimatorContractor = async (start_date: string, end_date: string) => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/admin/dashboard/signups?start_date=${start_date}&end_date=${end_date}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          }
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to fetch user');
+      const { data } = await res.json();
+      return data;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return error;
+    }
+  };
+  const estimatesQuotation = async (start_date: string, end_date: string) => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/admin/dashboard/activity?start_date=${start_date}&end_date=${end_date}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          }
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to fetch user');
+      const { data } = await res.json();
+      return data;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return error;
+    }
+  };
   return {
     fetchUsersList,
     fetchUser,
@@ -183,6 +252,9 @@ export function useUserApis() {
     userAction,
     me,
     upadteProfile,
-    resetPassword
+    resetPassword,
+    getStats,
+    estimatesQuotation,
+    estimatorContractor
   };
 }

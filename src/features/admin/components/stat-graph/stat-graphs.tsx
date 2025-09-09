@@ -18,24 +18,13 @@ import {
   ChartTooltipContent
 } from '@/components/ui/chart';
 import { CustomDropdown } from '@/components/shared/custom-dropdown';
-import { useState } from 'react';
-
-// Sample data for New User Signups - Last 30 Days
-const signupData = [
-  { date: '06/01', contractor: 5, estimate: 8 },
-  { date: '06/05', contractor: 12, estimate: 15 },
-  { date: '06/10', contractor: 18, estimate: 12 },
-  { date: '06/15', contractor: 25, estimate: 20 },
-  { date: '06/20', contractor: 35, estimate: 18 },
-  { date: '06/25', contractor: 28, estimate: 22 },
-  { date: '06/30', contractor: 22, estimate: 16 }
-];
-
-// Sample data for Monthly Activity
-const activityData = [
-  { name: 'Estimates Created', value: 140, color: '#3B82F6' },
-  { name: 'Quotations Added', value: 70, color: '#3DD598' }
-];
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useUserApis } from '../../actions/users';
+import {
+  Estimator_Contractor,
+  Estimattes_QuotationStats
+} from '../../types/user';
 
 const chartConfig = {
   contractor: {
@@ -47,12 +36,119 @@ const chartConfig = {
     color: '#3DD598'
   }
 };
-const months = ['This Month', 'Last Month', 'Next Month'];
+
+const months = ['This Month'];
+
+const getCurrentMonthDateRange = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+
+  // First day of current month
+  const startDate = new Date(year, month, 1);
+  // Current date
+  const endDate = new Date();
+
+  // Format as YYYY-MM-DD
+  const formatDate = (date: Date) => {
+    return date.toISOString().split('T')[0];
+  };
+
+  return {
+    start_date: formatDate(startDate),
+    end_date: formatDate(endDate)
+  };
+};
 
 export function DashboardCharts() {
   const [selectedValue, setSelectedValue] = useState(months[0]);
+  const { data: session } = useSession();
+
+  const { estimatesQuotation, estimatorContractor } = useUserApis();
+
+  const [contractorStats, setContractorStats] =
+    useState<Estimator_Contractor | null>(null);
+  const [quotationStats, setQuotationStats] =
+    useState<Estimattes_QuotationStats | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const { start_date, end_date } = getCurrentMonthDateRange();
+
+  const fetchEstimatesQuotation = async () => {
+    try {
+      const response = await estimatesQuotation(start_date, end_date);
+      setQuotationStats(response);
+    } catch (error) {
+      console.error('Error fetching estimates quotation:', error);
+    }
+  };
+
+  const fetchEstimatorContractor = async () => {
+    try {
+      const response = await estimatorContractor(start_date, end_date);
+      setContractorStats(response);
+    } catch (error) {
+      console.error('Error fetching estimator contractor:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      await Promise.all([
+        fetchEstimatorContractor(),
+        fetchEstimatesQuotation()
+      ]);
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [session]);
+
+  const signupData = contractorStats
+    ? [
+        {
+          date: 'Current Month',
+          contractor: contractorStats.contractor || 0,
+          estimate: contractorStats.estimator || 0
+        }
+      ]
+    : [];
+
+  const activityData = quotationStats
+    ? [
+        {
+          name: 'Projects Created',
+          value: quotationStats.projects_created || 0,
+          color: '#3B82F6'
+        },
+        {
+          name: 'Quotations Created',
+          value: quotationStats.quotations_created || 0,
+          color: '#3DD598'
+        }
+      ]
+    : [];
+
+  if (loading) {
+    return (
+      <div className='flex flex-row justify-between gap-6'>
+        <Card className='w-full'>
+          <CardContent className='flex h-[400px] items-center justify-center'>
+            <div className='text-muted-foreground'>Loading charts...</div>
+          </CardContent>
+        </Card>
+        <Card className='w-full'>
+          <CardContent className='flex h-[400px] items-center justify-center'>
+            <div className='text-muted-foreground'>Loading charts...</div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
-    <div className='flex flex-row justify-between'>
+    <div className='flex flex-row justify-between gap-6'>
       {/* New User Signups Chart */}
       <Card className='w-full'>
         <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
@@ -93,7 +189,7 @@ export function DashboardCharts() {
                   stroke='#3DD598'
                   strokeWidth={2}
                   dot={false}
-                  name='78 Contractor'
+                  name={`${contractorStats?.contractor || 0} Contractor`}
                 />
                 <Line
                   type='monotone'
@@ -101,7 +197,7 @@ export function DashboardCharts() {
                   stroke='#3B82F6'
                   strokeWidth={4}
                   dot={false}
-                  name='23 Estimate'
+                  name={`${contractorStats?.estimator || 0} Estimate`}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -150,14 +246,21 @@ export function DashboardCharts() {
             </ChartContainer>
           </div>
           <div className='mt-4 flex items-center justify-center gap-6'>
-
-             <div className='flex flex-col items-center gap-2'>
-              <div className='text-[24px] font-normal text-[#3b82f6]'>24</div>
-              <span className='text-[16px] text-[#737373] font-normal'>Estimates Created</span>
+            <div className='flex flex-col items-center gap-2'>
+              <div className='text-[24px] font-normal text-[#3b82f6]'>
+                {quotationStats?.projects_created || 0}
+              </div>
+              <span className='text-[16px] font-normal text-[#737373]'>
+                Projects Created
+              </span>
             </div>
             <div className='flex flex-col items-center gap-2'>
-              <div className='text-[24px] font-normal text-[#3DD598]'>24</div>
-              <span className='text-[16px] text-[#737373] font-normal'>Quotations Added</span>
+              <div className='text-[24px] font-normal text-[#3DD598]'>
+                {quotationStats?.quotations_created || 0}
+              </div>
+              <span className='text-[16px] font-normal text-[#737373]'>
+                Quotations Created
+              </span>
             </div>
           </div>
         </CardContent>
