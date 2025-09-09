@@ -4,6 +4,7 @@ import { Eye, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 import { Quotation } from './columns';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface CellActionProps {
   data: Quotation;
@@ -13,8 +14,11 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
   const [loading, setLoading] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const router = useRouter();
 
-  const onView = () => toast.message(`View quotation ${data.id}`);
+  const onView = () => {
+    router.push(`/dashboard/contractor/quotation-details/${data.id}`);
+  };
 
   const onDeleteConfirm = async () => {
     try {

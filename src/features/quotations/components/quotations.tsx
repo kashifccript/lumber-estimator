@@ -28,7 +28,7 @@ export default function QuotationsViewPage() {
   return (
     <PageContainer>
       <div className='flex w-full flex-col gap-3'>
-        <div className='flex justify-between gap-2'>
+        <div className='flex items-center justify-between gap-2'>
           <h2 className='text-2xl font-medium'>Quotations</h2>
           <div className={`flex items-center justify-end gap-1.5`}>
             <Button onClick={handleExportPdf} variant='icon' size='icon'>
