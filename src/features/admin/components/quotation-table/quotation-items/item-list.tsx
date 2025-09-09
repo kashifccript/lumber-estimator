@@ -8,21 +8,26 @@ import { useContractorApis } from '@/features/admin/actions/contractor';
 import { Item } from '@/features/admin/types/contractor';
 import { redirect, useParams } from 'next/navigation';
 import { Icon } from '@iconify/react';
+import { Button } from '@/components/ui/button';
+import { AlertModal } from '@/components/modal/alert-modal';
 interface ItemListingProps {
   quotation_id?: string;
 }
 
 export const ItemListing: React.FC<ItemListingProps> = ({ quotation_id }) => {
   const [quotations, setQuotations] = useState<Item[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [openApprove, setOpenApprove] = useState(false);
+  const [openReject, setOpenReject] = useState(false);
   const { data: session } = useSession();
-  const { fetchAllItemsWithinQuotation } = useContractorApis();
+  const { fetchAllItemsWithinQuotation, updateQuotationStatus } = useContractorApis();
   const params = useParams<{ id: string }>();
 
   const fetchQuotations = async () => {
     try {
       setLoading(true);
       const response = await fetchAllItemsWithinQuotation(quotation_id);
+      console.log(response, 'response');
       setQuotations(response);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -43,6 +48,42 @@ export const ItemListing: React.FC<ItemListingProps> = ({ quotation_id }) => {
   };
 
   const columns = createColumns({ onRefresh: handleRefresh });
+  const onApprove = async () => {
+    if (!session?.user?.access_token) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await updateQuotationStatus(quotation_id, true);
+      if (response) {
+        toast.success('Quotation Approved Successfully!');
+      } else toast.error('Error approving quotation:');
+    } catch (error) {
+      toast.error('Error approving quotation');
+    } finally {
+      setLoading(false);
+      setOpenApprove(false);
+    }
+  };
+  const onReject = async () => {
+    if (!session?.user?.access_token) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await updateQuotationStatus(quotation_id, false);
+      if (response) {
+        toast.success('Quotation Rejected Successfully!');
+      }
+    } catch (error) {
+      toast.error('Error rejecting Quotation');
+    } finally {
+      setLoading(false);
+      setOpenReject(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -66,6 +107,22 @@ export const ItemListing: React.FC<ItemListingProps> = ({ quotation_id }) => {
 
   return (
     <div>
+      <AlertModal
+        isOpen={openApprove}
+        onClose={() => setOpenApprove(false)}
+        onConfirm={onApprove}
+        loading={loading}
+        title='Approve Quotation'
+        description={`Are you sure you want to Approve this Quotation ?`}
+      />
+      <AlertModal
+        isOpen={openReject}
+        onClose={() => setOpenReject(false)}
+        onConfirm={onReject}
+        loading={loading}
+        title='Reject Quotation'
+        description={`Are you sure you want to Reject this Quotation ?`}
+      />
       <div className='flex flex-row justify-between py-4'>
         <div className='flex flex-row gap-3 text-[24px] font-semibold text-[#1F1F1F]'>
           <Icon
@@ -83,6 +140,25 @@ export const ItemListing: React.FC<ItemListingProps> = ({ quotation_id }) => {
         </div>
       </div>
       <CustomTable data={quotations} columns={columns} itemsPerPage={2} />
+      <div className='flex flex-row justify-between py-4'>
+        <div></div>
+
+        <div className='flex flex-row gap-4'>
+          <Button
+            variant={'destructive'}
+            className='h-[48px] w-auto rounded-[8px]'
+            onClick={() => setOpenReject(true)}
+          >
+            Reject
+          </Button>
+          <Button
+            className='h-[48px] w-auto rounded-[5px] bg-[#00A42E] text-white hover:bg-[#00A42E]'
+            onClick={() => setOpenApprove(true)}
+          >
+            Approve
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

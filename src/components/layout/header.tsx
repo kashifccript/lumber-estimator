@@ -20,6 +20,7 @@ import { UserNav } from './user-nav';
 import { ModeToggle } from './ThemeToggle/theme-toggle';
 import { ThemeSelector } from '../theme-selector';
 import { useSession } from 'next-auth/react';
+import { Icon } from '@iconify/react';
 
 type UserRole = 'admin' | 'contractor' | 'estimator';
 
@@ -27,48 +28,70 @@ interface NavItem {
   name: string;
   href: string;
   icon: any;
+  isAdmin?: boolean;
 }
 
 const getRoleNavItems = (role: UserRole): NavItem[] => {
   switch (role) {
     case 'admin':
       return [
-        { name: 'Dashboard', href: '/dashboard/admin', icon: LayoutGrid },
+        {
+          name: 'Dashboard',
+          href: '/dashboard/admin',
+          icon: 'mage:dashboard',
+          isAdmin: true
+        },
 
         {
           name: 'User Management',
           href: '/dashboard/admin/user-management',
-          icon: BarChart3
+          icon: 'mage:users',
+          isAdmin: true
         },
         {
           name: 'Contractors',
           href: '/dashboard/admin/contractors',
-          icon: BarChart3
+          icon: 'hugeicons:labor',
+          isAdmin: true
         },
         {
           name: 'Estimators',
           href: '/dashboard/admin/estimators',
-          icon: BarChart3
+          icon: 'hugeicons:estimate-01',
+          isAdmin: true
         },
-        { name: 'Settings', href: '/dashboard/admin/settings', icon: Settings }
+        {
+          name: 'Settings',
+          href: '/dashboard/admin/settings',
+          icon: 'solar:settings-linear',
+          isAdmin: true
+        }
       ];
     case 'contractor':
       return [
-        { name: 'Dashboard', href: '/dashboard/contractor', icon: LayoutGrid },
+        {
+          name: 'Dashboard',
+          href: '/dashboard/contractor/*',
+          icon: LayoutGrid,
+          isAdmin: true
+        },
         {
           name: 'Quotations',
-          href: '/dashboard/contractor/quotations',
-          icon: FileText
+          href: '/dashboard/contractor/quotations/*',
+          icon: FileText,
+          isAdmin: true
         },
         {
           name: 'Estimates Management',
           href: '/dashboard/contractors/estimates-management',
-          icon: Building2
+          icon: Building2,
+          isAdmin: true
         },
         {
           name: 'Settings',
           href: '/dashboard/contractor/settings',
-          icon: Settings
+          icon: Settings,
+          isAdmin: true
         }
       ];
     case 'estimator':
@@ -76,18 +99,21 @@ const getRoleNavItems = (role: UserRole): NavItem[] => {
         {
           name: 'Dashboard',
           href: '/dashboard/estimator',
-          icon: LayoutGrid
+          icon: LayoutGrid,
+          isAdmin: true
         },
         {
           name: 'Estimates',
           href: '/dashboard/estimator/estimates',
-          icon: FileText
+          icon: FileText,
+          isAdmin: true
         },
 
         {
           name: 'Settings',
           href: '/dashboard/estimator/settings',
-          icon: Settings
+          icon: Settings,
+          isAdmin: true
         }
       ];
     default:
@@ -95,17 +121,20 @@ const getRoleNavItems = (role: UserRole): NavItem[] => {
         {
           name: 'Dashboard',
           href: '/dashboard/estimator/overview',
-          icon: LayoutGrid
+          icon: LayoutGrid,
+          isAdmin: true
         },
         {
           name: 'Estimates',
           href: '/dashboard/estimator/estimates',
-          icon: FileText
+          icon: FileText,
+          isAdmin: true
         },
         {
           name: 'Settings',
           href: '/dashboard/estimator/settings',
-          icon: Settings
+          icon: Settings,
+          isAdmin: true
         }
       ];
   }
@@ -155,7 +184,7 @@ export default function Header() {
       {/* Center: Navigation */}
       <nav className='flex items-center gap-2 rounded-lg bg-white p-[5px]'>
         {navItems.map((item) => {
-          const Icon = item.icon;
+          // const Icon = item.icon;
           const isActive = pathname === item.href;
           return (
             <Link key={item.name} href={item.href}>
@@ -167,7 +196,8 @@ export default function Header() {
                     : 'bg-background text-secondary'
                 }`}
               >
-                <Icon className='h-5 w-5' />
+                {/* <Icon className='h-5 w-5' /> */}
+                <Icon icon={item.icon} width='24' height='24' />
                 {item.name}
               </Button>
             </Link>

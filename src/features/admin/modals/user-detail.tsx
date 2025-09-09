@@ -25,7 +25,6 @@ export default function UserDetails({ isOpen, onClose, id }: UserDetailsProps) {
   const [loading, setLoading] = useState(false);
   const [openApprove, setOpenApprove] = useState(false);
   const [openReject, setOpenReject] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
 
   const { data: session } = useSession();
   const { userAction } = useUserApis();

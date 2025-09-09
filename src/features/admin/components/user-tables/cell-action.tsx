@@ -36,6 +36,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
       const response = await userAction(userId, true);
       if (response) {
         toast.success('User Approved Successfully!');
+        onRefresh();
       } else toast.error('Error approving users:');
     } catch (error) {
       toast.error('Error approving users:');
@@ -44,7 +45,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
       setOpenApprove(false);
     }
   };
- const onReject = async () => {
+  const onReject = async () => {
     if (!session?.user?.access_token) {
       return;
     }
@@ -54,6 +55,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
       const response = await userAction(userId, false);
       if (response) {
         toast.success('User Rejected Successfully!');
+        onRefresh();
       }
     } catch (error) {
       toast.error('Error rejecting users:');
@@ -71,6 +73,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
       const response = await deleteUser(userId);
       if (response) {
         toast.success('User Deleted Successfully!');
+        onRefresh();
       }
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -79,7 +82,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
       setIsOpen(false);
     }
   };
-
 
   return (
     <>

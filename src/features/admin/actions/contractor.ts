@@ -74,9 +74,41 @@ export function useContractorApis() {
       return [];
     }
   };
+  const updateQuotationStatus = async (
+    quotation_id?: string,
+    approved?: boolean
+  ) => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/admin/quotations/${quotation_id}/action`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          },
+          body: JSON.stringify({
+            user_id: quotation_id,
+            approved: approved,
+            rejection_reason: 'none'
+          })
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to update Quotation');
+      const { data } = await res.json();
+      return data?.items || [];
+    } catch (error) {
+      console.error('Error updating Quotation', error);
+      return [];
+    }
+  };
   return {
     fetchAllContractors,
     fetchAllQuotationsbyUser,
-    fetchAllItemsWithinQuotation
+    fetchAllItemsWithinQuotation,
+    updateQuotationStatus
   };
 }

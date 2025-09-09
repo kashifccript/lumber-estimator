@@ -61,7 +61,7 @@ export const UserListing: React.FC<UserListingProps> = () => {
         <div className='text-[24px] font-semibold text-[#1F1F1F]'>
           Pending Users
         </div>
-        <Button
+        {/* <Button
           variant={'outline'}
           className='w-full max-w-[129px] rounded-[8px] border-[#E2624B] text-[#E2624B] hover:text-[#E2624B]'
         >
@@ -71,7 +71,7 @@ export const UserListing: React.FC<UserListingProps> = () => {
             className='h-6 w-6'
           />
           View All
-        </Button>
+        </Button> */}
       </div>
       <CustomTable data={users} columns={columns} itemsPerPage={10} />
     </div>
