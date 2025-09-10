@@ -3,70 +3,73 @@ import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
 
 export type Estimate = {
-  id: string;
-  estimator: {
-    name: string;
-    avatar: string;
+  project_id: number;
+  project_name: string;
+  description?: string;
+  project_type?: string | null;
+  location?: string | null;
+  total_cost: number;
+  status: string;
+  client_name?: string | null;
+  client_contact?: string | null;
+  skus: any[];
+  item_count: number;
+  statuses: {
+    available: number;
+    quotationNeeded: number;
   };
-  projectName: string;
-  material: {
-    count: number;
-  };
-  totalCost: string;
-  status: 'Approved' | 'Pending' | 'Rejected';
-  updatedOn: string;
+  created_at: string;
+  updated_at: string;
 };
+
+
+
 
 interface ColumnsProps {
   onRefresh: () => void;
+  estimatorName: string;
 }
 
-const statusClasses: Record<Estimate['status'], string> = {
-  Pending: 'bg-[#E3A00833] text-[#E3A008]',
-  Approved: 'bg-[#00A42E33] text-[#00A42E]',
-  Rejected: 'bg-[#C81E1E33] text-[#C81E1E]'
+const statusClasses: Record<string, string> = {
+  planning: 'bg-[#E3A00833] text-[#E3A008]',
+  in_progress: 'bg-[#0066CC33] text-[#0066CC]',
+  completed: 'bg-[#00A42E33] text-[#00A42E]',
+  cancelled: 'bg-[#C81E1E33] text-[#C81E1E]',
+  on_hold: 'bg-[#8896AB33] text-[#8896AB]'
 };
 
 export const createColumns = ({
-  onRefresh
+  onRefresh,
+  estimatorName
 }: ColumnsProps): ColumnDef<Estimate>[] => [
   {
-    accessorKey: 'estimator',
+    accessorKey: 'estimator_name',
     header: 'Estimator',
-    cell: ({ row }) => {
-      const estimator = row.original.estimator;
-      return (
-        <div className='flex items-center gap-3'>
-          <div className='flex h-8 w-8 items-center justify-center rounded-full bg-gray-200'>
-            <img
-              src={estimator.avatar}
-              alt={estimator.name}
-              className='h-8 w-8 rounded-full object-cover'
-            />
-          </div>
-          <span className='text-sm font-medium'>{estimator.name}</span>
-        </div>
-      );
-    }
+    cell: () => <span className='font-medium'>{estimatorName}</span>
   },
   {
-    accessorKey: 'projectName',
+    accessorKey: 'project_name',
     header: 'Project Name'
   },
   {
-    accessorKey: 'material',
-    header: 'Material',
-    cell: ({ row }) => {
-      const material = row.original.material;
-      return <span className='text-sm'>{material.count} Items</span>;
-    }
+    accessorKey: 'item_count',
+    header: 'Item Count',
+   
   },
   {
-    accessorKey: 'totalCost',
+    accessorKey: 'total_cost',
     header: 'Total Cost',
     cell: ({ row }) => {
-      const cost = row.original.totalCost;
-      return <span className='text-sm font-medium'>$ {cost}</span>;
+      const cost = row.original.total_cost;
+      return (
+        <span className='font-medium'>
+          $
+          {cost?.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          })}
+        </span>
+      );
     }
   },
   {
@@ -74,11 +77,12 @@ export const createColumns = ({
     header: 'Status',
     cell: ({ row }) => {
       const status = row.original.status;
+      const statusClass = statusClasses[status] || 'bg-gray-100 text-gray-800';
       return (
         <span
-          className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${statusClasses[status]}`}
+          className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${statusClass}`}
         >
-          {status}
+          {status?.replace('_', ' ').toUpperCase()}
         </span>
       );
     }
