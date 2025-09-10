@@ -1,49 +1,46 @@
 'use client';
-import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import { User } from '../../types/user';
-import {
-  useUserApis
-} from '../../actions/users';
 import { CustomTable } from '@/components/shared/table';
-import { createColumns } from './columns';
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify/react';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+
+import { createColumns } from './columns';
 interface UserListingProps {
   // query?: string;
 }
 
 export const UserListing: React.FC<UserListingProps> = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  // const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [query, setQuery] = useState('status=pending');
-  const { data: session } = useSession();
-  const { fetchUsersList } = useUserApis();
+  // const [query, setQuery] = useState('status=pending');
+  // const { data: session } = useSession();
 
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      const response = await fetchUsersList(query);
-      console.log(response, 'data');
-      setUsers(response);
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      toast.error('Failed to fetch pending approvals');
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    fetchUsers();
-  }, [session]);
+  // const fetchUsers = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await fetchUsersList(query);
+  //     console.log(response, 'data');
+  //     setUsers(response);
+  //   } catch (error) {
+  //     console.error('Error fetching users:', error);
+  //     toast.error('Failed to fetch pending approvals');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  const handleRefresh = () => {
-    fetchUsers();
-  };
+  // useEffect(() => {
+  //   fetchUsers();
+  // }, [session]);
 
-  const columns = createColumns({ onRefresh: handleRefresh });
+  // const handleRefresh = () => {
+  //   fetchUsers();
+  // };
+
+  // const columns = createColumns({ onRefresh: handleRefresh });
 
   if (loading) {
     return (
@@ -73,7 +70,7 @@ export const UserListing: React.FC<UserListingProps> = () => {
           View All
         </Button>
       </div>
-      <CustomTable data={users} columns={columns} itemsPerPage={10} />
+      {/* <CustomTable data={users} columns={columns} itemsPerPage={10} /> */}
     </div>
   );
 };
