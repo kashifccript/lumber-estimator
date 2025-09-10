@@ -1,4 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
+import { CellAction } from './cell-action';
 
 export interface Item {
   id: string | number;
@@ -25,37 +26,10 @@ export const itemColumns: ColumnDef<Item>[] = [
     accessorKey: 'cost',
     header: 'Cost'
   },
- 
-  // {
-  //   id: 'actions',
-  //   header: 'Actions',
-  //   cell: ({ row }) => {
-  //     const item = row.original;
-  //     return (
-  //       <div className='flex items-center gap-2'>
-  //         <Button
-  //           size='sm'
-  //           variant='ghost'
-  //           onClick={() => console.log('View', item)}
-  //         >
-  //           <Eye className='h-4 w-4' />
-  //         </Button>
-  //         <Button
-  //           size='sm'
-  //           variant='ghost'
-  //           onClick={() => console.log('Edit', item)}
-  //         >
-  //           <Pencil className='h-4 w-4' />
-  //         </Button>
-  //         <Button
-  //           size='sm'
-  //           variant='ghost'
-  //           onClick={() => console.log('Delete', item)}
-  //         >
-  //           <Trash className='h-4 w-4 text-red-500' />
-  //         </Button>
-  //       </div>
-  //     );
-  //   }
-  // }
+
+  {
+    id: 'actions',
+    header: 'Actions',
+    cell: ({ row }) => <CellAction data={row.original} onRefresh={() => {}} />
+  }
 ];

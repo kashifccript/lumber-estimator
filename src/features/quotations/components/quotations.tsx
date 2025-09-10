@@ -1,0 +1,63 @@
+'use client';
+import PageContainer from '@/components/layout/page-container';
+import { CustomTable } from '@/components/shared/table';
+import { Button } from '@/components/ui/button';
+import { Printer } from 'lucide-react';
+import Image from 'next/image';
+import { createColumns, Quotation } from './quotation-tables/columns';
+
+const mockData: Quotation[] = Array.from({ length: 10 }).map((_, idx) => {
+  const statuses: Quotation['status'][] = ['Pending', 'Approved', 'Rejected'];
+  const status = statuses[idx % statuses.length];
+  return {
+    id: `#RF1297370D${idx}`,
+    updatedOn: '20.Dec.2025 / 10 : 30 PM',
+    items: 45,
+    totalCost: '127,344',
+    status
+  };
+});
+
+export default function QuotationsViewPage() {
+  const handleExportPdf = () => {};
+  const handleExportCsv = () => {};
+  const onPrint = () => {};
+
+  const columns = createColumns({ onRefresh: () => {} });
+
+  return (
+    <PageContainer>
+      <div className='flex w-full flex-col gap-3'>
+        <div className='flex items-center justify-between gap-2'>
+          <h2 className='text-2xl font-medium'>Quotations</h2>
+          <div className={`flex items-center justify-end gap-1.5`}>
+            <Button onClick={handleExportPdf} variant='icon' size='icon'>
+              <Image
+                src='/assets/icons/pdf.png'
+                alt='PDF'
+                width={20}
+                height={20}
+                unoptimized
+                quality={100}
+              />
+            </Button>
+            <Button variant='icon' size='icon' onClick={handleExportCsv}>
+              <Image
+                src='/assets/icons/csv.png'
+                alt='CSV'
+                width={20}
+                height={20}
+                unoptimized
+                quality={100}
+              />
+            </Button>
+            <Button variant='icon' size='icon' onClick={onPrint}>
+              <Printer className='h-5 w-5 text-gray-600' />
+            </Button>
+          </div>
+        </div>
+        <CustomTable data={mockData} columns={columns} itemsPerPage={10} />
+      </div>
+    </PageContainer>
+  );
+}

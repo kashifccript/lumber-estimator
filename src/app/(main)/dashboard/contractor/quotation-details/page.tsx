@@ -1,9 +1,9 @@
-import QuotationDetailsViewPage from "@/features/quotations/components/quotations-details-view-page";
+import { redirect } from 'next/navigation';
 
 export const metadata = {
   title: 'Quotation Details'
 };
 
 export default function page() {
-  return <QuotationDetailsViewPage />;
+  redirect('/dashboard/contractor/quotations');
 }

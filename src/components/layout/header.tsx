@@ -82,7 +82,7 @@ const getRoleNavItems = (role: UserRole): NavItem[] => {
         },
         {
           name: 'Estimates Management',
-          href: '/dashboard/contractors/estimates-management',
+          href: '/dashboard/contractor/estimates-management',
           icon: Building2,
           isAdmin: true
         },

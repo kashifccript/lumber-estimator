@@ -10,6 +10,9 @@ interface AlertModalProps {
   loading: boolean;
   title: string;
   description: string;
+  confirmText?: string;
+  cancelText?: string;
+  variant?: 'approve' | 'reject' | 'default';
 }
 
 export const AlertModal: React.FC<AlertModalProps> = ({
@@ -18,7 +21,10 @@ export const AlertModal: React.FC<AlertModalProps> = ({
   onConfirm,
   loading,
   title,
-  description
+  description,
+  confirmText = 'Continue',
+  cancelText = 'Cancel',
+  variant = 'default'
 }) => {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -37,12 +43,29 @@ export const AlertModal: React.FC<AlertModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className='flex w-full items-center justify-end space-x-2 pt-6'>
-        <Button disabled={loading} variant='secondary' onClick={onClose}>
-          Cancel
+      <div className='flex items-center justify-end space-x-2 pt-6'>
+        <Button
+          disabled={loading}
+          variant={'reject'}
+          size={'md'}
+          onClick={onClose}
+        >
+          {cancelText}
         </Button>
-        <Button disabled={loading} variant='primary' onClick={onConfirm}>
-          Continue
+        <Button
+          disabled={loading}
+          size={'md'}
+          variant={
+            variant === 'approve'
+              ? 'approve'
+              : variant === 'reject'
+                ? 'reject'
+                : 'primary'
+          }
+          className={`${variant === 'reject' ? 'bg-[#C81E1E] text-white hover:bg-[#C81E1E]/90' : ''}`}
+          onClick={onConfirm}
+        >
+          {confirmText}
         </Button>
       </div>
     </Modal>
