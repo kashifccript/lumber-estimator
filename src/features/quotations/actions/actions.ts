@@ -1,4 +1,4 @@
-import { get, post, revalidateByTag } from '@/lib/api/client';
+import { del, get, post, revalidateByTag } from '@/lib/api/client';
 
 export async function getUserQuotations(quotationId: number) {
   try {
@@ -82,6 +82,27 @@ export async function addItemToQuotation(
         error instanceof Error
           ? error.message
           : 'Failed to add item to quotation',
+      data: null
+    };
+  }
+}
+
+export async function deleteQuotation(quotationId: number) {
+  try {
+    const res = await del({
+      endpoint: `/contractors/quotations/${quotationId}`
+    });
+
+    return {
+      success: res.success,
+      message: res.message,
+      data: res.data
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : 'Failed to delete quotation',
       data: null
     };
   }

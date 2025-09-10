@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { Quotation } from '@/features/admin/types/contractor';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { deleteQuotation } from '../../actions/actions';
 
 interface CellActionProps {
   data: Quotation;
@@ -23,10 +24,15 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
   const onDeleteConfirm = async () => {
     try {
       setLoading(true);
-      // mock async delete
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      toast.success(`Quotation ${data.quotation_id} deleted`);
-      onRefresh();
+      const res = await deleteQuotation(Number(data.quotation_id));
+      if (res.success) {
+        toast.success(`Quotation ${data.quotation_id} deleted successfully`);
+        onRefresh();
+      } else {
+        toast.error(`Failed to delete quotation ${data.quotation_id}`);
+      }
+    } catch (error) {
+      toast.error(`Failed to delete quotation ${data.quotation_id}`);
     } finally {
       setLoading(false);
       setOpenDelete(false);
@@ -41,7 +47,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
         onConfirm={onDeleteConfirm}
         loading={loading}
         title='Delete Quotation'
-        description={`Are you sure you want to delete ${data.quotation_id}?`}
+        description={`Are you sure you want to delete quotation ${data.quotation_id}?`}
       />
       <div className='flex items-center gap-2.5'>
         <button
