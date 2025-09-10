@@ -32,7 +32,7 @@ export default function QuotationDetailsViewPage() {
 
     if (res.success && res.data?.items) {
       const mappedData: Item[] = res.data.items.map((item: any) => ({
-        id: `I${item.item_id}`,
+        id: `${item.item_id}`,
         name: item.item_name,
         sku: item.sku_id,
         unit: item.unit,

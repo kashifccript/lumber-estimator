@@ -4,7 +4,8 @@ import { Eye, Pencil, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 import { Item } from './columns';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { deleteQuotationItem } from '../../actions/actions';
 
 interface CellActionProps {
   data: Item;
@@ -15,11 +16,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
   const [loading, setLoading] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const router = useRouter();
-
-  const onView = () => {
-    console.log('View item:', data);
-    // Add view functionality here
-  };
+  const params = useParams();
+  const quotationId = Number(params.id);
 
   const onEdit = () => {
     console.log('Edit item:', data);
@@ -29,10 +27,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
   const onDeleteConfirm = async () => {
     try {
       setLoading(true);
-      // mock async delete
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      toast.success(`Item ${data.name} deleted`);
-      onRefresh();
+      const res = await deleteQuotationItem(quotationId, Number(data.id));
+      if (res.success) {
+        toast.success(`Item ${data.name} deleted`);
+        onRefresh();
+      } else {
+        toast.error(`Failed to delete item ${data.name}`);
+      }
     } finally {
       setLoading(false);
       setOpenDelete(false);

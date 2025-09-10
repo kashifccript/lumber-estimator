@@ -107,3 +107,23 @@ export async function deleteQuotation(quotationId: number) {
     };
   }
 }
+
+export async function deleteQuotationItem(quotationId: number, itemId: number) {
+  try {
+    const res = await del({
+      endpoint: `/contractors/quotations/${quotationId}/items/${itemId}`
+    });
+
+    return {
+      success: res.success,
+      message: res.message,
+      data: res.data
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'Failed to delete item',
+      data: null
+    };
+  }
+}
