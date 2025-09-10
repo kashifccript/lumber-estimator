@@ -4,23 +4,14 @@ import { CustomTable } from '@/components/shared/table';
 import { Button } from '@/components/ui/button';
 import { Printer } from 'lucide-react';
 import Image from 'next/image';
-import { createColumns, Quotation } from './quotation-tables/columns';
+import { createColumns } from './quotation-tables/columns';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useContractorApis } from '@/features/admin/actions/contractor';
 import { toast } from 'sonner';
+import { Quotation } from '@/features/admin/types/contractor';
 
-// const mockData: Quotation[] = Array.from({ length: 10 }).map((_, idx) => {
-//   const statuses: Quotation['status'][] = ['Pending', 'Approved', 'Rejected'];
-//   const status = statuses[idx % statuses.length];
-//   return {
-//     id: `#RF1297370D${idx}`,
-//     updatedOn: '20.Dec.2025 / 10 : 30 PM',
-//     items: 45,
-//     totalCost: '127,344',
-//     status
-//   };
-// });
+
 
 export default function QuotationsViewPage() {
   const [quotations, setQuotations] = useState<Quotation[]>([]);
