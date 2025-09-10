@@ -1,16 +1,6 @@
 'use client';
 
-import {
-  Line,
-  LineChart,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell
-} from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   ChartContainer,
@@ -19,12 +9,9 @@ import {
 } from '@/components/ui/chart';
 import { CustomDropdown } from '@/components/shared/custom-dropdown';
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
 import { useUserApis } from '../../actions/users';
-import {
-  Estimator_Contractor,
-  Estimattes_QuotationStats
-} from '../../types/user';
+import type { Estimattes_QuotationStats } from '../../types/user';
+import { NewSignupStats } from './new-signup';
 
 const chartConfig = {
   contractor: {
@@ -65,12 +52,10 @@ const getCurrentMonthDateRange = () => {
 
 export function DashboardCharts() {
   const [selectedValue, setSelectedValue] = useState(months[0]);
-  const { data: session } = useSession();
 
   const { estimatesQuotation, estimatorContractor } = useUserApis();
 
-  const [contractorStats, setContractorStats] =
-    useState<Estimator_Contractor | null>(null);
+
   const [quotationStats, setQuotationStats] =
     useState<Estimattes_QuotationStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -86,47 +71,27 @@ export function DashboardCharts() {
     }
   };
 
-  const fetchEstimatorContractor = async () => {
-    try {
-      const response = await estimatorContractor(start_date, end_date);
-      setContractorStats(response);
-    } catch (error) {
-      console.error('Error fetching estimator contractor:', error);
-    }
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       await Promise.all([
-        fetchEstimatorContractor(),
         fetchEstimatesQuotation()
       ]);
       setLoading(false);
     };
 
     fetchData();
-  }, [session]);
-
-  const signupData = contractorStats
-    ? [
-        {
-          date: 'Current Month',
-          contractor: contractorStats.contractors || 0,
-          estimate: contractorStats.estimators || 0
-        }
-      ]
-    : [];
+  }, []);
 
   const activityData = quotationStats
     ? [
         {
-          name: 'Projects Created',
+          name: ' Projects Created ',
           value: quotationStats.projects_created || 0,
           color: '#3B82F6'
         },
         {
-          name: 'Quotations Created',
+          name: ' Quotations Created ',
           value: quotationStats.quotations_created || 0,
           color: '#3DD598'
         }
@@ -152,61 +117,7 @@ export function DashboardCharts() {
 
   return (
     <div className='flex flex-row justify-between gap-6'>
-      {/* New User Signups Chart */}
-      <Card className='w-full'>
-        <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-          <div>
-            <CardTitle className='text-[20px] font-normal text-[#0C0C0C]'>
-              New User Signups - Last 30 Days
-            </CardTitle>
-          </div>
-          <CustomDropdown
-            value={selectedValue}
-            onValueChange={setSelectedValue}
-            options={months}
-          />
-        </CardHeader>
-        <CardContent className='w-full'>
-          <ChartContainer config={chartConfig} className='h-[300px]'>
-            <ResponsiveContainer width='100%' height='100%'>
-              <LineChart
-                data={signupData}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray='3 3' className='stroke-muted' />
-                <XAxis
-                  dataKey='date'
-                  className='fill-muted-foreground text-xs'
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <YAxis
-                  className='fill-muted-foreground text-xs'
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Line
-                  type='monotone'
-                  dataKey='contractor'
-                  stroke='#3DD598'
-                  strokeWidth={2}
-                  dot={false}
-                  name={`${contractorStats?.contractors || 0} Contractor`}
-                />
-                <Line
-                  type='monotone'
-                  dataKey='estimate'
-                  stroke='#3B82F6'
-                  strokeWidth={4}
-                  dot={false}
-                  name={`${contractorStats?.estimators || 0} Estimator`}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-        </CardContent>
-      </Card>
+      <NewSignupStats />
 
       {/* Monthly Activity Chart */}
       <Card className='w-full'>
@@ -234,10 +145,11 @@ export function DashboardCharts() {
                     data={activityData}
                     cx='50%'
                     cy='50%'
-                    innerRadius={80}
-                    outerRadius={120}
+                    innerRadius={90}
+                    outerRadius={110}
                     paddingAngle={2}
                     dataKey='value'
+                    cornerRadius={10} // Added rounded corners to pie segments
                   >
                     {activityData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
@@ -254,15 +166,15 @@ export function DashboardCharts() {
                 {quotationStats?.projects_created || 0}
               </div>
               <span className='text-[16px] font-normal text-[#737373]'>
-                Projects Created
+                {'  Projects Created '}
               </span>
             </div>
             <div className='flex flex-col items-center gap-2'>
-              <div className='text-[24px] font-normal text-[#3DD598]'>
+              <div className='text-[24px] font-normal text-[#16a34a]'>
                 {quotationStats?.quotations_created || 0}
               </div>
               <span className='text-[16px] font-normal text-[#737373]'>
-                Quotations Created
+                {' Quotations Created '}
               </span>
             </div>
           </div>
