@@ -23,7 +23,7 @@ export function StatCard({
     return (
       <div
         className={cn(
-          'relative flex w-full max-w-sm flex-col justify-between gap-6 rounded-2xl bg-gray-50 p-6',
+          'relative flex w-full max-w-lg flex-col justify-between gap-6 rounded-2xl bg-[#F8F8F8] p-6',
           className
         )}
       >
@@ -44,7 +44,7 @@ export function StatCard({
   return (
     <div
       className={cn(
-        'relative flex w-full max-w-sm cursor-pointer flex-col justify-between gap-6 rounded-2xl bg-gray-50 p-6',
+        'relative flex w-full max-w-md cursor-pointer flex-col justify-between gap-6 rounded-2xl bg-[#F8F8F8] p-6',
         textColor,
         className
       )}

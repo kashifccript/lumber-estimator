@@ -6,6 +6,9 @@ import { useUserApis } from '../../actions/users';
 import { CustomTable } from '@/components/shared/table';
 import { createColumns } from './columns';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Icon } from '@iconify/react';
+import { redirect } from 'next/navigation';
 interface UserListingProps {
   // query?: string;
 }
@@ -57,8 +60,9 @@ export const UserListing: React.FC<UserListingProps> = () => {
         <div className='text-[24px] font-semibold text-[#1F1F1F]'>
           Pending Users
         </div>
-        {/* <Button
+        <Button
           variant={'outline'}
+          onClick={()=>{redirect('/dashboard/admin/user-management')}}
           className='w-full max-w-[129px] rounded-[8px] border-[#E2624B] text-[#E2624B] hover:text-[#E2624B]'
         >
           <Icon
@@ -67,7 +71,7 @@ export const UserListing: React.FC<UserListingProps> = () => {
             className='h-6 w-6'
           />
           View All
-        </Button> */}
+        </Button>
       </div>
       <CustomTable
         data={users}

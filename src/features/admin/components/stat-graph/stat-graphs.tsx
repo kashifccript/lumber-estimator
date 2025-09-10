@@ -149,7 +149,7 @@ export function DashboardCharts() {
                     outerRadius={110}
                     paddingAngle={2}
                     dataKey='value'
-                    cornerRadius={10} // Added rounded corners to pie segments
+                    cornerRadius={12} // Added rounded corners to pie segments
                   >
                     {activityData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />

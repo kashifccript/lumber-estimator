@@ -99,7 +99,7 @@ export function NewSignupStats() {
   }
 
   return (
-    <Card className='w-full'>
+    <Card className='w-full border-0 shadow-0'>
       <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
         <div>
           <CardTitle className='text-[20px] font-normal text-[#0C0C0C]'>
