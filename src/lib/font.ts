@@ -1,25 +1,23 @@
-import { Urbanist, Geist_Mono, Poppins } from 'next/font/google';
+// import localFont from 'next/font/local';
+// import { cn } from '@/lib/utils';
 
-import { cn } from '@/lib/utils';
+// export const fontSans = localFont({
+//   src: '../public/fonts/urbanist/Urbanist-VariableFont_wght.ttf',
+//   variable: '--font-sans'
+// });
 
-const fontSans = Urbanist({
-  subsets: ['latin'],
-  variable: '--font-sans'
-});
+// export const fontPoppins = localFont({
+//   src: '../public/fonts/poppins/Poppins-Regular.ttf',
+//   variable: '--font-poppins',
+// });
 
-const fontMono = Geist_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono'
-});
+// export const fontMono = localFont({
+//   src: '../public/fonts/geist-mono/GeistMono-VariableFont_wght.ttf',
+//   variable: '--font-mono'
+// });
 
-const fontPoppins = Poppins({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-poppins'
-});
-
-export const fontVariables = cn(
-  fontSans.variable,
-  fontMono.variable,
-  fontPoppins.variable
-);
+// export const fontVariables = cn(
+//   fontSans.variable,
+//   fontPoppins.variable,
+//   // fontMono.variable
+// );
