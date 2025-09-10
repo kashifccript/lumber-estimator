@@ -5,25 +5,56 @@ import { Button } from '@/components/ui/button';
 import { Printer } from 'lucide-react';
 import Image from 'next/image';
 import { createColumns, Quotation } from './quotation-tables/columns';
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useContractorApis } from '@/features/admin/actions/contractor';
+import { toast } from 'sonner';
 
-const mockData: Quotation[] = Array.from({ length: 10 }).map((_, idx) => {
-  const statuses: Quotation['status'][] = ['Pending', 'Approved', 'Rejected'];
-  const status = statuses[idx % statuses.length];
-  return {
-    id: `#RF1297370D${idx}`,
-    updatedOn: '20.Dec.2025 / 10 : 30 PM',
-    items: 45,
-    totalCost: '127,344',
-    status
-  };
-});
+// const mockData: Quotation[] = Array.from({ length: 10 }).map((_, idx) => {
+//   const statuses: Quotation['status'][] = ['Pending', 'Approved', 'Rejected'];
+//   const status = statuses[idx % statuses.length];
+//   return {
+//     id: `#RF1297370D${idx}`,
+//     updatedOn: '20.Dec.2025 / 10 : 30 PM',
+//     items: 45,
+//     totalCost: '127,344',
+//     status
+//   };
+// });
 
 export default function QuotationsViewPage() {
+  const [quotations, setQuotations] = useState<Quotation[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { data: session } = useSession();
+  const { fetchAllQuotationsbyUser } = useContractorApis();
+ const userId = String(session?.user?.user.id)
+
+  const fetchQuotations = async () => {
+    try {
+      setLoading(true);
+      const response = await fetchAllQuotationsbyUser(userId);
+      setQuotations(response);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      toast.error('Failed to fetch users');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleExportPdf = () => {};
   const handleExportCsv = () => {};
   const onPrint = () => {};
 
-  const columns = createColumns({ onRefresh: () => {} });
+  useEffect(() => {
+    fetchQuotations();
+  }, [session]);
+
+  const handleRefresh = () => {
+    fetchQuotations();
+  };
+
+  const columns = createColumns({ onRefresh: handleRefresh });
 
   return (
     <PageContainer>
@@ -56,7 +87,7 @@ export default function QuotationsViewPage() {
             </Button>
           </div>
         </div>
-        <CustomTable data={mockData} columns={columns} itemsPerPage={10} />
+        <CustomTable data={quotations} columns={columns} itemsPerPage={10} />
       </div>
     </PageContainer>
   );
