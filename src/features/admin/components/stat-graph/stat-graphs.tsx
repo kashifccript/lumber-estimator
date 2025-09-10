@@ -143,7 +143,7 @@ export function DashboardCharts() {
                     cy='50%'
                     innerRadius={90}
                     outerRadius={110}
-                    paddingAngle={2}
+                    // paddingAngle={2}
                     dataKey='value'
                     cornerRadius={12}
                   >
