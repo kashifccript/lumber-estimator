@@ -6,11 +6,15 @@ import { Icon } from '@iconify/react';
 import ProfileSettings from './profile-settings';
 import Security from './security';
 import { NotificationPreferences } from './notification';
+import CompanyInfo from './company-info';
+import { useSession } from 'next-auth/react';
 
-type TabType = 'profile' | 'security' | 'notifications';
+type TabType = 'profile' | 'security' | 'notifications' | 'companyInfo';
 
 export function SettingsTabs() {
   const [activeTab, setActiveTab] = useState<TabType>('profile');
+  const { data: session } = useSession();
+  const userData = session?.user.user;
 
   const tabs = [
     {
@@ -23,12 +27,38 @@ export function SettingsTabs() {
     //   label: 'Notifications',
     //   icon: <Icon icon='carbon:notification' width='32' height='32' />
     // },
+
+    {
+      id: 'companyInfo' as TabType,
+      label: 'Company Info',
+      icon: <Icon icon='mdi:company' width='24' height='24' />
+    },
     {
       id: 'security' as TabType,
       label: 'Security',
       icon: <Icon icon='lets-icons:lock' width='24' height='24' />
     }
   ];
+  const adminTabs = [
+    {
+      id: 'profile' as TabType,
+      label: 'Profile',
+      icon: <Icon icon='lets-icons:user-light' width='24' height='24' />
+    },
+    // {
+    //   id: 'notifications' as TabType,
+    //   label: 'Notifications',
+    //   icon: <Icon icon='carbon:notification' width='32' height='32' />
+    // },
+
+    {
+      id: 'security' as TabType,
+      label: 'Security',
+      icon: <Icon icon='lets-icons:lock' width='24' height='24' />
+    }
+  ];
+
+  const renderTabs = userData?.role === 'admin' ? adminTabs : tabs;
 
   return (
     <div className='w-full'>
@@ -39,7 +69,7 @@ export function SettingsTabs() {
           </h2>
         </div>
         <nav className='flex flex-col gap-2 md:flex-row'>
-          {tabs.map((tab) => {
+          {renderTabs.map((tab) => {
             return (
               <button
                 key={tab.id}
@@ -65,7 +95,11 @@ export function SettingsTabs() {
             <ProfileSettings />
           </div>
         )}
-
+        {activeTab === 'companyInfo' && (
+          <div className='space-y-6'>
+            <CompanyInfo />
+          </div>
+        )}
         {activeTab === 'security' && (
           <div className='space-y-6'>
             <Security />

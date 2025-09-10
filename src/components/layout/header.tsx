@@ -71,26 +71,22 @@ const getRoleNavItems = (role: UserRole): NavItem[] => {
         {
           name: 'Dashboard',
           href: '/dashboard/contractor',
-          icon: LayoutGrid,
-          isAdmin: true
+          icon: 'mage:dashboard'
         },
         {
           name: 'Quotations',
           href: '/dashboard/contractor/quotations',
-          icon: FileText,
-          isAdmin: true
+          icon: 'solar:database-linear'
         },
         {
           name: 'Estimates Management',
           href: '/dashboard/contractor/estimates-management',
-          icon: Building2,
-          isAdmin: true
+          icon: 'hugeicons:estimate-01'
         },
         {
           name: 'Settings',
           href: '/dashboard/contractor/settings',
-          icon: Settings,
-          isAdmin: true
+          icon: 'solar:settings-linear'
         }
       ];
     case 'estimator':
@@ -98,20 +94,17 @@ const getRoleNavItems = (role: UserRole): NavItem[] => {
         {
           name: 'Dashboard',
           href: '/dashboard/estimator',
-          icon: LayoutGrid,
-          isAdmin: true
+          icon: 'mage:dashboard'
         },
         {
           name: 'Estimates',
           href: '/dashboard/estimator/estimates',
-          icon: FileText,
-          isAdmin: true
+          icon: 'hugeicons:estimate-01'
         },
         {
           name: 'Settings',
           href: '/dashboard/estimator/settings',
-          icon: Settings,
-          isAdmin: true
+          icon: 'solar:settings-linear'
         }
       ];
     default:
@@ -183,7 +176,9 @@ export default function Header() {
       <nav className='flex items-center gap-2 rounded-lg bg-white p-[5px]'>
         {navItems.map((item) => {
           const isActive =
-            item.href === '/dashboard/admin'
+            item.href === '/dashboard/admin' ||
+            item.href === '/dashboard/estimator' ||
+            item.href === '/dashboard/contractor'
               ? pathname === item.href
               : pathname === item.href || pathname.startsWith(item.href + '/');
           return (
