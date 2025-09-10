@@ -8,7 +8,7 @@ import { DashboardCharts } from '../stat-graph/stat-graphs';
 import { QuotationListingDashboard } from './quotation/quotation-list';
 import { useSession } from 'next-auth/react';
 
-const index = () => {
+const Index = () => {
   const { data: session, status } = useSession();
   const userData = session?.user.user;
   const fullName = userData?.first_name || userData?.username;
@@ -28,4 +28,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import { Icon } from '@iconify/react';
-import { Quotation } from '@/features/admin/types/quotation';
+import { Quotation } from '@/features/admin/types/contractor';
 
 interface CellActionProps {
   data: Quotation;

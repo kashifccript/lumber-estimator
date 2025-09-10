@@ -6,8 +6,6 @@ import { useUserApis } from '../../actions/users';
 import { CustomTable } from '@/components/shared/table';
 import { createColumns } from './columns';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { Icon } from '@iconify/react';
 interface UserListingProps {
   // query?: string;
 }

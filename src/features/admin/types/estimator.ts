@@ -18,7 +18,7 @@ export interface Estimates {
   available_items: number;
   // total_project_value?: number;
   // account_status?: string;
-  status?:string
+  status?:string;
 }
 
 

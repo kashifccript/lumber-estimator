@@ -36,14 +36,14 @@ export const createColumns = ({
     header: 'Total Cost',
     cell: ({ cell }) => <div>${cell.getValue<number>()}</div>
   },
-  // {
-  //   accessorKey: 'statuses',
-  //   header: 'Status Overview',
-  //   cell: ({ row }) => {
-  //     const statuses = row.original.statuses;
-  //     return <StatusList statuses={statuses} />;
-  //   }
-  // },
+  {
+    accessorKey: 'statuses',
+    header: 'Status Overview',
+    cell: ({ row }) => {
+      const statuses = row.original.statuses;
+      return <StatusList statuses={statuses} />;
+    }
+  },
   {
     id: 'actions',
     header: 'Actions',

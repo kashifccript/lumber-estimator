@@ -7,7 +7,6 @@ import { toast } from 'sonner';
 import { Icon } from '@iconify/react';
 import { redirect, useParams } from 'next/navigation';
 import { useContractorApis } from '../../actions/contractor';
-import { Quotation, QuotationDashboard } from '../../types/contractor';
 
 interface CellActionProps {
   data: any ;

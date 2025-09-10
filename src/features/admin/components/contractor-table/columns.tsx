@@ -1,5 +1,4 @@
 'use client';
-import { User } from '../../types/user';
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
 import { Contractor } from '../../types/contractor';

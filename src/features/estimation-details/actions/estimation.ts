@@ -56,6 +56,7 @@ export const fetchProjectData = async (projectId: string) => {
     );
 
     const data = await response.json();
+    console.log(data, 'dataattaat');
 
     if (!response.ok) {
       return {
