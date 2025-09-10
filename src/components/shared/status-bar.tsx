@@ -2,17 +2,17 @@
 import React from 'react';
 
 type Statuses = {
-  pending: number;
-  approved: number;
-  rejected: number;
+  available: number;
+  // approved: number;
+  // rejected: number;
   quotationNeeded: number;
 };
 
 const statusColors: Record<keyof Statuses, string> = {
-  pending: 'bg-[#E9B33A]',
-  approved: 'bg-[#00A42E]',
-  rejected: 'bg-[#3A7FF0]',
-  quotationNeeded: 'bg-[#E9E9E9]'
+  quotationNeeded: 'bg-[#E9B33A]',
+  available: 'bg-[#00A42E]'
+  // rejected: 'bg-[#3A7FF0]',
+  // quotationNeeded: 'bg-[#E9E9E9]'
 };
 
 export default function StatusList({ statuses }: { statuses: Statuses }) {
@@ -21,7 +21,7 @@ export default function StatusList({ statuses }: { statuses: Statuses }) {
   return (
     <div className='flex h-10 items-end gap-4'>
       {Object.entries(statuses).map(([status, value]) => {
-        const percentage = maxValue > 0 ? (value / maxValue) *80 : 0;
+        const percentage = maxValue > 0 ? (value / maxValue) * 80 : 0;
 
         return (
           <div
