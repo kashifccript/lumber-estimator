@@ -246,7 +246,7 @@ export default function UserDetails({ isOpen, onClose, id }: UserDetailsProps) {
           </div>
           {userData.status === 'pending' ||
             (userData.status === 'Pending' && (
-              <div className='flex flex-row justify-between py-6'>
+              <div className=' py-6 flex flex-col gap-6 sm:flex-row sm:justify-between'>
                 <Button
                   variant='secondary'
                   className='h-[48px] w-auto rounded-[8px] border-[#E2624B] text-[#E2624B]'
@@ -255,7 +255,7 @@ export default function UserDetails({ isOpen, onClose, id }: UserDetailsProps) {
                   Close
                 </Button>
 
-                <div className='flex flex-row gap-4'>
+                <div className='py-6 flex flex-col gap-4 sm:flex-row'>
                   <Button
                     variant={'destructive'}
                     className='h-[48px] w-auto rounded-[8px]'

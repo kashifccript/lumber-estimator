@@ -25,7 +25,6 @@ export const EstimatesList: React.FC<UserListingProps> = ({
     try {
       setLoading(true);
       const response = await fetchAllEstimates(user_id, query);
-      console.log(response, 'sms');
       setUsers(response);
     } catch (error) {
       console.error('Error fetching users:', error);

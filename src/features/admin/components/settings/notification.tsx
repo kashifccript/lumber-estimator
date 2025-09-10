@@ -14,7 +14,6 @@ export function NotificationPreferences() {
       </h2>
 
       <div className='space-y-6'>
-        {/* Email Notifications */}
         <div className='flex items-start justify-between gap-4'>
           <div className='min-w-0 flex-1'>
             <h3 className='mb-1 text-[20px] font-semibold text-[#1F1F1F]'>
@@ -33,7 +32,6 @@ export function NotificationPreferences() {
           </div>
         </div>
 
-        {/* In-App Notifications */}
         <div className='flex items-start justify-between gap-4'>
           <div className='min-w-0 flex-1'>
             <h3 className='mb-1 text-[20px] font-semibold text-[#1F1F1F]'>

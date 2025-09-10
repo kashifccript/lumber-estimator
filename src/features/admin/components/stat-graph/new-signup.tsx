@@ -71,7 +71,7 @@ export function NewSignupStats() {
     };
 
     fetchData();
-  }, [selectedValue]); // Added selectedValue dependency
+  }, [selectedValue]);
 
   const signupData = contractorStats?.periods
     ? contractorStats.periods.map((period: any, index: number) => {

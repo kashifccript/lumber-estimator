@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Icon } from '@iconify/react';
 import { Badge } from '@/components/ui/badge';
-import { CustomDropdown } from '@/components/shared/custom-dropdown';
 import { redirect } from 'next/navigation';
 import { useUserApis } from '@/features/admin/actions/users';
 import { UserData } from '@/features/admin/types/user';
@@ -88,7 +87,7 @@ export default function EstimatorInfo({ id }: EstimatorInfoProps) {
               height='24'
               className='mt-1.5 cursor-pointer'
               onClick={() => {
-                redirect('/dashboard/admin/contractors/');
+                redirect('/dashboard/admin/estimators/');
               }}
             />
             <span className='!text-[#1F1F1F73]'> Al Estimators/</span>

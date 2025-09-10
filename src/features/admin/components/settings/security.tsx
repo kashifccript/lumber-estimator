@@ -64,9 +64,6 @@ const Security = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className='w-full space-y-4'
         >
-          {/* Name */}
-
-          {/* New Password */}
           <FormField
             control={form.control}
             name='new_password'
@@ -88,7 +85,6 @@ const Security = () => {
             )}
           />
 
-          {/* Confirm Password */}
           <FormField
             control={form.control}
             name='confirm_password'

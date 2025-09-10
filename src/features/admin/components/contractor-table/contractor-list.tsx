@@ -44,7 +44,7 @@ export const ContractorListing: React.FC<UserListingProps> = ({ query }) => {
   const columns = createColumns({ onRefresh: handleRefresh });
   return (
     <div>
-      <div className='flex flex-row justify-between py-4'>
+      <div className='flex flex-col gap-6 sm:flex-row sm:justify-between py-4'>
         <div className='text-[24px] font-semibold text-[#1F1F1F]'>
           All Contractors{' '}
           <span className='font-normal text-[#1F1F1FCC]'>

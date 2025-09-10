@@ -30,7 +30,6 @@ export function EstimationDetailsViewPage({
   const [projectData, setProjectData] = useState<any>(null);
   const { currentEstimationData } = useEstimationStore();
   const params = useParams<{ id: string; estimateId: string }>();
-  const breadcrumbs = useBreadcrumbs();
   const [isLoading, setIsLoading] = useState(false);
   const [userData, setUserData] = useState<UserData | null>(null);
 
@@ -60,18 +59,15 @@ export function EstimationDetailsViewPage({
     const loadData = async () => {
       setIsLoadingData(true);
 
-      // Get project ID from current estimation data
       const projectId = project_id || currentEstimationData?.project_id;
 
       if (projectId) {
         try {
-          // Fetch project data from API
           const response = await fetchProjectData(projectId.toString());
 
           if (response && response.project_id) {
             setProjectData(response);
 
-            // Transform API data to table items
             const tableItems = transformApiDataToTableItems(response);
             setItems(tableItems);
           } else {

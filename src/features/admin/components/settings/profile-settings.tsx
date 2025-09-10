@@ -56,21 +56,17 @@ const ProfileSettings = () => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
       alert('Please select a valid image file');
       return;
     }
 
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       alert('File size must be less than 5MB');
       return;
     }
 
     setIsUploading(true);
-
-    // Create preview URL
     const reader = new FileReader();
     reader.onload = (e) => {
       if (e.target?.result) {
@@ -174,7 +170,6 @@ const ProfileSettings = () => {
             onChange={handleImageUpload}
             className='hidden'
           />
-          {/* <p className="text-xs text-gray-500 mt-1">JPG, PNG or GIF (max 5MB)</p> */}
         </div>
       </div>
 

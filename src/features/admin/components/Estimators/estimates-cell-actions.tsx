@@ -3,8 +3,6 @@
 import { Icon } from '@iconify/react';
 import {
   Estimates,
-  Estimator,
-  EstimatorDetailsTable
 } from '../../types/estimator';
 import { redirect, useParams } from 'next/navigation';
 
@@ -14,7 +12,6 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
-  console.log(data, 'data');
   const params = useParams<{ id: string }>();
 
   return (

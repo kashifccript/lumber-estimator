@@ -31,12 +31,8 @@ const getCurrentMonthDateRange = () => {
   const year = now.getFullYear();
   const month = now.getMonth();
 
-  // First day of current month
   const startDate = new Date(year, month, 1);
-  // Current date
   const endDate = now;
-
-  // Format as YYYY-MM-DD in local time
   const formatDate = (date: Date) => {
     const yyyy = date.getFullYear();
     const mm = String(date.getMonth() + 1).padStart(2, '0');
@@ -116,10 +112,10 @@ export function DashboardCharts() {
   }
 
   return (
-    <div className='flex flex-row justify-between gap-6'>
+   <div className="flex flex-col gap-6 sm:flex-row sm:justify-between">
+
       <NewSignupStats />
 
-      {/* Monthly Activity Chart */}
       <Card className='w-full'>
         <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
           <div>
@@ -149,7 +145,7 @@ export function DashboardCharts() {
                     outerRadius={110}
                     paddingAngle={2}
                     dataKey='value'
-                    cornerRadius={12} // Added rounded corners to pie segments
+                    cornerRadius={12}
                   >
                     {activityData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />

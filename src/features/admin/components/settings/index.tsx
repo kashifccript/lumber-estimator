@@ -59,12 +59,10 @@ export function SettingsTabs() {
         </nav>
       </div>
 
-      {/* Tab Content */}
       <div className='mt-8'>
         {activeTab === 'profile' && (
           <div className='space-y-6'>
             <ProfileSettings />
-            {/* Add your profile content here */}
           </div>
         )}
 

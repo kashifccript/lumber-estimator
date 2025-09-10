@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify/react';
 import { redirect } from 'next/navigation';
 interface UserListingProps {
-  // query?: string;
 }
 
 export const UserListing: React.FC<UserListingProps> = () => {
@@ -56,14 +55,14 @@ export const UserListing: React.FC<UserListingProps> = () => {
   }
   return (
     <div>
-      <div className='flex flex-row justify-between py-4'>
+      <div className='flex flex-col gap-6 sm:flex-row sm:justify-between py-4'>
         <div className='text-[24px] font-semibold text-[#1F1F1F]'>
           Pending Users
         </div>
         <Button
           variant={'outline'}
           onClick={()=>{redirect('/dashboard/admin/user-management')}}
-          className='w-full max-w-[129px] rounded-[8px] border-[#E2624B] text-[#E2624B] hover:text-[#E2624B]'
+          className='sm:w-full  md:w-full lg:w-[129px] rounded-[8px] border-[#E2624B] text-[#E2624B] hover:text-[#E2624B]'
         >
           <Icon
             icon='meteor-icons:arrow-up-right'

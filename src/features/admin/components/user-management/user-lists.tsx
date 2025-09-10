@@ -71,13 +71,13 @@ export const UserListing: React.FC<UserListingProps> = ({ query }) => {
 
   return (
     <div>
-      <div className='flex flex-row justify-between py-4'>
+      <div className='flex flex-col gap-6 sm:flex-row sm:justify-between py-4'>
         <div className='text-[24px] font-semibold text-[#1F1F1F]'>
           All Users{' '}
           <span className='font-normal text-[#1F1F1FCC]'>({users.length})</span>
         </div>
 
-        <div className='flex flex-row gap-4'>
+        <div className='flex flex-col gap-6 sm:flex-row sm:flex-row gap-4'>
           {/* Search box */}
           <div className='relative w-full max-w-sm'>
             <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32]' />
@@ -90,9 +90,7 @@ export const UserListing: React.FC<UserListingProps> = ({ query }) => {
             />
           </div>
 
-          {/* Dropdown */}
           <CustomDropdown
-            // list={dropdownList}
             value={selectedFilter}
             onValueChange={setSelectedFilter}
           />
