@@ -160,21 +160,23 @@ export default function EstimatesManagementDetails() {
           {/* SummarySection */}
           <SummarySection data={projectData} />
 
-          {/* CTA */}
-          <CallToAction
-            projectName={projectData?.project_name}
-            projectId={projectId}
-            onApprove={() => {
-              // Handle post-approval actions (e.g., refresh data, navigate)
-              console.log('Estimate approved');
-              // You can add navigation or data refresh logic here
-            }}
-            onReject={() => {
-              // Handle post-rejection actions
-              console.log('Estimate rejected');
-              // You can add navigation or data refresh logic here
-            }}
-          />
+          {/* CTA - Only show when status is pending */}
+          {projectData?.status === 'pending' && (
+            <CallToAction
+              projectName={projectData?.project_name}
+              projectId={projectId}
+              onApprove={() => {
+                // Handle post-approval actions (e.g., refresh data, navigate)
+                console.log('Estimate approved');
+                // You can add navigation or data refresh logic here
+              }}
+              onReject={() => {
+                // Handle post-rejection actions
+                console.log('Estimate rejected');
+                // You can add navigation or data refresh logic here
+              }}
+            />
+          )}
         </div>
       </div>
     </PageContainer>

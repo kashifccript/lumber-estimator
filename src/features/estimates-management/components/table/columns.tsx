@@ -24,11 +24,11 @@ interface ColumnsProps {
 }
 
 const statusClasses: Record<string, string> = {
-  planning: 'bg-[#E3A00833] text-[#E3A008]',
-  in_progress: 'bg-[#0066CC33] text-[#0066CC]',
-  completed: 'bg-[#00A42E33] text-[#00A42E]',
-  cancelled: 'bg-[#C81E1E33] text-[#C81E1E]',
-  on_hold: 'bg-[#8896AB33] text-[#8896AB]'
+  pending: 'bg-[#E3A00833] text-[#E3A008]',
+  approved: 'bg-[#00A42E33] text-[#00A42E]',
+  rejected: 'bg-[#C81E1E33] text-[#C81E1E]',
+  // Default fallback
+  default: 'bg-gray-100 text-gray-800'
 };
 
 export const createColumns = ({
@@ -54,7 +54,6 @@ export const createColumns = ({
       return (
         <div className='flex flex-col gap-1'>
           <span>{count} materials</span>
-    
         </div>
       );
     }
@@ -80,7 +79,22 @@ export const createColumns = ({
     header: 'Status',
     cell: ({ row }) => {
       const status = row.original.status;
-      const statusClass = statusClasses[status] || 'bg-gray-100 text-gray-800';
+      // Map status values to match our color scheme
+      const normalizedStatus =
+        status === 'planning'
+          ? 'pending'
+          : status === 'in_progress'
+            ? 'pending'
+            : status === 'completed'
+              ? 'approved'
+              : status === 'cancelled'
+                ? 'rejected'
+                : status === 'on_hold'
+                  ? 'pending'
+                  : status;
+
+      const statusClass =
+        statusClasses[normalizedStatus] || statusClasses.default;
       return (
         <span
           className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${statusClass}`}
