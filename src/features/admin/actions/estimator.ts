@@ -97,7 +97,10 @@ export function useEstimatorApis() {
       return error;
     }
   };
-   const getStatusDistribution = async (start_date: string, end_date: string) => {
+  const getStatusDistribution = async (
+    start_date: string,
+    end_date: string
+  ) => {
     if (!session?.user?.access_token) return [];
 
     try {
@@ -119,11 +122,35 @@ export function useEstimatorApis() {
       return error;
     }
   };
+
+  const getMonthlyStats = async () => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/estimator/monthly-expenses`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          }
+        }
+      );
+      if (!res.ok) throw new Error('Failed to fetch user');
+      const { data } = await res.json();
+      return data;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return error;
+    }
+  };
   return {
     fetchAllEstimators,
     fetchAllEstimates,
     getStats,
     weeklyStats,
-    getStatusDistribution
+    getStatusDistribution,
+    getMonthlyStats
   };
 }
