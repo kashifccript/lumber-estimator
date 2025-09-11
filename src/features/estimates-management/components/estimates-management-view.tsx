@@ -72,9 +72,8 @@ export default function EstimatesManagementViewPage() {
       <div className='flex w-full flex-col gap-3'>
         <div className='flex items-center justify-between gap-2'>
           <h1 className='text-2xl font-semibold'>
-            {estimatorInfo
-              ? `${estimatorInfo.estimator_name}'s Projects`
-              : 'All Estimates'}
+         
+             All Estimates
           </h1>
 
           <div className='flex flex-row gap-4'>
