@@ -1,4 +1,4 @@
-import { get } from '@/lib/api/client';
+import { get, post, put } from '@/lib/api/client';
 
 export interface GetAllEstimatesParams {
   search?: string;
@@ -53,6 +53,68 @@ export async function getAllEstimatesByEstimator(estimator_id: number) {
       success: false,
       message:
         error instanceof Error ? error.message : 'Failed to fetch estimates'
+    };
+  }
+}
+
+// Approve estimate action
+export async function approveEstimate(projectId: string, notes?: string) {
+  try {
+    const payload = {
+      project_id: parseInt(projectId),
+      approved: true,
+      rejection_reason: null
+    };
+
+    const res = await put({
+      endpoint: `/admin/projects/${projectId}/action`,
+      body: JSON.stringify(payload)
+    });
+
+    return {
+      success: res.success,
+      message: res.message,
+      data: res.data
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : 'Failed to approve estimate'
+    };
+  }
+}
+
+// Reject estimate action
+export async function rejectEstimate(
+  projectId: string,
+  reason?: string,
+  notes?: string
+) {
+  try {
+    const rejectionReason = reason || 'Estimate rejected by contractor';
+
+    const payload = {
+      project_id: parseInt(projectId),
+      approved: false,
+      rejection_reason: rejectionReason
+    };
+
+    const res = await put({
+      endpoint: `/admin/projects/${projectId}/action`,
+      body: JSON.stringify(payload)
+    });
+
+    return {
+      success: res.success,
+      message: res.message,
+      data: res.data
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : 'Failed to reject estimate'
     };
   }
 }

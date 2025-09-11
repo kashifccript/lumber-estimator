@@ -3,15 +3,21 @@ import { Button } from '@/components/ui/button';
 import { AlertModal } from '@/components/modal/alert-modal';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import {
+  approveEstimate,
+  rejectEstimate
+} from '@/features/contractor/actions/estimates';
 
 interface CallToActionProps {
   projectName?: string;
+  projectId?: string;
   onApprove?: () => void;
   onReject?: () => void;
 }
 
 export const CallToAction = ({
   projectName = 'Downtown Office Renovation',
+  projectId,
   onApprove,
   onReject
 }: CallToActionProps) => {
@@ -20,13 +26,22 @@ export const CallToAction = ({
   const [loading, setLoading] = useState(false);
 
   const handleApprove = async () => {
+    if (!projectId) {
+      toast.error('Project ID is required');
+      return;
+    }
+
     try {
       setLoading(true);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      toast.success('Estimate approved successfully!');
-      onApprove?.();
-      setShowApproveModal(false);
+      const result = await approveEstimate(projectId);
+
+      if (result.success) {
+        toast.success(result.message || 'Estimate approved successfully!');
+        onApprove?.();
+        setShowApproveModal(false);
+      } else {
+        toast.error(result.message || 'Failed to approve estimate');
+      }
     } catch (error) {
       toast.error('Failed to approve estimate');
     } finally {
@@ -35,13 +50,26 @@ export const CallToAction = ({
   };
 
   const handleReject = async () => {
+    if (!projectId) {
+      toast.error('Project ID is required');
+      return;
+    }
+
     try {
       setLoading(true);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      toast.success('Estimate rejected successfully!');
-      onReject?.();
-      setShowRejectModal(false);
+      const result = await rejectEstimate(
+        projectId,
+        'Estimate rejected by contractor',
+        'Estimate does not meet requirements'
+      );
+
+      if (result.success) {
+        toast.success(result.message || 'Estimate rejected successfully!');
+        onReject?.();
+        setShowRejectModal(false);
+      } else {
+        toast.error(result.message || 'Failed to reject estimate');
+      }
     } catch (error) {
       toast.error('Failed to reject estimate');
     } finally {
