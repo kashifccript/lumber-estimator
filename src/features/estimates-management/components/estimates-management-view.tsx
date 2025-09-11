@@ -11,60 +11,92 @@ import { useSession } from 'next-auth/react';
 import { useEstimatorApis } from '@/features/admin/actions/estimator';
 import { toast } from 'sonner';
 import { Estimates } from '@/features/admin/types/estimator';
-import { getAllEstimates } from '@/features/contractor/actions/estimates';
+import {
+  getAllEstimates,
+  GetAllEstimatesParams
+} from '@/features/contractor/actions/estimates';
 
 export default function EstimatesManagementViewPage() {
-  const [users, setUsers] = useState<Estimate[]>([]);
-  const [estimatorInfo, setEstimatorInfo] = useState<{
-    estimator_id: number;
-    estimator_name: string;
-    total_projects: number;
-  } | null>(null);
+  const [estimates, setEstimates] = useState<Estimate[]>([]);
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    limit: 100,
+    offset: 0,
+    total: 0
+  });
 
   const { data: session } = useSession();
-  const id = 2;
 
-  const fetchEstimates = async () => {
+  const fetchEstimates = async (params?: GetAllEstimatesParams) => {
     try {
       setLoading(true);
-      const response = await getAllEstimates(id);
+      const response = await getAllEstimates({
+        search: params?.search || search,
+        status:
+          params?.status ||
+          (selectedFilter !== 'All' ? selectedFilter : undefined),
+        limit: params?.limit || pagination.limit,
+        offset: params?.offset || pagination.offset
+      });
+
       console.log(response, 'response');
       if (response.success && response.data) {
-        setUsers(response.data.projects || []);
-        setEstimatorInfo({
-          estimator_id: response.data.estimator_id,
-          estimator_name: response.data.estimator_name,
-          total_projects: response.data.total_projects
-        });
+        const estimatesData = response.data.estimates || [];
+        setEstimates(estimatesData);
+
+        // Update pagination info if available
+        if (response.data.total !== undefined) {
+          setPagination((prev) => ({
+            ...prev,
+            total: response.data.total
+          }));
+        }
       } else {
-        setUsers([]);
-        setEstimatorInfo(null);
+        setEstimates([]);
         toast.error(response.message || 'Failed to fetch estimates');
       }
     } catch (error) {
       console.error('Error fetching estimates:', error);
       toast.error('Failed to fetch estimates');
-      setUsers([]);
-      setEstimatorInfo(null);
+      setEstimates([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchEstimates();
+    if (session) {
+      fetchEstimates();
+    }
   }, [session]);
+
+  // Debounced search effect
+  useEffect(() => {
+    if (session && search !== '') {
+      const timer = setTimeout(() => {
+        fetchEstimates({ search });
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [search, session]);
+
+  // Filter change effect
+  useEffect(() => {
+    if (session) {
+      fetchEstimates({
+        status: selectedFilter !== 'All' ? selectedFilter : undefined
+      });
+    }
+  }, [selectedFilter, session]);
 
   const handleRefresh = () => {
     fetchEstimates();
   };
 
   const columns = createColumns({
-    onRefresh: handleRefresh,
-    estimatorName: estimatorInfo?.estimator_name || ''
+    onRefresh: handleRefresh
   });
 
   return (
@@ -72,8 +104,12 @@ export default function EstimatesManagementViewPage() {
       <div className='flex w-full flex-col gap-3'>
         <div className='flex items-center justify-between gap-2'>
           <h1 className='text-2xl font-semibold'>
-         
-             All Estimates
+            All Estimates
+            {estimates.length > 0 && (
+              <span className='ml-2 text-sm font-normal text-gray-500'>
+                ({estimates.length} total)
+              </span>
+            )}
           </h1>
 
           <div className='flex flex-row gap-4'>
@@ -82,7 +118,7 @@ export default function EstimatesManagementViewPage() {
               <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32]' />
               <Input
                 type='text'
-                placeholder='Search by Name or Email'
+                placeholder='Search by project name, description, or estimator'
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className='h-[48px] rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0'
@@ -98,8 +134,13 @@ export default function EstimatesManagementViewPage() {
           </div>
         </div>
 
+
         {/* Table */}
-        <CustomTable data={users} columns={columns} itemsPerPage={10} />
+        <CustomTable
+          data={estimates}
+          columns={columns}
+          itemsPerPage={10}
+        />
       </div>
     </PageContainer>
   );

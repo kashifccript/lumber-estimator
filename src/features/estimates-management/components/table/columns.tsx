@@ -4,30 +4,23 @@ import { CellAction } from './cell-action';
 
 export type Estimate = {
   project_id: number;
+  estimator_name: string;
+  estimator_id: number;
   project_name: string;
   description?: string;
-  project_type?: string | null;
-  location?: string | null;
+  material_count: number;
   total_cost: number;
   status: string;
-  client_name?: string | null;
-  client_contact?: string | null;
-  skus: any[];
-  item_count: number;
+  created_at: string;
+  updated_at: string;
   statuses: {
     available: number;
     quotationNeeded: number;
   };
-  created_at: string;
-  updated_at: string;
 };
-
-
-
 
 interface ColumnsProps {
   onRefresh: () => void;
-  estimatorName: string;
 }
 
 const statusClasses: Record<string, string> = {
@@ -39,22 +32,32 @@ const statusClasses: Record<string, string> = {
 };
 
 export const createColumns = ({
-  onRefresh,
-  estimatorName
+  onRefresh
 }: ColumnsProps): ColumnDef<Estimate>[] => [
   {
     accessorKey: 'estimator_name',
     header: 'Estimator',
-    cell: () => <span className='font-medium'>{estimatorName}</span>
+    cell: ({ row }) => (
+      <span className='font-medium'>{row.original.estimator_name}</span>
+    )
   },
   {
     accessorKey: 'project_name',
     header: 'Project Name'
   },
   {
-    accessorKey: 'item_count',
-    header: 'Item Count',
-   
+    accessorKey: 'material_count',
+    header: 'Material',
+    cell: ({ row }) => {
+      const count = row.original.material_count;
+      const statuses = row.original.statuses;
+      return (
+        <div className='flex flex-col gap-1'>
+          <span>{count} materials</span>
+    
+        </div>
+      );
+    }
   },
   {
     accessorKey: 'total_cost',
