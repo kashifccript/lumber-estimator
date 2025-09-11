@@ -1,6 +1,25 @@
 import { Card } from '@/components/ui/card';
 
-export const SummarySection = () => {
+interface SummarySectionProps {
+  data?: any;
+}
+
+export const SummarySection = ({ data }: SummarySectionProps) => {
+  // Calculate statistics from API data
+  const totalCost = data?.total_cost || 0;
+  const items = data?.items || [];
+
+  // Count items based on database_match flag
+  const itemsQuoted = items.filter(
+    (item: any) => item.database_match === 'Available'
+  ).length;
+
+  const itemsNeedingQuotation = items.filter(
+    (item: any) => item.database_match !== 'Available'
+  ).length;
+
+  const totalItems = data?.total_items_count || items.length;
+
   return (
     <Card>
       <div className='bg-background rounded-lg p-5'>
@@ -11,27 +30,36 @@ export const SummarySection = () => {
               <p className='text-secondary text-sm font-normal'>
                 Total Estimated Cost
               </p>
-              <p className='text-secondary text-[32px] font-semibold'>$100</p>
+              <p className='text-secondary text-[32px] font-semibold'>
+                ${totalCost.toLocaleString()}
+              </p>
             </div>
           </div>
+
           <div className='flex-1 space-y-4'>
             <div className='flex items-center justify-between'>
               <span className='text-secondary text-sm font-normal'>
-                Items Priced
+                Items Quoted
               </span>
-              <span className='text-secondary text-sm font-bold'>10</span>
+              <span className='text-secondary text-sm font-bold'>
+                {itemsQuoted}
+              </span>
             </div>
             <div className='flex items-center justify-between'>
               <span className='text-secondary text-sm font-normal'>
                 Items Needing Quotation
               </span>
-              <span className='text-sm font-bold text-[#D08700]'>3</span>
+              <span className='text-sm font-bold text-[#D08700]'>
+                {itemsNeedingQuotation}
+              </span>
             </div>
             <div className='border-secondary/17 flex items-center justify-between border-t pt-3'>
               <span className='text-secondary text-base font-semibold'>
                 Total Items
               </span>
-              <span className='text-secondary text-base font-bold'>6</span>
+              <span className='text-secondary text-base font-bold'>
+                {totalItems}
+              </span>
             </div>
           </div>
         </div>

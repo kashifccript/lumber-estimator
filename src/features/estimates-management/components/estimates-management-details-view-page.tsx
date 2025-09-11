@@ -10,83 +10,81 @@ import { createColumns, Estimate } from './estimate-table/columns';
 import { SummarySection } from './summary-section';
 import { Button } from '@/components/ui/button';
 import { CallToAction } from './cta';
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { fetchProjectById } from '@/features/project-details/actions/project';
+import { toast } from 'sonner';
 
 export default function EstimatesManagementDetails() {
-  // Mock data based on the image
-  const mockData: Estimate[] = [
-    {
-      id: 'EST-001',
-      itemName: 'Concrete Foundation (Grade A)',
-      skuId: 'PLY-34',
-      quantity: 120,
-      unitPrice: '127,344',
-      total: '127,344',
-      status: 'Quoted'
-    },
-    {
-      id: 'EST-002',
-      itemName: 'Steel Structural Beams I-Beam 12"',
-      skuId: 'PLY-34',
-      quantity: 45,
-      unitPrice: '127,344',
-      total: '127,344',
-      status: 'Quoted'
-    },
-    {
-      id: 'EST-003',
-      itemName: 'Premium Glass Curtain Wall System',
-      skuId: 'PLY-34',
-      quantity: 124,
-      unitPrice: '127,344',
-      total: '127,344',
-      status: 'Quoted'
-    },
-    {
-      id: 'EST-004',
-      itemName: 'Electrical Conduit & Wiring',
-      skuId: 'PLY-34',
-      quantity: 24,
-      unitPrice: '127,344',
-      total: '127,344',
-      status: 'Quoted'
-    },
-    {
-      id: 'EST-005',
-      itemName: 'Concrete Foundation (Grade A)',
-      skuId: 'PLY-34',
-      quantity: 120,
-      unitPrice: '127,344',
-      total: '127,344',
-      status: 'Quotation Needed'
-    },
-    {
-      id: 'EST-006',
-      itemName: 'Steel Structural Beams I-Beam 12"',
-      skuId: 'PLY-34',
-      quantity: 120,
-      unitPrice: '127,344',
-      total: '127,344',
-      status: 'Quoted'
-    },
-    {
-      id: 'EST-007',
-      itemName: 'Premium Glass Curtain Wall System',
-      skuId: 'PLY-34',
-      quantity: 120,
-      unitPrice: '127,344',
-      total: '127,344',
-      status: 'Quoted'
-    },
-    {
-      id: 'EST-008',
-      itemName: 'Electrical Conduit & Wiring',
-      skuId: 'PLY-34',
-      quantity: 120,
-      unitPrice: '127,344',
-      total: '127,344',
-      status: 'Quoted'
+  const [projectData, setProjectData] = useState<any>(null);
+  const [tableData, setTableData] = useState<Estimate[]>([]);
+  const [loading, setLoading] = useState(true);
+  const params = useParams();
+  const projectId = params.id as string;
+
+  // Transform API data to table format
+  const transformApiDataToTableItems = (apiData: any): Estimate[] => {
+    if (apiData.items && Array.isArray(apiData.items)) {
+      return apiData.items.map((item: any, index: number) => {
+        // Determine status based on database_match flag
+        const status: 'Quoted' | 'Quotation Needed' =
+          item.database_match === 'Available' ? 'Quoted' : 'Quotation Needed';
+
+        // Format cost
+        let unitPrice = '0';
+        let total = '0';
+
+        if (typeof item.unit_price === 'number') {
+          unitPrice = item.unit_price.toLocaleString();
+        }
+
+        if (typeof item.total_price === 'number') {
+          total = item.total_price.toLocaleString();
+        } else if (item.total_price === 'Quotation needed') {
+          unitPrice = 'Quotation needed';
+          total = 'Quotation needed';
+        }
+
+        return {
+          id: item.item_id || item.id || `item-${index}`,
+          itemName: item.item_name || 'Unknown Item',
+          skuId: item.sku || item.item_id || 'N/A',
+          quantity: item.quantity_needed || item.quantity || 0,
+          unitPrice,
+          total,
+          status
+        };
+      });
     }
-  ];
+    return [];
+  };
+
+  // Fetch project data
+  useEffect(() => {
+    const loadProjectData = async () => {
+      if (!projectId) return;
+
+      try {
+        setLoading(true);
+        const response = await fetchProjectById(projectId);
+
+        if (response && response.project_id) {
+          setProjectData(response);
+          const transformedData = transformApiDataToTableItems(response);
+          setTableData(transformedData);
+        } else {
+          toast.error('Failed to load project data');
+        }
+      } catch (error) {
+        console.error('Error loading project data:', error);
+        toast.error('Error loading project data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProjectData();
+  }, [projectId]);
 
   const columns = createColumns({
     onRefresh: () => {}
@@ -103,22 +101,12 @@ export default function EstimatesManagementDetails() {
                   href: '/dashboard/contractor/estimates-management'
                 },
                 {
-                  label: 'Estimates Management'
+                  label: projectData?.project_name || 'Project Details'
                 }
               ]}
             />
-            {/* <div className='relative w-full max-w-sm'>
-             
-              <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32]' />
-
-           
-              <Input
-                type='text'
-                placeholder='Search'
-                className='h-[48px] rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0'
-              />
-            </div> */}
           </div>
+
           {/* Profile Section */}
           <div className='flex items-center justify-between gap-3 rounded-sm bg-white px-10 py-4'>
             <div className='flex items-center gap-4'>
@@ -128,38 +116,49 @@ export default function EstimatesManagementDetails() {
                     width={90}
                     height={90}
                     src={'/assets/icons/profile.png'}
-                    alt='Profile Avatar'
+                    alt='Project Avatar'
                     className='h-full w-full object-cover'
                   />
                 </div>
               </div>
 
               <div className='flex-1'>
-                <h3 className='text-lg font-semibold'>{'Profile'}</h3>
+                <h3 className='text-lg font-semibold'>
+                  {projectData?.project_name || 'Loading...'}
+                </h3>
                 <p className='mb-2 text-[12px] font-[400] text-[#1F1F1F]'>
-                  {'email'}
+                  {projectData?.description || 'Project description'}
                 </p>
                 <div className='flex flex-row gap-3'>
                   <Badge
                     variant='secondary'
                     className={`h-[22px] rounded-[2px] bg-[#3B81F5] px-2 text-white capitalize`}
                   >
-                    {'role'}
+                    {'Estimator'}
                   </Badge>
                 </div>
               </div>
             </div>
             <div className='flex flex-col gap-3'>
               <p className='text-lg font-semibold'>Submitted Date</p>
-              <span className='text-xs font-normal'>15/01/2025</span>
+              <span className='text-xs font-normal'>
+                {projectData?.created_at
+                  ? new Date(projectData.created_at).toLocaleDateString()
+                  : 'Loading...'}
+              </span>
             </div>
           </div>
 
           {/* Custom Table */}
-          <CustomTable data={mockData} columns={columns} itemsPerPage={10} />
+          <CustomTable
+            data={tableData}
+            columns={columns}
+            itemsPerPage={10}
+            isLoading={loading}
+          />
 
           {/* SummarySection */}
-          <SummarySection />
+          <SummarySection data={projectData} />
 
           {/* CTA */}
           <CallToAction />
