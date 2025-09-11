@@ -3,12 +3,16 @@
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
-export default function CircleProgress() {
-  const percentage = 18;
+interface propsList {
+  percentage: number;
+}
 
+export function CircleProgress({ percentage }: propsList) {
   return (
-    <div className='flex w-full max-w-sm flex-row justify-between '>
-      <div className='text-[48px] items-center flex justify-center font-normal text-[#1F1F1F]'>{'Overview'}</div>
+    <div className='flex w-full max-w-sm flex-row justify-between'>
+      <div className='flex items-center justify-center text-[48px] font-normal text-[#1F1F1F]'>
+        {'Overview'}
+      </div>
       <div className='h-24 w-24 pt-6'>
         <CircularProgressbar
           value={percentage}

@@ -31,14 +31,14 @@ export const columns: ColumnDef<any>[] = [
   //   header: 'Status',
   //   cell: ({ row }) => <StatusProgress data={row.original.status} />
   // },
-  // {
-  //   accessorKey: 'statuses',
-  //   header: 'Status Overview',
-  //   cell: ({ row }) => {
-  //     const statuses = row?.original?.statuses;
-  //     return <StatusList statuses={statuses} />;
-  //   }
-  // },
+  {
+    accessorKey: 'statuses',
+    header: 'Status Overview',
+    cell: ({ row }) => {
+      const statuses = row?.original?.statuses;
+      return <StatusList statuses={statuses} />;
+    }
+  },
 
   {
     id: 'actions',
