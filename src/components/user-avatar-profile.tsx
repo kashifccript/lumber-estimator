@@ -24,9 +24,10 @@ export function UserAvatarProfile({
         </AvatarFallback>
       </Avatar>
 
-      <p className='text-secondary text-lg font-medium'>
-        {user?.fullName || 'User Name'}
-      </p>
+     <p className="hidden md:block text-secondary text-lg font-medium">
+  {user?.fullName || "User Name"}
+</p>
+
 
       {showInfo && (
         <div className='grid flex-1 text-left text-sm leading-tight'>

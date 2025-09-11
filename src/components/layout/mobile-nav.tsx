@@ -1,14 +1,13 @@
 "use client"
 
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { LayoutGrid, FileText, Settings } from "lucide-react"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Menu } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import Image from "next/image"
-import { UserNav } from "./user-nav"
 import { useSession } from "next-auth/react"
 import { Icon } from "@iconify/react"
-import { MobileNav } from "./mobile-nav"
 
 type UserRole = "admin" | "contractor" | "estimator"
 
@@ -100,69 +99,45 @@ const getRoleNavItems = (role: UserRole): NavItem[] => {
         {
           name: "Dashboard",
           href: "/dashboard/estimator/overview",
-          icon: LayoutGrid,
+          icon: "mage:dashboard",
           isAdmin: true,
         },
         {
           name: "Estimates",
           href: "/dashboard/estimator/estimates",
-          icon: FileText,
+          icon: "hugeicons:estimate-01",
           isAdmin: true,
         },
         {
           name: "Settings",
           href: "/dashboard/estimator/settings",
-          icon: Settings,
+          icon: "solar:settings-linear",
           isAdmin: true,
         },
       ]
   }
 }
 
-const getRoleHomeUrl = (role: UserRole): string => {
-  switch (role) {
-    case "admin":
-      return "/dashboard/admin"
-    case "contractor":
-      return "/dashboard/contractor"
-    case "estimator":
-      return "/dashboard/estimator"
-    default:
-      return "/dashboard/estimator/overview"
-  }
-}
-
-export default function Header() {
+export function MobileNav() {
+  const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const { data: session } = useSession()
-  // Get role from session, fallback to estimator for development
+
   const role = (session?.user?.user?.role?.toLowerCase() as UserRole) || "estimator"
   const navItems = getRoleNavItems(role)
-  const homeUrl = getRoleHomeUrl(role)
+
   return (
-    <header className="flex h-[52px] items-center justify-between overflow-hidden">
-      {/* Mobile Layout */}
-      <div className="flex md:hidden w-full items-center justify-between">
-        <MobileNav />
-
-        <Link href={homeUrl} className="flex h-[42px] w-[42px] items-center justify-center rounded-xl bg-white">
-          <Image src="/assets/home.svg" alt="Lumber Estimator" width={24} height={24} />
-        </Link>
-
-        <div className="flex h-[42px] items-center rounded-xl bg-white px-[5px] py-[10px]">
-          <UserNav />
-        </div>
-      </div>
-
-      <div className="hidden md:flex w-full items-center justify-between">
-        {/* Left: Logo + App Name */}
-        <Link href={homeUrl} className="flex h-full items-center gap-2 rounded-lg bg-white p-[5px]">
-          <Image src="/assets/home.svg" alt="Lumber Estimator" width={26} height={26} />
-          <span className="text-secondary text-base font-medium">Lumber Estimator</span>
-        </Link>
-
-        {/* Center: Navigation */}
-        <nav className="flex items-center gap-2 rounded-lg bg-white p-[5px]">
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button variant="ghost" className="size-[42px] rounded-xl bg-white p-3 md:hidden">
+          <Menu className="h-6 w-6 text-black" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-80 p-0">
+        <div className="flex flex-col space-y-2 p-6">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold">Navigation</h2>
+          </div>
           {navItems.map((item) => {
             const isActive =
               item.href === "/dashboard/admin" ||
@@ -170,29 +145,23 @@ export default function Header() {
               item.href === "/dashboard/contractor"
                 ? pathname === item.href
                 : pathname === item.href || pathname.startsWith(item.href + "/")
+
             return (
-              <Link key={item.name} href={item.href}>
+              <Link key={item.name} href={item.href} onClick={() => setOpen(false)}>
                 <Button
-                  variant={isActive ? "default" : "outline"}
-                  className={`flex h-10.5 items-center gap-2 rounded-md px-5 py-[10px] text-base font-medium ${
-                    isActive ? "bg-primary hover:bg-primary/90 text-white" : "bg-background text-secondary"
+                  variant={isActive ? "default" : "ghost"}
+                  className={`w-full justify-start gap-3 h-12 ${
+                    isActive ? "bg-primary hover:bg-primary/90 text-white" : "text-secondary hover:bg-accent"
                   }`}
                 >
-                  <Icon icon={item.icon} width="24" height="24" />
+                  <Icon icon={item.icon} width="20" height="20" />
                   {item.name}
                 </Button>
               </Link>
             )
           })}
-        </nav>
-
-        {/* Right: Notifications + User */}
-        <div className="flex h-full gap-2">
-          <div className="hover:hover:bg-accent flex h-full items-center rounded-xl bg-white px-[5px] py-[10px]">
-            <UserNav />
-          </div>
         </div>
-      </div>
-    </header>
+      </SheetContent>
+    </Sheet>
   )
 }
