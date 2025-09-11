@@ -11,19 +11,19 @@ import { useContractorApis } from '@/features/admin/actions/contractor';
 import { toast } from 'sonner';
 import { Quotation } from '@/features/admin/types/contractor';
 
-
-
 export default function QuotationsViewPage() {
   const [quotations, setQuotations] = useState<Quotation[]>([]);
   const [loading, setLoading] = useState(true);
   const { data: session } = useSession();
   const { fetchAllQuotationsbyUser } = useContractorApis();
- const userId = String(session?.user?.user.id)
+  const userId = String(session?.user?.user.id);
+  console.log(userId, 'userId');
 
   const fetchQuotations = async () => {
     try {
       setLoading(true);
       const response = await fetchAllQuotationsbyUser(userId);
+      console.log('response', response);
       setQuotations(response);
     } catch (error) {
       console.error('Error fetching users:', error);
