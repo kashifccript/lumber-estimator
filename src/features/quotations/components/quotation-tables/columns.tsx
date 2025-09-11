@@ -1,51 +1,66 @@
 'use client';
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
-
-export type Quotation = {
-  id: string;
-  updatedOn: string;
-  items: number;
-  totalCost: string;
-  status: 'Pending' | 'Approved' | 'Rejected';
-};
+import { Quotation } from '@/features/admin/types/contractor';
+import { formatDateTime } from '@/lib/format';
 
 interface ColumnsProps {
   onRefresh: () => void;
 }
 
-const statusClasses: Record<Quotation['status'], string> = {
-  Pending: 'bg-[#E3A00833] text-[#E3A008]',
-  Approved: 'bg-[#00A42E33] text-[#00A42E]',
-  Rejected: 'bg-[#C81E1E33] text-[#C81E1E]'
-};
-
 export const createColumns = ({
   onRefresh
 }: ColumnsProps): ColumnDef<Quotation>[] => [
-  { accessorKey: 'id', header: 'Quotation ID' },
-  { accessorKey: 'updatedOn', header: 'Updated On' },
   {
-    accessorKey: 'items',
-    header: 'Items',
-    cell: ({ cell }) => <span>{cell.getValue<number>()} Items</span>
+    accessorKey: 'quotation_id',
+    header: 'Quotation ID',
+    cell: ({ row }) => {
+      const quotation = row.original;
+      return (
+        <div className='flex items-center'>
+          <div className='h-8 w-8 flex-shrink-0'>
+            {' '}
+            #{quotation.quotation_id}
+          </div>
+        </div>
+      );
+    }
   },
   {
-    accessorKey: 'totalCost',
+    accessorKey: 'created_at',
+    header: 'Date & Time',
+    cell: ({ cell }) => <div>{formatDateTime(cell.getValue<string>())} </div>
+  },
+  {
+    accessorKey: 'item_count',
+    header: 'Items',
+    cell: ({ cell }) => <div>{`${cell.getValue<string>()} Items`} </div>
+  },
+
+  {
+    accessorKey: 'total_cost',
     header: 'Total Cost',
-    cell: ({ cell }) => <span>$ {cell.getValue<string>()}</span>
+    cell: ({ cell }) => <div>{`$ ${cell.getValue<string>()}`} </div>
   },
   {
     accessorKey: 'status',
     header: 'Status',
     cell: ({ cell }) => {
-      const status = cell.getValue<Quotation['status']>();
+      const status = cell.getValue<string>();
+      const statusColors = {
+        pending: 'bg-[#E3A00833] text-[#E3A008]',
+        approved: 'bg-[#00A42E33] text-[#00A42E]',
+        rejected: 'bg-[#C81E1E33] text-[#C81E1E]'
+      };
+
       return (
-        <span
-          className={`inline-flex rounded-full px-2.5 py-2 text-sm font-medium ${statusClasses[status]}`}
-        >
-          {status}
-        </span>
+        <div className='text-sm'>
+          <span
+            className={`inline-flex rounded-full px-2.5 py-2 font-medium capitalize ${statusColors[status as keyof typeof statusColors] || 'bg-[#E3A00833]/20 text-[#E3A008]'}`}
+          >
+            {status || 'Pending'}
+          </span>
+        </div>
       );
     }
   },

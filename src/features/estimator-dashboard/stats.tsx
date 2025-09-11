@@ -1,8 +1,7 @@
 'use client';
 import CircleProgress from '@/components/shared/circular-progress';
 import { EstimatorStats } from '@/components/shared/estimator-stat-card';
-import { StatCard } from '@/components/shared/stat-card';
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 
 export default function Stats() {
   const [loading, setLoading] = useState(false);

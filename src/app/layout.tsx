@@ -1,6 +1,5 @@
 import Providers from '@/components/layout/providers';
 import { Toaster } from '@/components/ui/sonner';
-import { fontVariables } from '@/lib/font';
 import ThemeProvider from '@/components/layout/ThemeToggle/theme-provider';
 import { cn } from '@/lib/utils';
 import type { Metadata, Viewport } from 'next';
@@ -10,6 +9,41 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { auth } from '../../auth';
 import './globals.css';
 import './theme.css';
+import localFont from 'next/font/local';
+
+const urbanist = localFont({
+  src: [
+    {
+      path: '../../public/fonts/urbanist/Urbanist-Regular.ttf',
+      weight: '400',
+      style: 'normal'
+    },
+    {
+      path: '../../public/fonts/urbanist/Urbanist-Medium.ttf',
+      weight: '500',
+      style: 'normal'
+    },
+    {
+      path: '../../public/fonts/urbanist/Urbanist-SemiBold.ttf',
+      weight: '600',
+      style: 'normal'
+    },
+    {
+      path: '../../public/fonts/urbanist/Urbanist-Bold.ttf',
+      weight: '700',
+      style: 'normal'
+    }
+  ],
+  display: 'swap'
+});
+export const fontPoppins = localFont({
+  src: '../../public/fonts/poppins/Poppins-Regular.ttf',
+  variable: '--font-poppins'
+});
+export const fontMono = localFont({
+  src: '../../public/fonts/geist-mono/GeistMono-VariableFont_wght.ttf',
+  variable: '--font-mono'
+});
 
 const META_THEME_COLORS = {
   light: '#ffffff',
@@ -53,10 +87,9 @@ export default async function RootLayout({
       </head>
       <body
         className={cn(
-          // 'bg-background overflow-hidden overscroll-none font-sans antialiased',
           activeThemeValue ? `theme-${activeThemeValue}` : '',
           isScaled ? 'theme-scaled' : '',
-          fontVariables
+          urbanist.className
         )}
       >
         <NextTopLoader showSpinner={false} />
