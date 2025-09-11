@@ -7,6 +7,7 @@ import { CustomTable } from '@/components/shared/table';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify/react';
 import { useContractorApis } from '../../actions/contractor';
+import { Quotation } from '../../types/contractor';
 interface UserListingProps {
   query?: string;
   showButton?: boolean;
