@@ -136,7 +136,7 @@ export function MobileNav() {
       <SheetContent side="left" className="w-80 p-0">
         <div className="flex flex-col space-y-2 p-6">
           <div className="mb-4">
-            <h2 className="text-lg font-semibold">Navigation</h2>
+            <h2 className="text-lg font-semibold">Lumber Estimator</h2>
           </div>
           {navItems.map((item) => {
             const isActive =

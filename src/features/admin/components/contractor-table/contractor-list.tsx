@@ -53,7 +53,7 @@ export const ContractorListing: React.FC<UserListingProps> = ({ query }) => {
         </div>
 
         <div className='flex flex-row gap-4'>
-          <div className='relative w-full max-w-sm'>
+          <div className='relative w-full'>
             {/* Search Icon */}
             <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32]' />
 

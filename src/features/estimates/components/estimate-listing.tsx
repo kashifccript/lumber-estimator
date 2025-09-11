@@ -31,7 +31,6 @@ export default function EstimateListing() {
 
     loadProjects();
   }, []);
-
   return (
     <>
       {/* Conditional Table Rendering */}

@@ -95,8 +95,7 @@ export default function EstimatesManagementDetails() {
     <PageContainer>
       <div className='flex w-full flex-col gap-5'>
         <div className='flex flex-col gap-3'>
-          <div className='flex items-center justify-between'>
-            <Breadcrumb
+ <div className='flex flex-col gap-6 sm:flex-row sm:justify-between py-4'>            <Breadcrumb
               items={[
                 {
                   label: 'All Estimates',
@@ -107,7 +106,7 @@ export default function EstimatesManagementDetails() {
                 }
               ]}
             />
-            <div className='relative w-full max-w-sm'>
+            <div className='relative w-full'>
               {/* Search Icon */}
               <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32]' />
 

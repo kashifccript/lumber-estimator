@@ -3,6 +3,7 @@ export interface Estimate {
   projectName: string;
   material: string;
   totalCost: string;
+  statuses?:any;
   status: {
     pending: number;
     approved: number;

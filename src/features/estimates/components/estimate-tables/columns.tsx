@@ -3,8 +3,9 @@ import { Estimate } from '../../types/estimate';
 import { ColumnDef } from '@tanstack/react-table';
 import { StatusProgress } from '../status-progress';
 import { CellAction } from './cell-action';
+import StatusList from '@/components/shared/status-bar';
 
-export const columns: ColumnDef<Estimate>[] = [
+export const columns: ColumnDef<any>[] = [
   {
     accessorKey: 'id',
     header: 'Estimate ID',
@@ -30,6 +31,15 @@ export const columns: ColumnDef<Estimate>[] = [
   //   header: 'Status',
   //   cell: ({ row }) => <StatusProgress data={row.original.status} />
   // },
+  // {
+  //   accessorKey: 'statuses',
+  //   header: 'Status Overview',
+  //   cell: ({ row }) => {
+  //     const statuses = row?.original?.statuses;
+  //     return <StatusList statuses={statuses} />;
+  //   }
+  // },
+
   {
     id: 'actions',
     header: 'Actions',

@@ -64,13 +64,12 @@ export default function EstimatesManagementViewPage() {
   return (
     <PageContainer>
       <div className='flex w-full flex-col gap-3'>
-        <div className='flex items-center justify-between gap-2'>
+        <div className='flex flex-col gap-6 sm:flex-row sm:justify-between py-4'>
           <h1 className='text-2xl font-semibold'>All Estimates</h1>
 
-          <div className='flex flex-row gap-4'>
-            {/* Search box */}
-            <div className='relative w-full max-w-sm'>
-              <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32]' />
+   <div className='flex flex-col gap-6 sm:flex-row sm:flex-row gap-4'>            {/* Search box */}
+            <div className='relative w-full'>
+              <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32] w-ful' />
               <Input
                 type='text'
                 placeholder='Search by Name or Email'
