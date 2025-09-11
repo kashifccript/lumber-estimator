@@ -13,7 +13,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
   const router = useRouter();
 
   const onView = () => {
-    router.push(`/dashboard/contractor/estimates-management/${data.id}`);
+    router.push(
+      `/dashboard/contractor/estimates-management/${data.project_id}`
+    );
   };
 
   return (
@@ -21,7 +23,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
       <div className='flex items-center gap-2.5'>
         <button
           onClick={onView}
-          className='flex h-[32px] w-[32px] items-center justify-center rounded-sm border-[0.3px] border-[#1F1F1F1A]'
+          className='flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border-[0.3px] border-[#1F1F1F1A]'
         >
           <Eye className='h-4 w-4 text-[#8896AB]' />
         </button>
