@@ -159,12 +159,65 @@ export function useContractorApis() {
     }
   };
 
+  const getContractorDashboardOveriview = async () => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+      // Build query params dynamically
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/contractor/dashboard-overview`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          }
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to fetch Quotations');
+
+      const { data } = await res.json();
+      return data || null;
+    } catch (error) {
+      console.error('Error fetching Quotations:', error);
+      return [];
+    }
+  };
+  const getContractorMonthlyExpensses = async () => {
+    if (!session?.user?.access_token) return [];
+
+    try {
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_HOST}/contractor/monthly-revenue`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.user.access_token}`
+          }
+        }
+      );
+
+      if (!res.ok) throw new Error('Failed to fetch Quotations');
+
+      const { data } = await res.json();
+      return data || null;
+    } catch (error) {
+      console.error('Error fetching Quotations:', error);
+      return [];
+    }
+  };
   return {
     fetchAllContractors,
     fetchAllQuotationsbyUser,
     fetchAllItemsWithinQuotation,
     updateQuotationStatus,
     delteQuotation,
-    fetchAllQuotations
+    fetchAllQuotations,
+    getContractorMonthlyExpensses,
+    getContractorDashboardOveriview
   };
 }

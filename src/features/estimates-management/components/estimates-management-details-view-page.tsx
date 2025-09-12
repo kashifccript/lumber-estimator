@@ -104,7 +104,7 @@ export default function EstimatesManagementDetails() {
                 }
               ]}
             />
-            <div className='relative w-full'>
+            <div className='relative w-full md:w-sm'>
               {/* Search Icon */}
               <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32]' />
 

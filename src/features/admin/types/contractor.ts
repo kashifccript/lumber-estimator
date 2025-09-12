@@ -37,10 +37,18 @@ export interface QuotationDashboard {
   skus?: string[];
   status?: string;
   contractor: {
-    
     name: string;
     first_name: string;
     id: string;
     last_name: string;
   };
+}
+
+export interface ContractorDashboardStats {
+  approved_projects: number | 0;
+  pending_approvals: number | 0;
+  active_project_value: number | 0;
+  quotation_items: number | 0;
+  approval_percentage: number | 0;
+  total: number | 0;
 }

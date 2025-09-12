@@ -15,10 +15,18 @@ import {
   getAllEstimates,
   GetAllEstimatesParams
 } from '@/features/contractor/actions/estimates';
-
-export default function EstimatesManagementViewPage() {
+export default function EstimatesManagementViewPage({
+  query,
+  isDashboard
+}: {
+  query?: string;
+  isDashboard?: boolean;
+}) {
+  // export default function EstimatesManagementViewPage() {
   const [estimates, setEstimates] = useState<Estimate[]>([]);
-  const [selectedFilter, setSelectedFilter] = useState('All');
+  const [selectedFilter, setSelectedFilter] = useState(
+    isDashboard ? 'pending' : 'All'
+  );
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
@@ -103,18 +111,26 @@ export default function EstimatesManagementViewPage() {
     <PageContainer>
       <div className='flex w-full flex-col gap-3'>
         <div className='flex items-center justify-between gap-2'>
-          <h1 className='text-2xl font-semibold'>
-            All Estimates
-            {estimates.length > 0 && (
-              <span className='ml-2 text-sm font-normal text-gray-500'>
-                ({estimates.length} total)
-              </span>
-            )}
-          </h1>
+          {isDashboard ? (
+            <h1 className='text-2xl font-semibold'>
+              Estimates Awaiting Your Approval
+            </h1>
+          ) : (
+            <h1 className='text-2xl font-semibold'>
+              All Estimates
+              {estimates.length > 0 && (
+                <span className='ml-2 text-sm font-normal text-gray-500'>
+                  ({estimates.length} total)
+                </span>
+              )}
+            </h1>
+          )}
 
-   <div className='flex flex-col gap-6 sm:flex-row sm:flex-row gap-4'>            {/* Search box */}
+          <div className='flex flex-col gap-4 gap-6 sm:flex-row'>
+            {' '}
+            {/* Search box */}
             <div className='relative w-full'>
-              <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32] w-ful' />
+              <Search className='w-ful absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32]' />
               <Input
                 type='text'
                 placeholder='Search Estimator'
@@ -123,23 +139,19 @@ export default function EstimatesManagementViewPage() {
                 className='h-[48px] rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0'
               />
             </div>
-
             {/* Dropdown */}
-            <CustomDropdown
-              options={estimatesManagementDropdownList}
-              value={selectedFilter}
-              onValueChange={setSelectedFilter}
-            />
+            {!isDashboard && (
+              <CustomDropdown
+                options={estimatesManagementDropdownList}
+                value={selectedFilter}
+                onValueChange={setSelectedFilter}
+              />
+            )}
           </div>
         </div>
 
-
         {/* Table */}
-        <CustomTable
-          data={estimates}
-          columns={columns}
-          itemsPerPage={10}
-        />
+        <CustomTable data={estimates} columns={columns} itemsPerPage={10} />
       </div>
     </PageContainer>
   );
