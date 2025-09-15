@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useTransition } from 'react';
+import { useTransition, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import {
@@ -17,6 +17,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { resetPassword } from '@/features/auth/actions/forgot-password';
+import { Eye, EyeOff } from 'lucide-react';
 
 const formSchema = z.object({
   confirm_password: z
@@ -33,6 +34,8 @@ type UserFormValue = z.infer<typeof formSchema>;
 
 export default function CreatePasswordView() {
   const [loading, startTransition] = useTransition();
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
@@ -70,44 +73,65 @@ export default function CreatePasswordView() {
       }
     });
   };
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className='w-full space-y-5 pb-10'
       >
-        {/* Username */}
+        {/* New Password */}
         <FormField
           control={form.control}
           name='new_password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Your New Passowrd</FormLabel>
+              <FormLabel>Your New Password</FormLabel>
               <FormControl>
-                <Input
-                  placeholder='your new password'
-                  disabled={loading}
-                  type='password'
-                  {...field}
-                />
+                <div className="relative">
+                  <Input
+                    placeholder='your new password'
+                    disabled={loading}
+                    type={showNewPassword ? 'text' : 'password'}
+                    {...field}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                  >
+                    {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
+        {/* Confirm Password */}
         <FormField
           control={form.control}
           name='confirm_password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Your Confirm Passowrd</FormLabel>
+              <FormLabel>Your Confirm Password</FormLabel>
               <FormControl>
-                <Input
-                  type='password'
-                  placeholder='your confirm password'
-                  disabled={loading}
-                  {...field}
-                />
+                <div className="relative">
+                  <Input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    placeholder='your confirm password'
+                    disabled={loading}
+                    {...field}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                  >
+                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

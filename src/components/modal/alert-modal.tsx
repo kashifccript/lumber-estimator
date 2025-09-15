@@ -54,7 +54,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
         </Button>
         <Button
           disabled={loading}
-          size={'md'}
+          // size={'md'}
           variant={
             variant === 'approve'
               ? 'approve'
@@ -62,7 +62,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
                 ? 'reject'
                 : 'primary'
           }
-          className={`${variant === 'reject' ? 'bg-[#C81E1E] text-white hover:bg-[#C81E1E]/90' : ''}`}
+          className={`w-auto ${variant === 'reject' ? 'bg-[#C81E1E] text-white hover:bg-[#C81E1E]/90' : ''}`}
           onClick={onConfirm}
         >
           {confirmText}

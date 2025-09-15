@@ -1,7 +1,6 @@
 import { AuthCover } from '@/components/auth/auth-cover';
 import AuthHeading from '@/components/auth/auth-heading';
 import CreatePasswordView from '@/components/auth/create-password-form';
-import ForgotPasswordForm from '@/components/auth/forgot-password-form';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

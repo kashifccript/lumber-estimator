@@ -1,7 +1,6 @@
 'use client';
 
 import type React from 'react';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
@@ -18,6 +17,7 @@ import {
 import { useUserApis } from '../../actions/users';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { Eye, EyeOff } from 'lucide-react';
 
 const profileFormSchema = z
   .object({
@@ -41,8 +41,13 @@ const Security = () => {
       confirm_password: ''
     }
   });
+
   const { resetPassword } = useUserApis();
   const [loading, setLoading] = useState(false);
+
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const onSubmit = async (data: ProfileFormValues) => {
     try {
       setLoading(true);
@@ -64,6 +69,7 @@ const Security = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className='w-full space-y-4'
         >
+          {/* New Password */}
           <FormField
             control={form.control}
             name='new_password'
@@ -73,18 +79,28 @@ const Security = () => {
                   New Password
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type='password'
-                    placeholder='Enter new password'
-                    {...field}
-                    className='border-0 shadow-none placeholder:text-[#1F1F1F66]'
-                  />
+                  <div className="relative">
+                    <Input
+                      type={showNewPassword ? 'text' : 'password'}
+                      placeholder='Enter new password'
+                      {...field}
+                      className='border-0 shadow-none placeholder:text-[#1F1F1F66]'
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword((prev) => !prev)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                    >
+                      {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
+          {/* Confirm Password */}
           <FormField
             control={form.control}
             name='confirm_password'
@@ -94,12 +110,21 @@ const Security = () => {
                   Confirm Password
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type='password'
-                    placeholder='Confirm new password'
-                    {...field}
-                    className='border-0 shadow-none placeholder:text-[#1F1F1F66]'
-                  />
+                  <div className="relative">
+                    <Input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      placeholder='Confirm new password'
+                      {...field}
+                      className='border-0 shadow-none placeholder:text-[#1F1F1F66]'
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                    >
+                      {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

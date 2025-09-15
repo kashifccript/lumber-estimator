@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useTransition } from 'react';
+import { useTransition, useState } from 'react';
 import { getSession, signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
@@ -18,6 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Eye, EyeOff } from 'lucide-react';
 
 const formSchema = z.object({
   username: z
@@ -36,6 +37,7 @@ export default function SigninForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl');
   const [loading, startTransition] = useTransition();
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const defaultValues = {
@@ -54,9 +56,9 @@ export default function SigninForm() {
       case 'admin':
         return '/dashboard/admin';
       case 'contractor':
-        return '/dashboard/overview'; // or '/dashboard/contractors' if you have a specific page
+        return '/dashboard/overview';
       case 'estimator':
-        return '/dashboard/overview'; // or '/dashboard/estimates' if you have a specific page
+        return '/dashboard/overview';
       default:
         return '/dashboard/overview';
     }
@@ -74,7 +76,6 @@ export default function SigninForm() {
         if (result?.error) {
           toast.error('Invalid Credentials!');
         } else if (result?.ok) {
-          // Get the session to access user data
           const session = await getSession();
 
           if (session?.user?.user) {
@@ -86,7 +87,6 @@ export default function SigninForm() {
             );
             router.push(redirectUrl);
           } else {
-            // Fallback if session is not available immediately
             toast.success('Signed In Successfully!');
             router.push(callbackUrl || '/dashboard/overview');
           }
@@ -99,6 +99,7 @@ export default function SigninForm() {
       }
     });
   };
+
   return (
     <Form {...form}>
       <form
@@ -134,11 +135,18 @@ export default function SigninForm() {
               <FormControl>
                 <div className='relative'>
                   <Input
-                    type='password'
+                    type={showPassword ? 'text' : 'password'}
                     placeholder='Your Password'
                     disabled={loading}
                     {...field}
                   />
+                  <button
+                    type='button'
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className='absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-gray-500'
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
                 </div>
               </FormControl>
               <FormMessage />
