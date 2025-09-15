@@ -86,7 +86,8 @@ const ProfileSettings = () => {
     try {
       setLoading(true);
       const response = await upadteProfile(data);
-      setUser(response);
+      // console.log(response, 'response');
+      // setUser(response);
       toast.success('Profile updated successfully!');
       console.log('[v0] Profile updated:', response);
     } catch (error) {

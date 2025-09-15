@@ -50,7 +50,7 @@ const CompanyInfo = () => {
     try {
       setLoading(true);
       const response = await upadteProfile(data);
-      setUser(response);
+      // setUser(response);
       toast.success('Company data updated successfully!');
       console.log('[v0] Profile updated:', response);
     } catch (error) {
