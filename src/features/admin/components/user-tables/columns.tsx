@@ -11,7 +11,7 @@ export const createColumns = ({
   onRefresh
 }: ColumnsProps): ColumnDef<User>[] => [
   {
-    accessorKey: 'user_name',
+    accessorKey: 'username',
     header: 'User Name',
     cell: ({ row }) => {
       const user = row.original;
@@ -25,7 +25,7 @@ export const createColumns = ({
           </div>
           <div className='ml-3'>
             <div className='text-sm font-medium text-gray-900'>
-              {user.user_name}
+              {user.username}
             </div>
           </div>
         </div>

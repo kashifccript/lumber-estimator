@@ -17,7 +17,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 
 const formSchema = z.object({
@@ -147,14 +146,14 @@ export default function SigninForm() {
           )}
         />
         {/* Forget Password link aligned right */}
-        {/* <div className='flex justify-end'>
+        <div className='flex justify-end'>
           <Link
-            href='/auth/forgot-password'
+            href='/forgot-password'
             className='text-lg text-[#90A1B9] hover:underline'
           >
             Forgot Password
           </Link>
-        </div> */}
+        </div>
 
         {/* Submit Button */}
         <Button type='submit' variant='default' disabled={loading}>

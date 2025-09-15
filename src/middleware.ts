@@ -7,7 +7,14 @@ export default async function middleware(req: NextRequest) {
   const pathname = url.pathname;
 
   // Allowed unauthenticated paths (auth pages)
-  const allowedAuthPaths = new Set(['/sign-in', '/sign-up', '/role-selection']);
+  const allowedAuthPaths = new Set([
+    '/sign-in',
+    '/sign-up',
+    '/role-selection',
+    '/forgot-password',
+    '/email-verification',
+    '/reset-password'
+  ]);
 
   // If unauthenticated and hitting an allowed auth page, continue
   if (!session && allowedAuthPaths.has(pathname)) {
@@ -48,6 +55,6 @@ export default async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     // Run on dashboard and auth pages
-    '/(dashboard|sign-in|sign-up|role-selection)(.*)'
+    '/(dashboard|sign-in|sign-up|role-selection|forgot-password|email-verification|reset-password)(.*)'
   ]
 };
