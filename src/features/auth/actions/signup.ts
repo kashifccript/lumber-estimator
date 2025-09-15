@@ -2,21 +2,45 @@ import { z } from 'zod';
 
 // Schema that matches the FastAPI registration endpoint
 export const signUpSchema = z.object({
-  username: z.string().min(3, 'Username must be at least 3 characters'),
+  username: z
+    .string()
+    .min(3, 'Username must be at least 3 characters')
+    .regex(/^\S+$/, 'Invalid input'),
+
   email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  password: z
+    .string()
+    .min(6, 'Password must be at least 6 characters'),
   role: z.enum(['estimator', 'admin', 'contractor'], {
     required_error: 'Role is required'
   }),
-  first_name: z.string().min(1, 'First name is required'),
-  last_name: z.string().min(1, 'Last name is required'),
-  phone: z.string().min(10, 'Phone number must be at least 10 characters'),
-  company_name: z.string().min(1, 'Company name is required'),
+  first_name: z
+    .string()
+    .min(1, 'First name is required')
+    .regex(/^\S+$/, 'Invalid input'),
+  last_name: z
+    .string()
+    .min(1, 'Last name is required')
+    .regex(/^\S+$/, 'Invalid input'),
+  phone: z
+    .string()
+    .min(10, 'Phone number must be at least 10 characters')
+    .regex(/^\S+$/, 'Invalid input'),
+  company_name: z
+    .string()
+    .min(1, 'Company name is required')
+    .regex(/^\S+$/, 'Invalid input'),
   business_license: z.string().optional(),
-  address: z.string().min(1, 'Address is required'),
-  city: z.string().min(1, 'City is required'),
-  state: z.string().min(1, 'State is required'),
-  zip_code: z.string().min(5, 'ZIP code must be at least 5 characters')
+  address: z
+    .string()
+    .min(1, 'Address is required')
+    .regex(/^\S+$/, 'Invalid input'),
+  city: z.string().min(1, 'City is required').regex(/^\S+$/, 'Invalid input'),
+  state: z.string().min(1, 'State is required').regex(/^\S+$/, 'Invalid input'),
+  zip_code: z
+    .string()
+    .min(5, 'ZIP code must be at least 5 characters')
+    .regex(/^\S+$/, 'Invalid input')
 });
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;

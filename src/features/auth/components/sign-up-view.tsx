@@ -22,7 +22,7 @@ export default function SignUpViewPage() {
             subtitle='Enter all required information to discover more'
           />
           <SignupForm />
-          
+
         </div>
       </div>
     </div>

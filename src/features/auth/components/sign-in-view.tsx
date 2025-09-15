@@ -15,7 +15,7 @@ export default function SignInViewPage() {
       <AuthCover />
 
       {/* Right Side - Form */}
-      <div className='flex w-full justify-center overflow-y-auto bg-[#F8F8F8] p-4 lg:w-1/2 lg:p-8'>
+      <div className='flex w-full justify-center overflow-y-auto bg-[#F8F8F8] p-4 lg:w-1/2 lg:p-8 items-center'>
         <div className='w-full max-w-lg space-y-20'>
           <AuthHeading
             title='Welcome Back'
