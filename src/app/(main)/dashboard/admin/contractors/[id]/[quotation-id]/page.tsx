@@ -10,7 +10,7 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <div className='py-8'>
-      <ItemListing quotation_id={id} />
+      <ItemListing quotation_id={(await params)['quotation-id']} />
     </div>
   );
 }

@@ -15,11 +15,17 @@ interface UserDetailsProps {
   isOpen: boolean;
   onClose: (setIsPasswordModalOpen: boolean) => void;
   id?: string | number;
+  onRefresh?: () => void;
 }
 
 type StatusType = 'pending' | 'approved' | 'rejected';
 
-export default function UserDetails({ isOpen, onClose, id }: UserDetailsProps) {
+export default function UserDetails({
+  isOpen,
+  onClose,
+  id,
+  onRefresh
+}: UserDetailsProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -39,6 +45,7 @@ export default function UserDetails({ isOpen, onClose, id }: UserDetailsProps) {
       const response = await userAction(id, true);
       if (response) {
         toast.success('User Approved Successfully!');
+        if (onRefresh) onRefresh();
       } else toast.error('Error approving users:');
     } catch (error) {
       toast.error('Error approving users:');
@@ -58,6 +65,7 @@ export default function UserDetails({ isOpen, onClose, id }: UserDetailsProps) {
       if (response) {
         toast.success('User Rejected Successfully!');
       }
+      if (onRefresh) onRefresh();
     } catch (error) {
       toast.error('Error rejecting users:');
     } finally {

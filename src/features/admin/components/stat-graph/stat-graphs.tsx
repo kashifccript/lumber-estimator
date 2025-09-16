@@ -2,11 +2,7 @@
 
 import { ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent
-} from '@/components/ui/chart';
+import { ChartContainer, ChartTooltip } from '@/components/ui/chart';
 import { CustomDropdown } from '@/components/shared/custom-dropdown';
 import { useEffect, useState } from 'react';
 import { useUserApis } from '../../actions/users';
@@ -49,8 +45,7 @@ const getCurrentMonthDateRange = () => {
 export function DashboardCharts() {
   const [selectedValue, setSelectedValue] = useState(months[0]);
 
-  const { estimatesQuotation, estimatorContractor } = useUserApis();
-
+  const { estimatesQuotation } = useUserApis();
 
   const [quotationStats, setQuotationStats] =
     useState<Estimattes_QuotationStats | null>(null);
@@ -70,9 +65,7 @@ export function DashboardCharts() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await Promise.all([
-        fetchEstimatesQuotation()
-      ]);
+      await Promise.all([fetchEstimatesQuotation()]);
       setLoading(false);
     };
 
@@ -82,12 +75,12 @@ export function DashboardCharts() {
   const activityData = quotationStats
     ? [
         {
-          name: ' Projects Created ',
+          name: 'Projects Created',
           value: quotationStats.projects_created || 0,
           color: '#3B82F6'
         },
         {
-          name: ' Quotations Created ',
+          name: 'Quotations Created',
           value: quotationStats.quotations_created || 0,
           color: '#3DD598'
         }
@@ -112,8 +105,7 @@ export function DashboardCharts() {
   }
 
   return (
-   <div className="flex flex-col gap-6 sm:flex-row sm:justify-between">
-
+    <div className='flex flex-col gap-6 sm:flex-row sm:justify-between'>
       <NewSignupStats />
 
       <Card className='w-full'>
@@ -143,7 +135,6 @@ export function DashboardCharts() {
                     cy='50%'
                     innerRadius={90}
                     outerRadius={110}
-                    // paddingAngle={2}
                     dataKey='value'
                     cornerRadius={12}
                   >
@@ -151,7 +142,37 @@ export function DashboardCharts() {
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <ChartTooltip content={<ChartTooltipContent />} />
+                  {/* ✅ Custom Tooltip */}
+                  <ChartTooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className='rounded-md border bg-white p-2 shadow-md'>
+                            {payload.map((entry: any, index: number) => (
+                              <div
+                                key={`item-${index}`}
+                                className='flex items-center gap-2'
+                              >
+                                <span
+                                  className='h-2 w-2 rounded-full'
+                                  style={{
+                                    backgroundColor: entry.payload.color
+                                  }}
+                                />
+                                <span
+                                  className={`text-[14px] font-medium`}
+                                  style={{ color: entry.payload.color }}
+                                >
+                                  {entry.name}: {entry.value}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </ChartContainer>
@@ -162,7 +183,7 @@ export function DashboardCharts() {
                 {quotationStats?.projects_created || 0}
               </div>
               <span className='text-[16px] font-normal text-[#737373]'>
-                {'  Projects Created '}
+                Projects Created
               </span>
             </div>
             <div className='flex flex-col items-center gap-2'>
@@ -170,7 +191,7 @@ export function DashboardCharts() {
                 {quotationStats?.quotations_created || 0}
               </div>
               <span className='text-[16px] font-normal text-[#737373]'>
-                {' Quotations Created '}
+                Quotations Created
               </span>
             </div>
           </div>

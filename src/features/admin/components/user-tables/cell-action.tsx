@@ -187,6 +187,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
           setIsOpen(false);
         }}
         id={userId}
+        onRefresh={onRefresh}
       />
     </>
   );
