@@ -6,6 +6,7 @@ import { Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Separator } from '../ui/separator';
+import { Icon } from '@iconify/react';
 
 type Role = 'admin' | 'contractor' | 'estimator';
 
@@ -29,14 +30,14 @@ const roleOptions: RoleOption[] = [
     title: 'Contractor',
     description:
       'Add and manage team projects, and supervise final project estimates',
-    icon: '👷‍♂️'
+    icon: 'hugeicons:labor'
   },
   {
     id: 'estimator',
     title: 'Estimator',
     description:
       'Upload project files to automatically generate detailed cost estimates',
-    icon: '📊'
+    icon: 'hugeicons:estimate-01'
   }
 ];
 
@@ -52,19 +53,24 @@ export function RoleSelection() {
   };
 
   return (
-    <div className='space-y-3'>
+    <div className='space-y-8'>
       {roleOptions.map((role) => (
         <Card
           key={role.id}
-          className={`relative cursor-pointer border-2 p-5 transition-all hover:shadow-md ${
+          className={`relative rounded-[8px] cursor-pointer p-5 transition-all hover:shadow-xs hover:bg-[#FFFFFF] ${
             selectedRole === role.id
               ? 'border-orange-500 bg-orange-50'
-              : 'border-gray-200 hover:border-gray-300'
+              : 'border-0'
           }`}
           onClick={() => setSelectedRole(role.id)}
         >
           <div className='flex items-start space-x-3'>
-            <div className='text-2xl'>{role.icon}</div>
+            <div className='text-2xl mt-2'>
+
+
+                                <Icon icon={role.icon} width="24" height="24" />
+
+            </div>
             <div className='flex-1'>
               <div className='flex items-center justify-between'>
                 <h3 className='font-medium text-gray-900'>{role.title}</h3>
@@ -85,9 +91,9 @@ export function RoleSelection() {
         disabled={!selectedRole}
         type='submit'
         variant='default'
-        className='w-full'
+        className='w-full h-[52px]'
       >
-        Continue to Sign Up
+        Continue
       </Button>
 
       {/* Separator */}
