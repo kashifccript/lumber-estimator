@@ -90,7 +90,7 @@ export default function EstimatorInfo({ id }: EstimatorInfoProps) {
                 redirect('/dashboard/admin/estimators/');
               }}
             />
-            <span className='!text-[#1F1F1F73]'> Al Estimators/</span>
+            <span className='!text-[#1F1F1F73]'> All Estimators/</span>
             {getFullName()}
           </div>
         </div>

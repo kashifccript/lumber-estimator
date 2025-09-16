@@ -61,7 +61,7 @@ export const ContractorListing: React.FC<UserListingProps> = ({ query }) => {
             <Input
               type='text'
               placeholder='Search'
-              className='h-[48px] rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0'
+              className='h-[48px] rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0 border border-[#8896AB33]'
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
