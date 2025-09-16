@@ -26,12 +26,12 @@ export function CustomDropdown({
         {value}
         <ChevronDown className='ml-2 h-4 w-4' />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='start' className=''>
+      <DropdownMenuContent align='start' className='mx-4'>
         {options.map((option: any) => (
           <DropdownMenuItem
             key={option}
             onClick={() => onValueChange(option)}
-            className='cursor-pointer capitalize'
+            className='cursor-pointer capitalize '
           >
             {option}
           </DropdownMenuItem>

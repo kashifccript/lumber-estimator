@@ -7,6 +7,8 @@ export interface Estimator {
   active_projects: number;
   total_project_value?: number;
   account_status?: string;
+  profile_picture?:string;
+  avatar?:string
 }
 
 export interface Estimates {

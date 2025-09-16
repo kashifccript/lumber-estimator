@@ -30,6 +30,7 @@ export interface User {
   created_at: string;
   status?: string;
   profile_picture?: string;
+  avatar?: string;
 }
 export type UserRole = 'admin' | 'estimator' | 'contractor';
 export type UserStatus = 'pending' | 'active' | 'rejected';
@@ -55,6 +56,8 @@ export interface UserData {
   approved_by: string | null;
   approved_at: string | null;
   rejection_reason: string | null;
+  profile_picture?: string;
+  avatar?: string;
 }
 
 export interface StatsCard {

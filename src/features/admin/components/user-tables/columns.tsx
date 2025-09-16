@@ -17,17 +17,23 @@ export const createColumns = ({
       const user = row.original;
       return (
         <div className='flex items-center'>
-          <div className='h-8 w-8 flex-shrink-0'>
-            <div className='flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-sm font-medium text-gray-700 capitalize'>
-              {user.user_name.charAt(0)}
-              {user.user_name.charAt(0)}
+          {/* {user.profile_picture || user.avatar ? ( */}
+            <div className='flex items-center gap-3'>
+              <div
+                className='h-8 w-8 rounded-full bg-cover bg-center'
+                style={{
+                  backgroundImage: `url(${user.profile_picture || user.avatar || '/assets/icons/profile.png'})`
+                }}
+              />
+              <div className=''>
+                <div className='text-sm font-medium text-gray-900'>
+                  {user.username}
+                </div>
+              </div>
             </div>
-          </div>
-          <div className='ml-3'>
-            <div className='text-sm font-medium text-gray-900'>
-              {user.username}
-            </div>
-          </div>
+          {/* ) : (
+            <span className='text-sm text-[#101828]'>___</span>
+          )} */}
         </div>
       );
     }

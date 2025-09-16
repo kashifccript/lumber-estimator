@@ -60,10 +60,9 @@ const apiRequest = async ({
 
   try {
     const response = await fetch(url, options);
-
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.message || 'Something went wrong');
+      throw new Error(error.message || error?.detail || 'Something went wrong');
     }
 
     return await response.json();

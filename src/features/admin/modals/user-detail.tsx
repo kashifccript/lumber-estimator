@@ -246,16 +246,19 @@ export default function UserDetails({ isOpen, onClose, id }: UserDetailsProps) {
           </div>
           {userData.status === 'pending' ||
             (userData.status === 'Pending' && (
-              <div className=' py-6 flex flex-col gap-6 sm:flex-row sm:justify-between'>
-                <Button
-                  variant='secondary'
-                  className='h-[48px] w-auto rounded-[8px] border-[#E2624B] text-[#E2624B]'
-                  onClick={handleClose}
-                >
-                  Close
-                </Button>
+              <div className='flex flex-col md:flex-row md:justify-between'>
+                <div className='flex pt-6'>
+                  {' '}
+                  <Button
+                    variant='secondary'
+                    className='h-[48px] w-auto rounded-[8px] border-[#E2624B] text-[#E2624B]'
+                    onClick={handleClose}
+                  >
+                    Close
+                  </Button>
+                </div>
 
-                <div className='py-6 flex flex-col gap-4 sm:flex-row'>
+                <div className='flex flex-col gap-4 pt-6 sm:flex-row'>
                   <Button
                     variant={'destructive'}
                     className='h-[48px] w-auto rounded-[8px]'

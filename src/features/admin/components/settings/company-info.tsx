@@ -43,7 +43,7 @@ const CompanyInfo = () => {
   const { data: session } = useSession();
 
   const { me, upadteProfile } = useUserApis();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
   const onSubmit = async (data: ProfileFormValues) => {
