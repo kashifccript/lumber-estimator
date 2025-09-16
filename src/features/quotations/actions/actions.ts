@@ -1,4 +1,4 @@
-import { del, get, post, revalidateByTag } from '@/lib/api/client';
+import { del, get, post, revalidateByTag, patch } from '@/lib/api/client';
 
 export async function getUserQuotations(quotationId: number) {
   try {
@@ -123,6 +123,42 @@ export async function deleteQuotationItem(quotationId: number, itemId: number) {
     return {
       success: false,
       message: error instanceof Error ? error.message : 'Failed to delete item',
+      data: null
+    };
+  }
+}
+
+export async function updateQuotationItem(
+  quotationId: number,
+  itemId: number,
+  itemData: {
+    item_name: string;
+    sku?: string;
+    unit: string;
+    unit_of_measure: string;
+    cost: number;
+  }
+) {
+  try {
+    const res = await patch({
+      endpoint: `/contractors/quotations/${quotationId}/items/${itemId}`,
+      body: JSON.stringify(itemData)
+    });
+
+    await revalidateByTag(`user-quotations`);
+
+    return {
+      success: res.success,
+      message: res.message,
+      data: res.data
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : 'Failed to update item in quotation',
       data: null
     };
   }

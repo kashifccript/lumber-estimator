@@ -6,9 +6,13 @@ import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 import { useBreadcrumbs } from '@/hooks/use-breadcrumbs';
 import { useEffect, useState } from 'react';
 import { QuotationDataTable } from './quotation-table';
-import { Item, itemColumns } from './quotation-table/columns';
+import { Item, getItemColumns } from './quotation-table/columns';
 import { QuotationActionBar } from './quotations-action-bar';
-import { addItemToQuotation, getUserQuotations } from '../actions/actions';
+import {
+  addItemToQuotation,
+  getUserQuotations,
+  updateQuotationItem
+} from '../actions/actions';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import { useParams } from 'next/navigation';
@@ -50,7 +54,6 @@ export default function QuotationDetailsViewPage() {
 
   useEffect(() => {
     loadQuotationItems();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quotationIdStr]);
 
   const handleAddItem = async (data: {
@@ -98,7 +101,10 @@ export default function QuotationDetailsViewPage() {
         {isLoadingData ? (
           <DataTableSkeleton columnCount={6} rowCount={8} filterCount={0} />
         ) : (
-          <QuotationDataTable data={quotationData} columns={itemColumns} />
+          <QuotationDataTable
+            data={quotationData}
+            columns={getItemColumns(loadQuotationItems)}
+          />
         )}
       </div>
 
