@@ -40,12 +40,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
     cost: string;
   }) => {
     try {
-      const res = await updateQuotationItem(quotationId, Number(data.id), {
+      const res = await updateQuotationItem(Number(data.id), {
         item_name: values.itemName,
         sku: values.sku || '',
         unit: values.unitOfMeasure,
         unit_of_measure: values.unitOfMeasure,
-        cost: parseFloat(values.cost)
+        cost: values.cost
       });
       if (!res.success) throw new Error(res.message);
       toast.success('Item updated successfully');
@@ -79,7 +79,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
       <EditQuotationItemModal
         isOpen={openEdit}
         onClose={() => setOpenEdit(false)}
-        quotationId={quotationId}
         item={data}
         onSuccess={onRefresh}
       />
@@ -100,7 +99,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onRefresh }) => {
         </button>
         <button
           onClick={() => setOpenDelete(true)}
-          className='cursor-pointerjustify-center flex h-[32px] w-[32px] cursor-pointer items-center rounded-sm border-[0.3px] border-[#1F1F1F1A]'
+          className='flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-sm border-[0.3px] border-[#1F1F1F1A]'
         >
           <Trash className='h-4 w-4 text-[#8896AB]' />
         </button>

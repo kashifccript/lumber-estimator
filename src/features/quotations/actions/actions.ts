@@ -1,4 +1,4 @@
-import { del, get, post, revalidateByTag, patch } from '@/lib/api/client';
+import { del, get, post, revalidateByTag, put } from '@/lib/api/client';
 
 export async function getUserQuotations(quotationId: number) {
   try {
@@ -129,19 +129,18 @@ export async function deleteQuotationItem(quotationId: number, itemId: number) {
 }
 
 export async function updateQuotationItem(
-  quotationId: number,
   itemId: number,
-  itemData: {
+  itemData: Partial<{
     item_name: string;
-    sku?: string;
+    sku: string;
     unit: string;
     unit_of_measure: string;
-    cost: number;
-  }
+    cost: string | number;
+  }>
 ) {
   try {
-    const res = await patch({
-      endpoint: `/contractors/quotations/${quotationId}/items/${itemId}`,
+    const res = await put({
+      endpoint: `/contractors/quotations/items/${itemId}`,
       body: JSON.stringify(itemData)
     });
 

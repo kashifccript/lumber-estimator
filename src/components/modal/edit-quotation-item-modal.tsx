@@ -48,7 +48,6 @@ type FormValues = z.infer<typeof formSchema>;
 interface EditQuotationItemModalProps {
   isOpen: boolean;
   onClose: () => void;
-  quotationId: number;
   item: {
     id: string | number;
     name: string;
@@ -63,7 +62,6 @@ interface EditQuotationItemModalProps {
 export function EditQuotationItemModal({
   isOpen,
   onClose,
-  quotationId,
   item,
   onSuccess,
   onError
@@ -100,12 +98,12 @@ export function EditQuotationItemModal({
   const handleSubmit = async (values: FormValues) => {
     setIsSubmitting(true);
     try {
-      const res = await updateQuotationItem(quotationId, Number(item.id), {
+      const res = await updateQuotationItem(Number(item.id), {
         item_name: values.itemName,
         sku: values.sku || '',
         unit: values.unitOfMeasure,
         unit_of_measure: values.unitOfMeasure,
-        cost: parseFloat(values.cost)
+        cost: values.cost
       });
       if (!res.success) throw new Error(res.message);
       toast.success('Item updated successfully');
