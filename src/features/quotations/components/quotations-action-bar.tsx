@@ -5,24 +5,43 @@ import { FileSpreadsheet, FileText, Plus, Printer, Send } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { useSession } from 'next-auth/react';
+import { downloadFile } from '@/lib/download';
 
 type QuotationActionBarProps = {
   onAddNewItem?: () => void;
   className?: string;
+  quotationId: number;
 };
 
 export function QuotationActionBar({
   onAddNewItem,
-  className
+  className,
+  quotationId
 }: QuotationActionBarProps) {
   const handleExportPdf = async () => {
-    alert('Export PDF');
+    try {
+      await downloadFile(
+        `/contractors/quotations/${quotationId}/export/pdf`,
+        `quotation-${quotationId}.pdf`
+      );
+      toast.success('PDF exported successfully!');
+    } catch {
+      toast.error('Failed to export PDF');
+    }
   };
   const handleExportCsv = async () => {
-    alert('Export CSV');
+    try {
+      await downloadFile(
+        `/contractors/quotations/${quotationId}/export/xlsx`,
+        `quotation-${quotationId}.csv`
+      );
+      toast.success('CSV exported successfully!');
+    } catch {
+      toast.error('Failed to export CSV');
+    }
   };
-  const handlePrint = async () => {
-    alert('Print');
+  const handlePrint = () => {
+    window.print();
   };
 
   return (
