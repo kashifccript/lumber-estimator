@@ -13,13 +13,15 @@ interface CallToActionProps {
   projectId?: string;
   onApprove?: () => void;
   onReject?: () => void;
+  refetch?: () => void;
 }
 
 export const CallToAction = ({
   projectName = 'Downtown Office Renovation',
   projectId,
   onApprove,
-  onReject
+  onReject,
+  refetch
 }: CallToActionProps) => {
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
@@ -39,6 +41,7 @@ export const CallToAction = ({
         toast.success(result.message || 'Estimate approved successfully!');
         onApprove?.();
         setShowApproveModal(false);
+        if (refetch) refetch();
       } else {
         toast.error(result.message || 'Failed to approve estimate');
       }
@@ -67,6 +70,7 @@ export const CallToAction = ({
         toast.success(result.message || 'Estimate rejected successfully!');
         onReject?.();
         setShowRejectModal(false);
+        if (refetch) refetch();
       } else {
         toast.error(result.message || 'Failed to reject estimate');
       }

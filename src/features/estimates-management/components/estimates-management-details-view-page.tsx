@@ -58,10 +58,7 @@ export default function EstimatesManagementDetails() {
     }
     return [];
   };
-
-  // Fetch project data
-  useEffect(() => {
-    const loadProjectData = async () => {
+const loadProjectData = async () => {
       if (!projectId) return;
 
       try {
@@ -82,6 +79,9 @@ export default function EstimatesManagementDetails() {
         setLoading(false);
       }
     };
+
+  // Fetch project data
+  useEffect(() => {
 
     loadProjectData();
   }, [projectId]);
@@ -175,6 +175,7 @@ export default function EstimatesManagementDetails() {
             <CallToAction
               projectName={projectData?.project_name}
               projectId={projectId}
+              refetch= {loadProjectData}
               onApprove={() => {
                 // Handle post-approval actions (e.g., refresh data, navigate)
                 console.log('Estimate approved');
