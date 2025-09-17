@@ -23,11 +23,11 @@ export function EstimatorStats({
     return (
       <div
         className={cn(
-          'relative flex w-full max-w-sm flex-col justify-between gap-6 rounded-2xl bg-[#F8F8F8] p-6',
+          'relative flex w-full max-w-sm flex-col justify-between gap-6 rounded-2xl bg-[#F8F8F8]',
           className
         )}
       >
-        <div className='flex flex-col gap-2'>
+        <div className='flex flex-col gap-4.5 overflow-hidden'>
           <div className='flex items-start justify-between'>
             <div className='flex flex-col gap-2'>
               <Skeleton className='h-6 w-32 bg-gray-200' />
@@ -44,15 +44,15 @@ export function EstimatorStats({
   return (
     <div
       className={cn(
-        'relative flex w-full !max-w-xs cursor-pointer flex-col justify-between gap-3 rounded-2xl bg-[#F8F8F8] p-6',
+        'relative flex w-full !max-w-xs cursor-pointer flex-col justify-between gap-3 rounded-2xl bg-[#F8F8F8]',
         textColor,
         className
       )}
     >
-      <div className='flex flex-col gap-2'>
+      <div className='flex flex-col gap-4.5'>
         <div className='flex items-start justify-between'>
           <div className='flex flex-col'>
-            <div className='text-[24px] font-normal text-[#1F1F1F]'>
+            <div className='text-base font-normal text-[#1F1F1F] sm:text-[24px]'>
               {title}
             </div>
             {subtitle && (
@@ -62,7 +62,9 @@ export function EstimatorStats({
             )}
           </div>
         </div>
-        <div className='text-[56px] font-normal text-[#1F1F1F]'>{value}</div>
+        <div className='overflow-hidden text-[32px] font-normal text-[#1F1F1F] sm:text-[56px]'>
+          {value}
+        </div>
       </div>
     </div>
   );
