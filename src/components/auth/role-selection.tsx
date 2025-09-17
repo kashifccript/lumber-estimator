@@ -57,19 +57,14 @@ export function RoleSelection() {
       {roleOptions.map((role) => (
         <Card
           key={role.id}
-          className={`relative rounded-[8px] cursor-pointer p-5 transition-all hover:shadow-xs hover:bg-[#FFFFFF] ${
-            selectedRole === role.id
-              ? 'border-orange-500 bg-orange-50'
-              : 'border-0'
+          className={`relative cursor-pointer rounded-[8px] p-5 transition-all hover:bg-[#FFFFFF] hover:shadow-xs ${
+            selectedRole === role.id ? 'bg-white' : 'border-0'
           }`}
           onClick={() => setSelectedRole(role.id)}
         >
           <div className='flex items-start space-x-3'>
-            <div className='text-2xl mt-2'>
-
-
-                                <Icon icon={role.icon} width="24" height="24" />
-
+            <div className='mt-2 text-2xl'>
+              <Icon icon={role.icon} width='24' height='24' />
             </div>
             <div className='flex-1'>
               <div className='flex items-center justify-between'>
@@ -91,7 +86,7 @@ export function RoleSelection() {
         disabled={!selectedRole}
         type='submit'
         variant='default'
-        className='w-full h-[52px]'
+        className='h-[52px] w-full'
       >
         Continue
       </Button>

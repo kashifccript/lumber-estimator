@@ -10,6 +10,7 @@ import { useSession } from 'next-auth/react';
 import { useContractorApis } from '@/features/admin/actions/contractor';
 import { toast } from 'sonner';
 import { Quotation } from '@/features/admin/types/contractor';
+import { downloadFile } from '@/lib/download';
 
 export default function QuotationsViewPage() {
   const [quotations, setQuotations] = useState<Quotation[]>([]);
@@ -17,13 +18,12 @@ export default function QuotationsViewPage() {
   const { data: session } = useSession();
   const { fetchAllQuotationsbyUser } = useContractorApis();
   const userId = String(session?.user?.user.id);
-  console.log(userId, 'userId');
+  const userName = String(session?.user?.user.username);
 
   const fetchQuotations = async () => {
     try {
       setLoading(true);
       const response = await fetchAllQuotationsbyUser(userId);
-      console.log('response', response);
       setQuotations(response);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -33,9 +33,33 @@ export default function QuotationsViewPage() {
     }
   };
 
-  const handleExportPdf = () => {};
-  const handleExportCsv = () => {};
-  const onPrint = () => {};
+  const handleExportPdf = async () => {
+    try {
+      await downloadFile(
+        `/contractors/contractors/${userId}/quotations/export/pdf`,
+        `quotations-user-${userName}.pdf`
+      );
+      toast.success('PDF exported successfully!');
+    } catch {
+      toast.error('Failed to export PDF');
+    }
+  };
+
+  const handleExportCsv = async () => {
+    try {
+      await downloadFile(
+        `/contractors/contractors/${userId}/quotations/export/xlsx`,
+        `quotations-user-${userName}.xlsx`
+      );
+      toast.success('Excel exported successfully!');
+    } catch {
+      toast.error('Failed to export Excel');
+    }
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
 
   useEffect(() => {
     fetchQuotations();
@@ -73,7 +97,7 @@ export default function QuotationsViewPage() {
                 quality={100}
               />
             </Button>
-            <Button variant='icon' size='icon' onClick={onPrint}>
+            <Button variant='icon' size='icon' onClick={handlePrint}>
               <Printer className='h-5 w-5 text-gray-600' />
             </Button>
           </div>

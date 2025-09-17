@@ -9,7 +9,7 @@ export interface Item {
   cost: string;
 }
 
-export const itemColumns: ColumnDef<Item>[] = [
+export const getItemColumns = (onRefresh: () => void): ColumnDef<Item>[] => [
   {
     accessorKey: 'name',
     header: 'Item Name'
@@ -26,10 +26,9 @@ export const itemColumns: ColumnDef<Item>[] = [
     accessorKey: 'cost',
     header: 'Cost'
   },
-
   {
     id: 'actions',
     header: 'Actions',
-    cell: ({ row }) => <CellAction data={row.original} onRefresh={() => {}} />
+    cell: ({ row }) => <CellAction data={row.original} onRefresh={onRefresh} />
   }
 ];
