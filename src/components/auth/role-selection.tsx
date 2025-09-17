@@ -58,9 +58,7 @@ export function RoleSelection() {
         <Card
           key={role.id}
           className={`relative cursor-pointer rounded-[8px] p-5 transition-all hover:bg-[#FFFFFF] hover:shadow-xs ${
-            selectedRole === role.id
-              ? 'border-orange-500 bg-orange-50'
-              : 'border-0'
+            selectedRole === role.id ? 'bg-white' : 'border-0'
           }`}
           onClick={() => setSelectedRole(role.id)}
         >
