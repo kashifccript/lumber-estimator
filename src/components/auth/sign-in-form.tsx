@@ -73,9 +73,10 @@ export default function SigninForm() {
           redirect: false
         });
         if (result.error) {
-          if (result.error === 'CredentialsSignin')
-            toast.error('Pending Approval');
-          else toast.error(result.error);
+          // if (result.error === 'CredentialsSignin')
+          //   toast.error('Pending Approval');
+          // else
+          toast.error(result.error || 'Invalid Credentials');
         } else if (result?.ok) {
           const session = await getSession();
 
