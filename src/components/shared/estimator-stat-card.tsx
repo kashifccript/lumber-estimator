@@ -52,7 +52,7 @@ export function EstimatorStats({
       <div className='flex flex-col gap-4.5'>
         <div className='flex items-start justify-between'>
           <div className='flex flex-col'>
-            <div className='text-[24px] font-normal text-[#1F1F1F]'>
+            <div className='text-base font-normal text-[#1F1F1F] sm:text-[24px]'>
               {title}
             </div>
             {subtitle && (
@@ -62,7 +62,7 @@ export function EstimatorStats({
             )}
           </div>
         </div>
-        <div className='overflow-hidden text-[56px] font-normal text-[#1F1F1F]'>
+        <div className='overflow-hidden text-[32px] font-normal text-[#1F1F1F] sm:text-[56px]'>
           {value}
         </div>
       </div>
