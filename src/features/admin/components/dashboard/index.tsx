@@ -20,8 +20,7 @@ const Index = () => {
         subtitle='Overview of your Dashboard'
       />
       <AdminStats />
-      <DashboardCharts />
-      <UserListing />
+      {/* <DashboardCharts /> */}
       <QuotationListingDashboard />
       {/* <QuotationListing /> */}
     </div>

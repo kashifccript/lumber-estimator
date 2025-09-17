@@ -9,6 +9,7 @@ interface MetricsCardProps {
   className?: string;
   subtitle?: string;
   isLoading?: boolean;
+  onClick?: () => void;
 }
 
 export function StatCard({
@@ -17,7 +18,8 @@ export function StatCard({
   textColor = 'text-black',
   className,
   subtitle,
-  isLoading = false
+  isLoading = false,
+  onClick
 }: MetricsCardProps) {
   if (isLoading) {
     return (
@@ -30,12 +32,12 @@ export function StatCard({
         <div className='flex flex-col gap-2'>
           <div className='flex items-start justify-between'>
             <div className='flex flex-col gap-2'>
-              <Skeleton className="h-6 w-32 bg-gray-200" />
-              {subtitle && <Skeleton className="h-4 w-24 bg-gray-200" />}
+              <Skeleton className='h-6 w-32 bg-gray-200' />
+              {subtitle && <Skeleton className='h-4 w-24 bg-gray-200' />}
             </div>
-            <Skeleton className="h-10 w-10 rounded-[5px] bg-gray-200" />
+            <Skeleton className='h-10 w-10 rounded-[5px] bg-gray-200' />
           </div>
-          <Skeleton className="h-14 w-24 bg-gray-200" />
+          <Skeleton className='h-14 w-24 bg-gray-200' />
         </div>
       </div>
     );
@@ -61,7 +63,10 @@ export function StatCard({
               </div>
             )}
           </div>
-          <div className='flex h-10 w-10 items-center justify-center rounded-[5px] border border-[#E2624B66] bg-white'>
+          <div
+            className='flex h-10 w-10 items-center justify-center rounded-[5px] border border-[#E2624B66] bg-white'
+            onClick={onClick}
+          >
             <Icon
               icon='meteor-icons:arrow-up-right'
               color='#666666'

@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Estimator } from '../../types/estimator';
 import { useEstimatorApis } from '../../actions/estimator';
+import { Search } from 'lucide-react';
 
 interface EstimatorListingProps {
   query?: string;
@@ -54,6 +55,8 @@ export const EstimatorListing: React.FC<EstimatorListingProps> = ({
         <div className='flex flex-row gap-4'>
           <div className='relative w-full max-w-sm'>
             {/* Search Icon */}
+                        <Search className='absolute top-1/2 left-3 h-5  w-5 -translate-y-1/2 text-[#292D32]' />
+
             <Input
               type='text'
               placeholder='Search'

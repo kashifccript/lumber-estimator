@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { CustomDropdown } from '@/components/shared/custom-dropdown';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { useSearchParams } from 'next/navigation';
 
 interface UserListingProps {
   query?: string;
@@ -18,10 +19,14 @@ export const UserListing: React.FC<UserListingProps> = ({ query }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const { data: session } = useSession();
+  const searchParams = useSearchParams();
+
+  // 👇 get "status" from query
+  const status = searchParams.get('status');
 
   const { fetchUsersList } = useUserApis();
 
-  const [selectedFilter, setSelectedFilter] = useState('All');
+  const [selectedFilter, setSelectedFilter] = useState(status||'All');
   const [search, setSearch] = useState('');
 
   const buildQuery = () => {
