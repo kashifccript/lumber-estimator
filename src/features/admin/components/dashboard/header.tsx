@@ -11,7 +11,9 @@ export function Header({
 }: HeaderProps) {
   return (
     <div className='flex flex-col'>
-      <div className='text-[40px] font-bold text-[#1F1F1F]'>{title}</div>
+      <div className='text-[32px] font-semibold text-[#1F1F1F] [md:text-[40px] sm:text-[40px]'>
+        {title}
+      </div>
       {subtitle && (
         <div className='text-[20px] font-normal text-[#1F1F1F]'>{subtitle}</div>
       )}

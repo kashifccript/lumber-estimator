@@ -27,37 +27,42 @@ export default function Stats() {
   }, [session]);
 
   return (
-    <div className='grid grid-cols-1 gap-6 py-8 md:grid-cols-2 lg:grid-cols-5'>
-      <div className='h-full'>
+    <div className='flex flex-col items-start justify-between gap-6 md:items-center lg:flex-row'>
+      <h3 className='text-[48px] leading-[60px] font-normal text-[#1F1F1F]'>
+        Overview
+      </h3>
+      <div className='h-full place-self-center'>
         <CircleProgress percentage={stats?.percentage || 0} />
       </div>
-      <div className='h-full'>
-        <EstimatorStats
-          title='Total Projects'
-          value={stats?.total_projects || 0}
-          isLoading={loading}
-        />
-      </div>
-      <div className='h-full'>
-        <EstimatorStats
-          title='Active Estimates'
-          value={stats?.active_estimates || 0}
-          isLoading={loading}
-        />
-      </div>
-      <div className='h-full'>
-        <EstimatorStats
-          title='This Month Expense'
-          value={stats?.expenses_this_month || 0}
-          isLoading={loading}
-        />
-      </div>
-      <div className='h-full'>
-        <EstimatorStats
-          title='No of Contractor'
-          value={stats?.no_of_contractors || 0}
-          isLoading={loading}
-        />
+      <div className='flex h-full flex-wrap justify-between gap-3 md:flex-row md:gap-6 lg:flex-nowrap'>
+        <div className='h-full w-[48%] lg:w-[23%]'>
+          <EstimatorStats
+            title='Total Projects'
+            value={stats?.total_projects || 0}
+            isLoading={loading}
+          />
+        </div>
+        <div className='h-full w-[48%] lg:w-[23%]'>
+          <EstimatorStats
+            title='Active Estimates'
+            value={stats?.active_estimates || 0}
+            isLoading={loading}
+          />
+        </div>
+        <div className='h-full w-[48%] lg:w-[23%]'>
+          <EstimatorStats
+            title='This Month Expense'
+            value={stats?.expenses_this_month || 0}
+            isLoading={loading}
+          />
+        </div>
+        <div className='h-full w-[48%] lg:w-[23%]'>
+          <EstimatorStats
+            title='No of Contractor'
+            value={stats?.no_of_contractors || 0}
+            isLoading={loading}
+          />
+        </div>
       </div>
     </div>
   );

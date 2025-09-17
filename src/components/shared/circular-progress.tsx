@@ -10,10 +10,7 @@ interface propsList {
 export function CircleProgress({ percentage }: propsList) {
   return (
     <div className='flex w-full max-w-sm flex-row justify-between'>
-      <div className='flex items-center justify-center text-[48px] font-normal text-[#1F1F1F]'>
-        {'Overview'}
-      </div>
-      <div className='h-24 w-24 pt-6'>
+      <div className='h-28 w-28'>
         <CircularProgressbar
           value={percentage}
           text={`${percentage}%`}

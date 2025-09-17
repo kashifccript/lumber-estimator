@@ -14,7 +14,7 @@ const Index = () => {
   const userData = session?.user.user;
   const fullName = userData?.first_name || userData?.username;
   return (
-    <div className='flex flex-col gap-6 py-8'>
+    <div className='flex flex-col gap-4 py-5'>
       <Header
         title={`Welcome in, ${fullName}`}
         subtitle='Overview of your Dashboard'
