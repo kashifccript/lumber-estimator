@@ -90,7 +90,7 @@ export function useContractorApis() {
             Authorization: `Bearer ${session.user.access_token}`
           },
           body: JSON.stringify({
-            user_id: quotation_id,
+            quotation_id: quotation_id,
             approved: approved,
             rejection_reason: 'none'
           })

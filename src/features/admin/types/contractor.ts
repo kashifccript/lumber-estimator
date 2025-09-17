@@ -4,6 +4,8 @@ export interface Contractor {
   total_quotations: number;
   approved_quotations: number;
   pending_quotations: number;
+  profile_picture?: string;
+  avatar?: string;
   declined_quotations: number;
 }
 export interface Quotation {

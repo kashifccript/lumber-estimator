@@ -43,14 +43,15 @@ export const AlertModal: React.FC<AlertModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className='flex items-center justify-end space-x-2 pt-6'>
+      <div className='flex items-center justify-end space-x-2 pt-6 px-8'>
         <Button
           disabled={loading}
           variant={'reject'}
-          size={'md'}
           onClick={onClose}
+          className='w-auto'
         >
           {cancelText}
+
         </Button>
         <Button
           disabled={loading}

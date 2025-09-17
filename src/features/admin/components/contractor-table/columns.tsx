@@ -17,11 +17,24 @@ export const createColumns = ({
       const contractor = row.original;
       return (
         <div className='flex items-center'>
-          <div className='ml-3'>
+          {/* <div className='ml-3'>
             <div className='text-sm font-medium text-gray-900'>
               {contractor.name}
             </div>
-          </div>
+          </div> */}
+           <div className='flex items-center gap-3'>
+              <div
+                className='h-8 w-8 rounded-full bg-cover bg-center'
+                style={{
+                  backgroundImage: `url(${contractor.profile_picture || contractor.avatar || '/assets/icons/profile.png'})`
+                }}
+              />
+              <div className=''>
+                <div className='text-sm font-medium text-gray-900'>
+                  {contractor.name}
+                </div>
+              </div>
+            </div>
         </div>
       );
     }

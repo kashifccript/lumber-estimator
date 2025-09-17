@@ -72,9 +72,10 @@ export default function SigninForm() {
           password: data.password,
           redirect: false
         });
-
-        if (result?.error) {
-          toast.error('Invalid Credentials!');
+        if (result.error) {
+          if (result.error === 'CredentialsSignin')
+            toast.error('Pending Approval');
+          else toast.error(result.error);
         } else if (result?.ok) {
           const session = await getSession();
 

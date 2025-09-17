@@ -8,9 +8,7 @@ export const signUpSchema = z.object({
     .regex(/^\S+$/, 'Invalid input'),
 
   email: z.string().email('Invalid email address'),
-  password: z
-    .string()
-    .min(6, 'Password must be at least 6 characters'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
   role: z.enum(['estimator', 'admin', 'contractor'], {
     required_error: 'Role is required'
   }),
@@ -26,16 +24,10 @@ export const signUpSchema = z.object({
     .string()
     .min(10, 'Phone number must be at least 10 characters')
     .regex(/^\S+$/, 'Invalid input'),
-  company_name: z
-    .string()
-    .min(1, 'Company name is required')
-    .regex(/^\S+$/, 'Invalid input'),
+  company_name: z.string().min(1, 'Company name is required'),
   business_license: z.string().optional(),
-  address: z
-    .string()
-    .min(1, 'Address is required')
-    .regex(/^\S+$/, 'Invalid input'),
-  city: z.string().min(1, 'City is required').regex(/^\S+$/, 'Invalid input'),
+  address: z.string().min(1, 'Address is required'),
+  city: z.string().min(1, 'City is required'),
   state: z.string().min(1, 'State is required').regex(/^\S+$/, 'Invalid input'),
   zip_code: z
     .string()
