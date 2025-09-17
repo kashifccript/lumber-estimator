@@ -83,7 +83,7 @@ export default function WeeklyBarChart() {
 
   return (
     <div className='flex w-full flex-col gap-4'>
-      <div className='flex flex-row gap-6 py-4 md:justify-between'>
+      <div className='flex flex-row gap-6 py-4 justify-between'>
         <div className='text-[20px] font-normal text-[#1F1F1F]'>
           System Estimated Accuracy
         </div>

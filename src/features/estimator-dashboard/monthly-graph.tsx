@@ -68,7 +68,7 @@ export default function MonthlyBarChart() {
 
   return (
     <div className='flex h-100 w-full flex-col gap-9'>
-      <div className='flex flex-col flex-row gap-6 py-4 md:justify-between'>
+      <div className='flex flex-row gap-6 py-4 justify-between'>
         <div className='text-[20px] font-normal text-[#1F1F1F]'>
           Total Expenses
         </div>

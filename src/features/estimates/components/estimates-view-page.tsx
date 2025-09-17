@@ -5,7 +5,7 @@ import Heading from './heading';
 export default function EstimatesViewPage() {
   return (
     <PageContainer>
-      <div className='flex flex-1 flex-col gap-3 pb-6'>
+      <div className='flex flex-1 flex-col gap-3 overflow-hidden pb-6'>
         <Heading />
         {/* Data Table */}
 

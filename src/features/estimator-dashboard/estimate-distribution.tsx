@@ -52,7 +52,7 @@ export function DonutChart() {
   const [selectedValue, setSelectedValue] = useState(months[0]);
   return (
     <div className='flex w-full flex-col'>
-      <div className='flex flex-col flex-row gap-6 py-4 md:justify-between'>
+      <div className='flex  flex-row gap-6 py-4 justify-between'>
         <div className='text-[20px] font-normal text-[#1F1F1F]'>
           Estimate Status Distribution
         </div>
