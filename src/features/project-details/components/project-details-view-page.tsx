@@ -158,6 +158,7 @@ export default function ProjectDetailsViewPage() {
             onAddNewItem={() => setShowAddItemModal(true)}
             onSubmitEstimate={handleSubmitEstimate}
             onPrint={handlePrint}
+            projectId={projectId}
           />
         </div>
 

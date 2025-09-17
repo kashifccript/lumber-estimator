@@ -14,7 +14,7 @@ export default async function DashboardLayout({
 }) {
   return (
     <KBar>
-      <div className='bg-background flex min-h-screen w-full flex-col p-6'>
+      <div className='bg-background flex min-h-screen w-full flex-col overflow-y-auto p-6'>
         <Header />
         <main className='flex-1'>{children}</main>
       </div>
