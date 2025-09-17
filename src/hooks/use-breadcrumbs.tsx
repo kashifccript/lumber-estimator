@@ -16,8 +16,8 @@ const routeMapping: Record<string, BreadcrumbItem[]> = {
     { title: 'Overview', link: '/dashboard/overview' }
   ],
   '/dashboard/estimation-details': [
-    { title: 'Dashboard', link: '/dashboard' },
-    { title: 'Estimation Details', link: '/dashboard/estimation-details' }
+    { title: 'Estimates', link: '/dashboard/estimates' },
+    { title: 'Estimate Details', link: '/dashboard/estimation-details' }
   ],
   '/dashboard/employee': [
     { title: 'Dashboard', link: '/dashboard' },

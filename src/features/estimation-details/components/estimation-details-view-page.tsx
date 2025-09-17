@@ -136,8 +136,8 @@ export default function EstimationDetailsViewPage() {
 
   return (
     <PageContainer>
-      <div className='flex flex-1 flex-col gap-3 pb-6'>
-        <div className='flex items-center justify-between'>
+      <div className='flex flex-col gap-3 overflow-hidden flex-1 pb-6'>
+        <div className='flex flex-col items-start justify-between gap-3 lg:flex-row lg:items-center'>
           {/* Dynamic Breadcrumb */}
           <Breadcrumb
             items={breadcrumbs.map((crumb, index) => ({

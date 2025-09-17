@@ -153,35 +153,40 @@ export function EstimationActionBar({
   };
 
   return (
-    <div className={`flex items-center justify-end gap-1.5 ${className ?? ''}`}>
-      <Button onClick={handleExportPdf} variant='icon' size='icon'>
-        <Image
-          src='/assets/icons/pdf.png'
-          alt='PDF'
-          width={20}
-          height={20}
-          unoptimized
-          quality={100}
-        />
-      </Button>
-      <Button variant='icon' size='icon' onClick={handleExportCsv}>
-        <Image
-          src='/assets/icons/csv.png'
-          alt='CSV'
-          width={20}
-          height={20}
-          unoptimized
-          quality={100}
-        />
-      </Button>
-      <Button variant='icon' size='icon' onClick={onPrint}>
-        <Printer className='h-5 w-5 text-gray-600' />
-      </Button>
-      <Button onClick={onAddNewItem} variant='secondary' size='secondary'>
+    <div
+      className={`md:flex-row w-full items-end md:items-center flex flex-col justify-end gap-1.5 ${className ?? ''}`}
+    >
+      <div className=''>
+        <Button onClick={handleExportPdf} variant='icon' size='icon'>
+          <Image
+            src='/assets/icons/pdf.png'
+            alt='PDF'
+            width={20}
+            height={20}
+            unoptimized
+            quality={100}
+          />
+        </Button>
+        <Button variant='icon' size='icon' onClick={handleExportCsv}>
+          <Image
+            src='/assets/icons/csv.png'
+            alt='CSV'
+            width={20}
+            height={20}
+            unoptimized
+            quality={100}
+          />
+        </Button>
+        <Button variant='icon' size='icon' onClick={onPrint}>
+          <Printer className='h-5 w-5 text-gray-600' />
+        </Button>
+      </div>
+
+      <Button onClick={onAddNewItem} variant='secondary' size='secondary' className='w-full md:w-fit'>
         <Plus />
         Add New Item
       </Button>
-      <Button onClick={onSubmitEstimate} variant='primary' size='secondary'>
+      <Button onClick={onSubmitEstimate} variant='primary' size='secondary' className='w-full md:w-fit'>
         <Send />
         Submit Estimate
       </Button>
