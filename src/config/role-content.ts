@@ -18,7 +18,6 @@ export interface RoleContent {
     buttonText: string;
   };
   quickTips: Array<{
-    title: string;
     description: string;
   }>;
 }
@@ -26,41 +25,40 @@ export interface RoleContent {
 export const roleContent: Record<UserRole, RoleContent> = {
   contractor: {
     hero: {
-      title: 'Build Better Quotation',
+      title: 'Build Better Quotation',
       subtitle:
         'Create your first quotation to unlock powerful insights and analytics for your projects.',
       buttonText: 'Create Your First Quotation'
     },
     features: [
       {
-        icon: '/assets/icons/building.svg',
+        icon: '/assets/icons/fast.svg',
         title: 'Fast Estimates',
         description:
           'Estimators can price project using your material database.'
       },
       {
-        icon: '/assets/icons/fast.svg',
+        icon: '/assets/icons/checkmark.svg',
         title: 'Consistent Pricing',
         description: 'Estimator use your approved material and pricing.'
       },
       {
-        icon: '/assets/icons/checkmark.svg',
+        icon: '/assets/icons/building.svg',
         title: 'Better Margins',
         description:
           'Keep track of current market prices and maintain profitability.'
       }
     ],
     cta: {
-      title: 'Ready to Get Started',
+      title: 'Add Your Own Materials',
       description:
-        'Join thousands of contractors who are saving time and improving accuracy.',
+        'Add specific materials and prices that are unique to your business.',
       buttonText: 'Create Your First Quotation'
     },
     quickTips: [
       {
-        title: 'Add Your Own Materials',
         description:
-          'Add specific materials and prices that are unique to your business.'
+          'Start with your most commonly used materials. You can always add more later!'
       }
     ]
   },
@@ -73,17 +71,17 @@ export const roleContent: Record<UserRole, RoleContent> = {
     },
     features: [
       {
-        icon: '/assets/icons/building.svg',
+        icon: '/assets/icons/upload.svg',
         title: 'Upload Your Plans',
         description: 'Simply upload your design PDF or blueprints'
       },
       {
-        icon: '/assets/icons/fast.svg',
+        icon: '/assets/icons/review.svg',
         title: 'Upload Your Plans',
         description: 'Simply upload your design PDF or blueprints'
       },
       {
-        icon: '/assets/icons/checkmark.svg',
+        icon: '/assets/icons/analyze.svg',
         title: 'Upload Your Plans',
         description: 'Simply upload your design PDF or blueprints'
       }
@@ -96,9 +94,16 @@ export const roleContent: Record<UserRole, RoleContent> = {
     },
     quickTips: [
       {
-        title: 'Quick Tip',
         description:
-          'Start with a simple project to get familiar with the tools'
+          'Upload high-resolution PDF plans for the most accurate results.'
+      },
+      {
+        description:
+          'Review the generated material list and adjust quantities if needed.'
+      },
+      {
+        description:
+          'Set up contractor profiles to track performance across projects.'
       }
     ]
   }
