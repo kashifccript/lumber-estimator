@@ -10,18 +10,18 @@ interface SegmentedProgressProps {
 export function SegmentedProgress({
   value,
   size = 110,
-  strokeWidth = 14,
+  strokeWidth = 16,
   className = ''
 }: SegmentedProgressProps) {
   const radius = (size - strokeWidth) / 2;
 
   const segments = [
-    { size: 50, gap: 20 },
-    { size: 30, gap: 20 },
-    { size: 40, gap: 20 },
-    { size: 25, gap: 20 },
-    { size: 45, gap: 20 },
-    { size: 35, gap: 20 }
+    { size: 50, gap: 22 },
+    { size: 30, gap: 22 },
+    { size: 40, gap: 22 },
+    { size: 25, gap: 22 },
+    { size: 45, gap: 22 },
+    { size: 35, gap: 22 }
   ];
 
   const totalSegmentDegrees = segments.reduce((sum, seg) => sum + seg.size, 0);
@@ -100,10 +100,10 @@ export function SegmentedProgress({
       {/* Center text */}
       <div className='absolute inset-0 flex items-center justify-center'>
         <div className='text-center'>
-          <span className='text-2xl font-bold text-gray-900'>
+          <span className='text-[36px] font-normal text-[#1F1F1F]'>
             {Math.round(value)}
           </span>
-          <span className='text-lg text-gray-600'>%</span>
+          <span className='text-[18px] text-[#1F1F1F]'>%</span>
         </div>
       </div>
     </div>
