@@ -1,38 +1,62 @@
 import { z } from 'zod';
 
 // Schema that matches the FastAPI registration endpoint
+
 export const signUpSchema = z.object({
   username: z
     .string()
     .min(3, 'Username must be at least 3 characters')
-    .regex(/^\S+$/, 'Invalid input'),
+    .max(20, 'Username must not exceed 20 characters')
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      'Username can only contain letters, numbers, and underscores'
+    ),
 
   email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one number')
+    .regex(
+      /[^A-Za-z0-9]/,
+      'Password must contain at least one special character'
+    ),
+
   role: z.enum(['estimator', 'admin', 'contractor'], {
     required_error: 'Role is required'
   }),
+
   first_name: z
     .string()
     .min(1, 'First name is required')
-    .regex(/^\S+$/, 'Invalid input'),
+    .regex(/^[A-Za-z]+$/, 'First name must only contain letters'),
+
   last_name: z
     .string()
     .min(1, 'Last name is required')
-    .regex(/^\S+$/, 'Invalid input'),
+    .regex(/^[A-Za-z]+$/, 'Last name must only contain letters'),
+
   phone: z
     .string()
-    .min(10, 'Phone number must be at least 10 characters')
-    .regex(/^\S+$/, 'Invalid input'),
+    .regex(/^[0-9]{10,15}$/, 'Phone number must be 10–15 digits'),
+
   company_name: z.string().min(1, 'Company name is required'),
+
   business_license: z.string().optional(),
+
   address: z.string().min(1, 'Address is required'),
+
   city: z.string().min(1, 'City is required'),
-  state: z.string().min(1, 'State is required').regex(/^\S+$/, 'Invalid input'),
-  zip_code: z
+
+  state: z
     .string()
-    .min(5, 'ZIP code must be at least 5 characters')
-    .regex(/^\S+$/, 'Invalid input')
+    .min(2, 'State is required')
+    .regex(/^[A-Za-z\s]+$/, 'State must only contain letters'),
+
+  zip_code: z.string().regex(/^[0-9]{5,10}$/, 'ZIP code must be 5–10 digits')
 });
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;

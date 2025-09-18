@@ -97,7 +97,7 @@ export default function EstimatesManagementViewPage({
         status: selectedFilter !== 'All' ? selectedFilter : undefined
       });
     }
-  }, [selectedFilter, session]);
+  }, [selectedFilter, session, search]);
 
   const handleRefresh = () => {
     fetchEstimates();
