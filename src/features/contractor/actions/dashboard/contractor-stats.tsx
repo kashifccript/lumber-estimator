@@ -1,5 +1,5 @@
 'use client';
-import { CircleProgress } from '@/components/shared/circular-progress';
+import { SegmentedProgress } from '@/components/shared/circular-progress';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { EstimatorStats } from '@/components/shared/estimator-stat-card';
@@ -27,38 +27,44 @@ export default function ContractorStats() {
   }, [session]);
 
   return (
-    <div className='grid grid-cols-1 gap-6 py-8 md:grid-cols-2 lg:grid-cols-5'>
-      <div className='h-full'>
-        <CircleProgress percentage={stats?.approval_percentage || 0} />
-      </div>
-      <div className='h-full'>
-        <EstimatorStats
-          title='Approved Project'
-          value={stats?.approved_projects || 0}
-          isLoading={loading}
-        />
-      </div>
-      <div className='h-full'>
-        <EstimatorStats
-          title='Pending Approvals'
-          value={stats?.pending_approvals || 0}
-          isLoading={loading}
-        />
-      </div>
-      <div className='h-full'>
-        <EstimatorStats
-          title='Active Project Value'
-          value={stats?.active_project_value || 0}
-          isLoading={loading}
-        />
-      </div>
-      <div className='h-full'>
-        <EstimatorStats
-          title='Quotation Items'
-          value={stats?.quotation_items || 0}
-          isLoading={loading}
-        />
-      </div>
+<div className="flex flex-col gap-6 py-8 lg:flex-row">
+  {/* First div = double width */}
+  <div className="flex-[1] h-full">
+    <SegmentedProgress value={stats?.approval_percentage || 0} />
+  </div>
+
+  {/* Stats container = remaining space */}
+  <div className="flex-[3] flex flex-wrap gap-3 md:gap-6">
+    <div className="flex-1 min-w-[45%] lg:min-w-[22%]">
+      <EstimatorStats
+        title="Approved Project"
+        value={stats?.approved_projects || 0}
+        isLoading={loading}
+      />
     </div>
+    <div className="flex-1 min-w-[45%] lg:min-w-[22%]">
+      <EstimatorStats
+        title="Pending Approvals"
+        value={stats?.pending_approvals || 0}
+        isLoading={loading}
+      />
+    </div>
+    <div className="flex-1 min-w-[45%] lg:min-w-[22%]">
+      <EstimatorStats
+        title="Active Project Value"
+        value={stats?.active_project_value || 0}
+        isLoading={loading}
+      />
+    </div>
+    <div className="flex-1 min-w-[45%] lg:min-w-[22%]">
+      <EstimatorStats
+        title="Quotation Items"
+        value={stats?.quotation_items || 0}
+        isLoading={loading}
+      />
+    </div>
+  </div>
+</div>
+
   );
 }

@@ -1,5 +1,5 @@
 'use client';
-import { CircleProgress } from '@/components/shared/circular-progress';
+import { SegmentedProgress } from '@/components/shared/circular-progress';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { EstimatorStat } from '../estimates/types/estimate';
@@ -27,43 +27,44 @@ export default function Stats() {
   }, [session]);
 
   return (
-    <div className='flex flex-col items-start justify-between gap-6 md:items-center lg:flex-row'>
-      <h3 className='text-[48px] leading-[60px] font-normal text-[#1F1F1F]'>
-        Overview
-      </h3>
-      <div className='h-full place-self-center'>
-        <CircleProgress percentage={stats?.percentage || 0} />
-      </div>
-      <div className='flex h-full flex-wrap justify-between gap-3 md:flex-row md:gap-6 lg:flex-nowrap'>
-        <div className='h-full w-[48%] lg:w-[23%]'>
-          <EstimatorStats
-            title='Total Projects'
-            value={stats?.total_projects || 0}
-            isLoading={loading}
-          />
-        </div>
-        <div className='h-full w-[48%] lg:w-[23%]'>
-          <EstimatorStats
-            title='Active Estimates'
-            value={stats?.active_estimates || 0}
-            isLoading={loading}
-          />
-        </div>
-        <div className='h-full w-[48%] lg:w-[23%]'>
-          <EstimatorStats
-            title='This Month Expense'
-            value={stats?.expenses_this_month || 0}
-            isLoading={loading}
-          />
-        </div>
-        <div className='h-full w-[48%] lg:w-[23%]'>
-          <EstimatorStats
-            title='No of Contractor'
-            value={stats?.no_of_contractors || 0}
-            isLoading={loading}
-          />
-        </div>
-      </div>
+   <div className="flex flex-col gap-6 py-8 lg:flex-row">
+  {/* First div = double width */}
+  <div className="flex-[1] h-full">
+    <SegmentedProgress value={stats?.percentage || 0} />
+  </div>
+
+  {/* Stats container = remaining space */}
+  <div className="flex-[3] flex flex-wrap gap-3 md:gap-6">
+    <div className="flex-1 min-w-[45%] lg:min-w-[22%]">
+      <EstimatorStats
+        title="Total Projects"
+        value={stats?.total_projects || 0}
+        isLoading={loading}
+      />
     </div>
-  );
+    <div className="flex-1 min-w-[45%] lg:min-w-[22%]">
+      <EstimatorStats
+        title="Active Estimates"
+        value={stats?.active_estimates || 0}
+        isLoading={loading}
+      />
+    </div>
+    <div className="flex-1 min-w-[45%] lg:min-w-[22%]">
+      <EstimatorStats
+        title="This Month Expense"
+        value={stats?.expenses_this_month || 0}
+        isLoading={loading}
+      />
+    </div>
+    <div className="flex-1 min-w-[45%] lg:min-w-[22%]">
+      <EstimatorStats
+        title="No of Contractor"
+        value={stats?.no_of_contractors || 0}
+        isLoading={loading}
+      />
+    </div>
+  </div>
+</div>
+  )
+
 }
