@@ -80,13 +80,15 @@ export function DonutChart() {
       </div>
 
       {/* Stats section */}
-      <div className='w-ful flex items-center justify-center gap-20'>
+      <div className='w-ful flex items-center justify-between  px-3 lg:px-32'>
         <div className='text-center'>
           <div className='mb-2 text-[24px] font-normal text-[#1F1F1F]'>
             {stats?.total}
           </div>
           <div className='text-[16px] font-normal text-[#737373]'>Complete</div>
         </div>
+ <div className='text-center  w-[1.5px] text-[#C0C0C0]  bg-[#C0C0C0] h-[32.06px]'/>
+
 
         <div className='text-center'>
           <div className='mb-2 text-[24px] font-normal text-[#1F1F1F]'>
