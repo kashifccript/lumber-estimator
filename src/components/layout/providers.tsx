@@ -14,7 +14,7 @@ export default function Providers({
 }) {
   return (
     <>
-      <SessionProvider session={session}>
+      <SessionProvider session={session} refetchOnWindowFocus={false}>
         <ActiveThemeProvider initialTheme={activeThemeValue}>
           {children}
         </ActiveThemeProvider>
