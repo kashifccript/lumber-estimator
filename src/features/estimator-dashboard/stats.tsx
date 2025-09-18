@@ -1,5 +1,5 @@
 'use client';
-import { CircleProgress } from '@/components/shared/circular-progress';
+import { SegmentedProgress } from '@/components/shared/circular-progress';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { EstimatorStat } from '../estimates/types/estimate';
@@ -29,7 +29,7 @@ export default function Stats() {
   return (
     <div className='grid grid-cols-1 gap-6 py-8 md:grid-cols-2 lg:grid-cols-5'>
       <div className='h-full'>
-        <CircleProgress percentage={stats?.percentage || 0} />
+        <SegmentedProgress value={stats?.percentage || 0} />
       </div>
       <div className='h-full'>
         <EstimatorStats
