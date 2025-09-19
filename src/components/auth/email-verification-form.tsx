@@ -21,6 +21,9 @@ export default function EmailVerification() {
   const handleInputChange = (index: number, value: string) => {
     if (value.length > 1) return; // Prevent multiple characters
 
+    // Only allow digits (0–9)
+    if (!/^\d?$/.test(value)) return;
+
     const newCode = [...code];
     newCode[index] = value;
     setCode(newCode);
@@ -155,7 +158,7 @@ export default function EmailVerification() {
 
           <button
             onClick={handleResendCode}
-            className='flex-start flex w-full text-[18px] text-[#77797E] transition-colors hover:text-gray-800'
+            className='flex-start flex w-full text-[18px] text-[#77797E] transition-colors hover:text-gray-800 -mt-1'
           >
             Resend Code
           </button>
