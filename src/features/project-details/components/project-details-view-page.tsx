@@ -141,7 +141,7 @@ export default function ProjectDetailsViewPage() {
   return (
     <PageContainer>
       <div className='flex flex-1 flex-col gap-3 overflow-hidden pb-6'>
-        <div className='flex flex-col gap-3 sm:gap-4 md:flex-row  items-center justify-between'>
+        <div className='flex flex-col items-center justify-between gap-3 sm:gap-4 md:flex-row'>
           {/* Dynamic Breadcrumb */}
           <Breadcrumb
             items={breadcrumbs.map((crumb, index) => ({
@@ -176,6 +176,6 @@ export default function ProjectDetailsViewPage() {
         onClose={() => setShowAddItemModal(false)}
         onSubmit={handleAddItem}
       />
-    </div>
+    </PageContainer>
   );
 }
