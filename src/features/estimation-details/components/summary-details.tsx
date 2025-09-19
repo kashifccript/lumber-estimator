@@ -24,16 +24,18 @@ export function SummaryDetails({ data }: { data: any }) {
   const totalItems = data?.total_items_count || items.length;
 
   return (
-    <Card>
+    <Card className='bg-white'>
       <div className='bg-background rounded-lg p-5'>
-        <div className='flex flex-row gap-4'>
+        <div className='flex flex-col gap-4 sm:flex-row'>
           <div className='flex-1 space-y-2.5'>
-            <h3 className='text-secondary text-2xl font-semibold'>Summary</h3>
+            <h3 className='text-secondary text-xl font-semibold sm:text-2xl'>
+              Summary
+            </h3>
             <div className='space-y-2'>
               <p className='text-secondary text-sm font-normal'>
                 Total Estimated Cost
               </p>
-              <p className='text-secondary text-[32px] font-semibold'>
+              <p className='text-secondary text-2xl sm:text-[32px] font-semibold'>
                 ${totalCost.toLocaleString()}
               </p>
             </div>
@@ -56,7 +58,7 @@ export function SummaryDetails({ data }: { data: any }) {
               </span>
             </div>
             <div className='border-secondary/17 flex items-center justify-between border-t pt-3'>
-              <span className='text-secondary text-base font-semibold'>
+              <span className='text-secondary text-sm sm:text-base font-semibold'>
                 Total Items
               </span>
               <span className='text-secondary text-base font-bold'>
