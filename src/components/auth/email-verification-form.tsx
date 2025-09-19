@@ -139,7 +139,7 @@ export default function EmailVerification() {
                 onChange={(e) => handleInputChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 onPaste={handlePaste}
-                className='h-[72px] w-[78.62px] rounded-md border-0 bg-[#FFFFFF] text-center text-lg font-medium focus:outline-none'
+                className='h-[72px] w-full rounded-md border-0 bg-[#FFFFFF] text-center text-lg font-medium focus:outline-none'
                 aria-label={`Digit ${index + 1}`}
                 placeholder='-'
               />

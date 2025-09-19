@@ -57,26 +57,26 @@ export function RoleSelection() {
       {roleOptions.map((role) => (
         <Card
           key={role.id}
-          className={`relative cursor-pointer rounded-[8px] p-5 transition-all hover:bg-[#FFFFFF] hover:shadow-xs ${
+          className={`relative cursor-pointer rounded-[8px] p-5  transition-all hover:bg-[#FFFFFF] hover:shadow-xs ${
             selectedRole === role.id ? 'bg-white' : 'border-0'
           }`}
           onClick={() => setSelectedRole(role.id)}
         >
-          <div className='flex items-start space-x-3'>
-            <div className='mt-2 text-2xl'>
+          {/* Checkmark in top-right corner */}
+          {selectedRole === role.id && (
+            <div className='absolute top-3 right-3 flex h-6 w-6 items-center justify-center rounded-full bg-orange-500'>
+              <Check className='h-4 w-4 text-white' />
+            </div>
+          )}
+
+          <div className='flex flex-col items-start gap-2'>
+            <div className='flex flex-row items-center justify-start gap-2 text-2xl'>
               <Icon icon={role.icon} width='24' height='24' />
+              <h3 className='text-secondary font-medium'>{role.title}</h3>
             </div>
-            <div className='flex-1'>
-              <div className='flex items-center justify-between'>
-                <h3 className='font-medium text-gray-900'>{role.title}</h3>
-                {selectedRole === role.id && (
-                  <div className='flex h-5 w-5 items-center justify-center rounded-full bg-orange-500'>
-                    <Check className='h-3 w-3 text-white' />
-                  </div>
-                )}
-              </div>
-              <p className='mt-1 text-sm text-gray-600'>{role.description}</p>
-            </div>
+            <p className='text-base font-normal text-black'>
+              {role.description}
+            </p>
           </div>
         </Card>
       ))}
@@ -94,12 +94,12 @@ export function RoleSelection() {
       {/* Separator */}
       <div className='flex items-center gap-2'>
         <Separator className='flex-1' />
-        <span className='text-sm text-gray-500'>Or</span>
+        <span className='text-lg text-gray-500'>Or</span>
         <Separator className='flex-1' />
       </div>
 
       {/* Login Link */}
-      <p className='text-center text-sm'>
+      <p className='text-center text-lg text-secondary'>
         Already have an account?{' '}
         <Link href='/sign-in' className='text-primary hover:underline'>
           Sign In

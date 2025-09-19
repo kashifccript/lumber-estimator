@@ -188,9 +188,9 @@ export default function SigninForm() {
         </Button>
         */}
 
-        <p className='text-center text-sm'>
+        <p className='text-center text-lg font-medium'>
           Don&apos;t have an account?{' '}
-          <Link href='/role-selection' className='text-primary hover:underline'>
+          <Link href='/role-selection' className='text-primary font-bold hover:underline'>
             Sign Up
           </Link>
         </p>

@@ -13,8 +13,8 @@ export default function AuthHeading({
   subtitle
 }: AuthHeadingProps) {
   return (
-    <div className='text-left'>
-      <h1 className='text-[42px] text-[1F1F1F] leading-[100%] font-semibold'>
+    <div className='text-left lg:mt-13'>
+      <h1 className='text-secondary text-[36px] leading-[100%] font-semibold md:text-[42px]'>
         {title}
         {highlight && <span className='text-primary'>{highlight}</span>}
       </h1>
