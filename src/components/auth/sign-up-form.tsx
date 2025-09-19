@@ -22,9 +22,12 @@ import {
   signUpSchema,
   signUpUser
 } from '@/features/auth/actions/signup';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const roleFromUrl = searchParams.get('role') as
@@ -167,12 +170,22 @@ export default function SignupForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input
-                    type='password'
-                    placeholder='Enter your password'
-                    {...field}
-                  />
+                  <div className='relative'>
+                    <Input
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder='Enter your password'
+                      {...field}
+                    />
+                    <button
+                      type='button'
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      className='absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-gray-500'
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
                 </FormControl>
+
                 <FormMessage />
               </FormItem>
             )}
