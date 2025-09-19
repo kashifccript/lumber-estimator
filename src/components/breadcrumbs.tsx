@@ -20,14 +20,14 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
   };
 
   return (
-    <div className='flex items-center gap-3 w-full'>
+    <div className='flex flex-row w-full items-center gap-3 place-self-start'>
       <button
         onClick={handleBackClick}
         className='flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-gray-100 bg-white transition-colors hover:bg-gray-50'
       >
         <ChevronLeft className='h-6 w-6 text-[#1F1F1F]' />
       </button>
-      <div className='text-[16px] md:text-2xl'>
+      <div className='text-base sm:text-2xl'>
         {items.map((item, index) => (
           <span key={index}>
             {item.href && !item.active ? (

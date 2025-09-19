@@ -29,11 +29,9 @@ export default function ProjectDetailsViewPage() {
 
   // Dynamic breadcrumbs
   const breadcrumbs = [
-    { title: 'Dashboard', link: '/dashboard' },
-    { title: 'Estimates', link: '/dashboard/estimator/estimates' },
+    { title: 'Estimate', link: '/dashboard/estimator/estimates' },
     {
-      title: projectData?.name || 'Project Details',
-      link: `/dashboard/estimator/project-details/${projectId}`
+      title: 'Estimation Details'
     }
   ];
 
@@ -141,9 +139,9 @@ export default function ProjectDetailsViewPage() {
   };
 
   return (
-    <div>
-      <div className='flex flex-1 flex-col gap-3 pb-6'>
-        <div className='flex flex-col md:flex-row items-center justify-between'>
+    <PageContainer>
+      <div className='flex flex-1 flex-col gap-3 overflow-hidden pb-6'>
+        <div className='flex flex-col gap-3 sm:gap-4 md:flex-row  items-center justify-between'>
           {/* Dynamic Breadcrumb */}
           <Breadcrumb
             items={breadcrumbs.map((crumb, index) => ({

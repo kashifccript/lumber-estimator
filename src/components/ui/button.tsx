@@ -38,7 +38,7 @@ const buttonVariants = cva(
         lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
         icon: '[&_svg]:size-5 [&_svg]:shrink-0 p-3.5',
         tableIcon: '[&_svg]:size-4 [&_svg]:shrink-0 p-[7px]',
-        secondary: 'h-[52px] px-5 py-3 [&_svg]:size-6'
+        secondary: 'h-[44px] sm:h-[52px] px-5 py-3 [&_svg]:size-6'
       }
     },
     defaultVariants: {

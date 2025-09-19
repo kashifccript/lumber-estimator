@@ -154,9 +154,9 @@ export function EstimationActionBar({
 
   return (
     <div
-      className={`md:flex-row w-full items-end md:items-center flex flex-col justify-end gap-1.5 ${className ?? ''}`}
+      className={`flex w-full flex-col items-end justify-end gap-1.5 md:flex-row md:items-center ${className ?? ''}`}
     >
-      <div className=''>
+      <div className='flex flex-row gap-1.5'>
         <Button onClick={handleExportPdf} variant='icon' size='icon'>
           <Image
             src='/assets/icons/pdf.png'
@@ -182,11 +182,21 @@ export function EstimationActionBar({
         </Button>
       </div>
 
-      <Button onClick={onAddNewItem} variant='secondary' size='secondary' className='w-full md:w-fit'>
+      <Button
+        onClick={onAddNewItem}
+        variant='secondary'
+        size='secondary'
+        className='w-full md:w-fit'
+      >
         <Plus />
         Add New Item
       </Button>
-      <Button onClick={onSubmitEstimate} variant='primary' size='secondary' className='w-full md:w-fit'>
+      <Button
+        onClick={onSubmitEstimate}
+        variant='primary'
+        size='secondary'
+        className='w-full md:w-fit'
+      >
         <Send />
         Submit Estimate
       </Button>

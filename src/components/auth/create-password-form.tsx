@@ -98,7 +98,7 @@ export default function CreatePasswordView() {
             <FormItem>
               <FormLabel>Your New Password</FormLabel>
               <FormControl>
-                <div className="relative">
+                <div className='relative'>
                   <Input
                     placeholder='your new password'
                     disabled={loading}
@@ -106,9 +106,9 @@ export default function CreatePasswordView() {
                     {...field}
                   />
                   <button
-                    type="button"
+                    type='button'
                     onClick={() => setShowNewPassword((prev) => !prev)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                    className='absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-gray-500'
                   >
                     {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -127,7 +127,7 @@ export default function CreatePasswordView() {
             <FormItem>
               <FormLabel>Confirm Your Password</FormLabel>
               <FormControl>
-                <div className="relative">
+                <div className='relative'>
                   <Input
                     type={showConfirmPassword ? 'text' : 'password'}
                     placeholder='confirm your password'
@@ -135,11 +135,15 @@ export default function CreatePasswordView() {
                     {...field}
                   />
                   <button
-                    type="button"
+                    type='button'
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                    className='absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-gray-500'
                   >
-                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showConfirmPassword ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
                   </button>
                 </div>
               </FormControl>
@@ -150,7 +154,7 @@ export default function CreatePasswordView() {
 
         {/* Submit Button */}
         <Button type='submit' variant='default' disabled={loading}>
-          {loading ? 'Resetting...' : 'Reset'}
+          {loading ? 'Resetting...' : 'Reset Password'}
         </Button>
       </form>
     </Form>
