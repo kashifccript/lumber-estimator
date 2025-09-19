@@ -61,9 +61,10 @@ export default function CostLineChart() {
   const [selectedValue, setSelectedValue] = useState(months[0]);
   return (
     <div className='flex w-full flex-col'>
-      <div className='flex flex-col flex-row gap-6 py-4 md:justify-between'>
+      <div className='flex flex-col flex-row gap-6 py-4 justify-between'>
         <div className='text-[20px] font-normal text-[#1F1F1F]'>
-          Actual Cost Estimated Cost
+          <span className='block lg:hidden'>Estimate Cost</span>
+          <span className='hidden lg:block'>Actual Cost Estimated Cost</span>
         </div>
         <CustomDropdown
           value={selectedValue}

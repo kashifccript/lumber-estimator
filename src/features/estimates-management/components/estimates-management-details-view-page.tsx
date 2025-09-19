@@ -58,31 +58,30 @@ export default function EstimatesManagementDetails() {
     }
     return [];
   };
-const loadProjectData = async () => {
-      if (!projectId) return;
+  const loadProjectData = async () => {
+    if (!projectId) return;
 
-      try {
-        setLoading(true);
-        const response = await fetchProjectById(projectId);
+    try {
+      setLoading(true);
+      const response = await fetchProjectById(projectId);
 
-        if (response && response.project_id) {
-          setProjectData(response);
-          const transformedData = transformApiDataToTableItems(response);
-          setTableData(transformedData);
-        } else {
-          toast.error('Failed to load project data');
-        }
-      } catch (error) {
-        console.error('Error loading project data:', error);
-        toast.error('Error loading project data');
-      } finally {
-        setLoading(false);
+      if (response && response.project_id) {
+        setProjectData(response);
+        const transformedData = transformApiDataToTableItems(response);
+        setTableData(transformedData);
+      } else {
+        toast.error('Failed to load project data');
       }
-    };
+    } catch (error) {
+      console.error('Error loading project data:', error);
+      toast.error('Error loading project data');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Fetch project data
   useEffect(() => {
-
     loadProjectData();
   }, [projectId]);
 
@@ -93,7 +92,9 @@ const loadProjectData = async () => {
     <PageContainer>
       <div className='flex w-full flex-col gap-5'>
         <div className='flex flex-col gap-3'>
- <div className='flex flex-col gap-6 sm:flex-row sm:justify-between py-4'>            <Breadcrumb
+          <div className='flex flex-col gap-6 py-4 sm:flex-row sm:justify-between'>
+            {' '}
+            <Breadcrumb
               items={[
                 {
                   label: 'All Estimates',
@@ -111,8 +112,8 @@ const loadProjectData = async () => {
               {/* Input */}
               <Input
                 type='text'
-                placeholder='Search'
-                className='h-[48px] rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0 border border-[#8896AB33]'
+                placeholder='Search By Name or Email'
+                className='h-[48px] rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-[#292D32] placeholder:text-[16px]'
               />
             </div>
           </div>
@@ -133,7 +134,7 @@ const loadProjectData = async () => {
               </div>
 
               <div className='flex-1'>
-                <h3 className='text-lg font-semibold'>
+                <h3 className='text-[18px] md:text-lg font-semibold'>
                   {projectData?.project_name || 'Loading...'}
                 </h3>
                 <p className='mb-2 text-[12px] font-[400] text-[#1F1F1F]'>
@@ -149,7 +150,7 @@ const loadProjectData = async () => {
                 </div>
               </div>
             </div>
-            <div className='flex flex-col gap-3'>
+            <div className='flex flex-col gap-3 hidden md:block'>
               <p className='text-lg font-semibold'>Submitted Date</p>
               <span className='text-xs font-normal'>
                 {projectData?.created_at
@@ -175,7 +176,7 @@ const loadProjectData = async () => {
             <CallToAction
               projectName={projectData?.project_name}
               projectId={projectId}
-              refetch= {loadProjectData}
+              refetch={loadProjectData}
               onApprove={() => {
                 // Handle post-approval actions (e.g., refresh data, navigate)
                 console.log('Estimate approved');

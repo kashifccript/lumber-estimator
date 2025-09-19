@@ -49,7 +49,7 @@ export function EstimatorStats({
         className
       )}
     >
-      <div className='flex flex-col gap-4.5'>
+      <div className='flex flex-col'>
         <div className='flex items-start justify-between'>
           <div className='flex flex-col'>
             <div className='text-base font-normal text-[#1F1F1F] sm:text-[24px]'>

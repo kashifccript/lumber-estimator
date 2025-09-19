@@ -110,22 +110,23 @@ export default function EstimatesManagementViewPage({
   return (
     <PageContainer>
       <div className='flex w-full flex-col gap-3'>
-        <div className='flex items-center justify-between gap-2'>
-          {isDashboard ? (
-            <h1 className='text-2xl font-semibold'>
-              Estimates Awaiting Your Approval
-            </h1>
-          ) : (
-            <h1 className='text-2xl font-semibold'>
-              All Estimates
-              {estimates.length > 0 && (
-                <span className='ml-2 text-sm font-normal text-gray-500'>
-                  ({estimates.length} total)
-                </span>
-              )}
-            </h1>
-          )}
-
+        <div className='md: flex flex-col  justify-between gap-2 md:flex-row'>
+          <div>
+            {isDashboard ? (
+              <h1 className='text-2xl font-semibold'>
+                Estimates Awaiting Your Approval
+              </h1>
+            ) : (
+              <h1 className='md:text-2xl font-semibold text-[16px]'>
+                All Estimate
+                {estimates.length > 0 && (
+                  <span className='ml-2 text-sm font-normal text-gray-500 hidden lg:block'>
+                    ({estimates.length} total)
+                  </span>
+                )}
+              </h1>
+            )}
+          </div>
           <div className='flex flex-col gap-4 gap-6 sm:flex-row'>
             {' '}
             {/* Search box */}
@@ -136,7 +137,7 @@ export default function EstimatesManagementViewPage({
                 placeholder='Search Estimator'
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className='h-[48px] rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0 border border-[#8896AB33]'
+                className='h-[48px] rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0'
               />
             </div>
             {/* Dropdown */}

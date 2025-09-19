@@ -141,9 +141,9 @@ export default function ProjectDetailsViewPage() {
   };
 
   return (
-    <PageContainer>
+    <div>
       <div className='flex flex-1 flex-col gap-3 pb-6'>
-        <div className='flex items-center justify-between'>
+        <div className='flex flex-col md:flex-row items-center justify-between'>
           {/* Dynamic Breadcrumb */}
           <Breadcrumb
             items={breadcrumbs.map((crumb, index) => ({
@@ -178,6 +178,6 @@ export default function ProjectDetailsViewPage() {
         onClose={() => setShowAddItemModal(false)}
         onSubmit={handleAddItem}
       />
-    </PageContainer>
+    </div>
   );
 }

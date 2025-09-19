@@ -94,6 +94,7 @@ export const CallToAction = ({
         confirmText='Approve Estimate'
         cancelText='Cancel'
         variant='approve'
+        isEstimate
       />
 
       {/* Reject Modal */}
@@ -107,6 +108,7 @@ export const CallToAction = ({
         confirmText='Reject Estimate'
         cancelText='Cancel'
         variant='reject'
+        isEstimate
       />
 
       <div className='flex flex-row justify-end gap-2'>
