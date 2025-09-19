@@ -27,7 +27,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
       >
         <ChevronLeft className='h-6 w-6 text-[#1F1F1F]' />
       </button>
-      <div className='text-2xl'>
+      <div className='text-basesm:text-2xl'>
         {items.map((item, index) => (
           <span key={index}>
             {item.href && !item.active ? (

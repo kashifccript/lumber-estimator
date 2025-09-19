@@ -9,7 +9,7 @@ export default function Heading() {
     usePdfUpload();
   return (
     <div className='flex items-center justify-between'>
-      <h1 className='text-secondary text-2xl font-semibold'>
+      <h1 className='text-secondary text-base font-semibold sm:text-2xl'>
         Recent Estimates
       </h1>
       <Button
