@@ -68,14 +68,14 @@ export function SettingsTabs() {
             {activeTab}
           </h2>
         </div>
-        <nav className='flex flex-col gap-2 md:flex-row'>
+        <nav className='flex flex-col gap-2 md:flex-row '>
           {renderTabs.map((tab) => {
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  'flex w-full cursor-pointer items-center gap-2 rounded-[5px] px-4 py-2 text-sm font-medium transition-colors md:w-auto',
+                  'flex w-full cursor-pointer items-center justify-center text-center gap-2 rounded-[5px] px-4 py-2 text-sm font-medium transition-colors md:w-auto',
                   activeTab === tab.id
                     ? 'bg-[#E2624B] text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
