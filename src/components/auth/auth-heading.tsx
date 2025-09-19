@@ -19,7 +19,7 @@ export default function AuthHeading({
         {highlight && <span className='text-primary'>{highlight}</span>}
       </h1>
       {subtitle && (
-        <p className='mt-[10px] text-lg leading-[100%] font-normal text-[#1F1F1F]/80'>
+        <p className='mt-[15px] text-lg leading-[100%] font-normal text-[#1F1F1F]/80'>
           {subtitle}
         </p>
       )}

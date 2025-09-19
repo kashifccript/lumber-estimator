@@ -27,14 +27,14 @@ const roleOptions: RoleOption[] = [
   // },
   {
     id: 'contractor',
-    title: 'Contractor',
+    title: 'Contractors',
     description:
       'Add and manage team projects, and supervise final project estimates',
     icon: 'hugeicons:labor'
   },
   {
     id: 'estimator',
-    title: 'Estimator',
+    title: 'Estimators',
     description:
       'Upload project files to automatically generate detailed cost estimates',
     icon: 'hugeicons:estimate-01'
