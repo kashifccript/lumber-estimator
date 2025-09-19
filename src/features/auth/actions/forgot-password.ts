@@ -1,3 +1,4 @@
+'use server';
 import { post } from '@/lib/api/client';
 
 export async function forgotPassword(data: { email: string | null }) {
