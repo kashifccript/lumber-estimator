@@ -57,7 +57,7 @@ export function RoleSelection() {
       {roleOptions.map((role) => (
         <Card
           key={role.id}
-          className={`relative cursor-pointer rounded-[8px] p-5 transition-all hover:bg-[#FFFFFF] hover:shadow-xs ${
+          className={`relative cursor-pointer rounded-[8px] p-5  transition-all hover:bg-[#FFFFFF] hover:shadow-xs ${
             selectedRole === role.id ? 'bg-white' : 'border-0'
           }`}
           onClick={() => setSelectedRole(role.id)}
