@@ -57,7 +57,7 @@ export function RoleSelection() {
       {roleOptions.map((role) => (
         <Card
           key={role.id}
-          className={`relative cursor-pointer rounded-[8px] p-5  transition-all hover:bg-[#FFFFFF] hover:shadow-xs ${
+          className={`relative cursor-pointer rounded-[8px] p-5 transition-all hover:bg-[#FFFFFF] hover:shadow-xs ${
             selectedRole === role.id ? 'bg-white' : 'border-0'
           }`}
           onClick={() => setSelectedRole(role.id)}
@@ -99,9 +99,12 @@ export function RoleSelection() {
       </div>
 
       {/* Login Link */}
-      <p className='text-center text-lg text-secondary'>
+      <p className='text-secondary text-center text-lg'>
         Already have an account?{' '}
-        <Link href='/sign-in' className='text-primary hover:underline'>
+        <Link
+          href='/sign-in'
+          className='text-primary font-bold hover:underline'
+        >
           Sign In
         </Link>
       </p>

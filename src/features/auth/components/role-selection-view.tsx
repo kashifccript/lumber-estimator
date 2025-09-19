@@ -4,7 +4,7 @@ import { RoleSelection } from '@/components/auth/role-selection';
 
 export default function RoleSelectionView() {
   return (
-    <div className='bg-background relative flex h-screen flex-col gap-6 overflow-y-auto p-6 sm:gap-8 md:p-0 lg:flex-row lg:gap-0'>
+    <div className='bg-background relative flex min-h-screen flex-col gap-6 overflow-y-auto p-6 sm:gap-8 md:p-0 lg:flex-row lg:gap-0'>
       {/* Left Side - Cover */}
       <AuthCover />
 
