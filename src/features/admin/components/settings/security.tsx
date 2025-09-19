@@ -23,8 +23,24 @@ const profileFormSchema = z
   .object({
     new_password: z
       .string()
-      .min(6, { message: 'Password must be at least 6 characters.' }),
-    confirm_password: z.string()
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+      .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+      .regex(/[0-9]/, 'Password must contain at least one number')
+      .regex(
+        /[^A-Za-z0-9]/,
+        'Password must contain at least one special character'
+      ),
+    confirm_password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+      .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+      .regex(/[0-9]/, 'Password must contain at least one number')
+      .regex(
+        /[^A-Za-z0-9]/,
+        'Password must contain at least one special character'
+      )
   })
   .refine((data) => data.new_password === data.confirm_password, {
     path: ['confirm_password'],
@@ -79,7 +95,7 @@ const Security = () => {
                   New Password
                 </FormLabel>
                 <FormControl>
-                  <div className="relative">
+                  <div className='relative'>
                     <Input
                       type={showNewPassword ? 'text' : 'password'}
                       placeholder='Enter new password'
@@ -87,11 +103,15 @@ const Security = () => {
                       className='border-0 shadow-none placeholder:text-[#1F1F1F66]'
                     />
                     <button
-                      type="button"
+                      type='button'
                       onClick={() => setShowNewPassword((prev) => !prev)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                      className='absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-gray-500'
                     >
-                      {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {showNewPassword ? (
+                        <EyeOff size={18} />
+                      ) : (
+                        <Eye size={18} />
+                      )}
                     </button>
                   </div>
                 </FormControl>
@@ -110,7 +130,7 @@ const Security = () => {
                   Confirm Password
                 </FormLabel>
                 <FormControl>
-                  <div className="relative">
+                  <div className='relative'>
                     <Input
                       type={showConfirmPassword ? 'text' : 'password'}
                       placeholder='Confirm new password'
@@ -118,11 +138,15 @@ const Security = () => {
                       className='border-0 shadow-none placeholder:text-[#1F1F1F66]'
                     />
                     <button
-                      type="button"
+                      type='button'
                       onClick={() => setShowConfirmPassword((prev) => !prev)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                      className='absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-gray-500'
                     >
-                      {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {showConfirmPassword ? (
+                        <EyeOff size={18} />
+                      ) : (
+                        <Eye size={18} />
+                      )}
                     </button>
                   </div>
                 </FormControl>

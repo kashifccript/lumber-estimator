@@ -19,16 +19,34 @@ import { Button } from '@/components/ui/button';
 import { resetPassword } from '@/features/auth/actions/forgot-password';
 import { Eye, EyeOff } from 'lucide-react';
 
-const formSchema = z.object({
-  confirm_password: z
-    .string()
-    .min(6, { message: 'Password must be at least 6 characters long' })
-    .max(100, { message: 'Password must not exceed 100 characters' }),
-  new_password: z
-    .string()
-    .min(6, { message: 'Password must be at least 6 characters long' })
-    .max(100, { message: 'Password must not exceed 100 characters' })
-});
+// ✅ Schema with runtime password match validation
+const formSchema = z
+  .object({
+    new_password: z
+        .string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one number')
+    .regex(
+      /[^A-Za-z0-9]/,
+      'Password must contain at least one special character'
+    ),
+    confirm_password: z
+         .string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one number')
+    .regex(
+      /[^A-Za-z0-9]/,
+      'Password must contain at least one special character'
+    ),
+  })
+  .refine((data) => data.new_password === data.confirm_password, {
+    path: ['confirm_password'], // error will show on confirm_password field
+    message: 'Passwords do not match'
+  });
 
 type UserFormValue = z.infer<typeof formSchema>;
 
@@ -39,17 +57,14 @@ export default function CreatePasswordView() {
 
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
-
   const router = useRouter();
-
-  const defaultValues = {
-    new_password: '',
-    confirm_password: ''
-  };
 
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
-    defaultValues
+    defaultValues: {
+      new_password: '',
+      confirm_password: ''
+    }
   });
 
   const onSubmit = async (data: UserFormValue) => {
@@ -63,12 +78,10 @@ export default function CreatePasswordView() {
           toast.success(result.message);
           router.push(`/sign-in`);
         } else {
-          toast.error(
-            result.message || 'Something went wrong. Please try again.'
-          );
+          toast.error(result.message || 'Something went wrong. Please try again.');
         }
       } catch (error) {
-        console.error('Sign in error:', error);
+        console.error('Reset password error:', error);
         toast.error('Something went wrong. Please try again.');
       }
     });
@@ -76,10 +89,7 @@ export default function CreatePasswordView() {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className='w-full space-y-5 pb-10'
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className='w-full space-y-5 pb-10'>
         {/* New Password */}
         <FormField
           control={form.control}
@@ -115,12 +125,12 @@ export default function CreatePasswordView() {
           name='confirm_password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Your Confirm Password</FormLabel>
+              <FormLabel>Confirm Your Password</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder='your confirm password'
+                    placeholder='confirm your password'
                     disabled={loading}
                     {...field}
                   />
@@ -140,7 +150,7 @@ export default function CreatePasswordView() {
 
         {/* Submit Button */}
         <Button type='submit' variant='default' disabled={loading}>
-          {loading ? 'Reseting' : 'Reset'}
+          {loading ? 'Resetting...' : 'Reset'}
         </Button>
       </form>
     </Form>
