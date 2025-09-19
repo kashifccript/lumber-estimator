@@ -19,6 +19,7 @@ export default function SignUpViewPage() {
         <div className='w-full max-w-lg space-y-20  '>
           <AuthHeading
             title='Create your Account'
+             highlight='!'
             subtitle='Enter all required information to discover more'
           />
           <SignupForm />

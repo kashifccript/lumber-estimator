@@ -303,7 +303,7 @@ export default function SignupForm() {
             className='w-full'
             disabled={isLoading}
           >
-            {isLoading ? 'Creating Account...' : 'Create Account'}
+            {isLoading ? 'Creating Account...' : 'Sign Up'}
           </Button>
 
           {/* Login Link */}
