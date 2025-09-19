@@ -9,8 +9,8 @@ export default function RoleSelectionView() {
       <AuthCover />
 
       {/* Right Side - Role Selection */}
-      <div className='flex items-center justify-center bg-[#F8F8F8] sm:mx-8 lg:w-1/2 lg:px-12'>
-        <div className=' w-full space-y-10 lg:max-w-lg lg:space-y-20'>
+      <div className='flex items-center justify-start bg-[#F8F8F8] sm:mx-8 lg:w-1/2 lg:px-12'>
+        <div className='w-full space-y-10 lg:space-y-20'>
           <AuthHeading
             title='How will you be using the platform?'
             subtitle='Please select your role.'

@@ -15,8 +15,8 @@ export default function SignUpViewPage() {
       <AuthCover />
 
       {/* Right Side - Form */}
-      <div className='flex justify-center bg-[#F8F8F8] sm:mx-8 lg:h-screen lg:w-1/2 lg:overflow-y-auto lg:px-12'>
-        <div className='w-full space-y-10 lg:max-w-lg lg:space-y-20'>
+      <div className='flex justify-start bg-[#F8F8F8] sm:mx-8 lg:h-screen lg:w-1/2 lg:overflow-y-auto lg:px-12'>
+        <div className='w-full space-y-10 lg:space-y-20'>
           <AuthHeading
             title='Create your Account'
             subtitle='Enter all required information to discover more'
