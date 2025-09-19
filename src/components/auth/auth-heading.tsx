@@ -14,7 +14,7 @@ export default function AuthHeading({
 }: AuthHeadingProps) {
   return (
     <div className='text-left'>
-      <h1 className='text-[42px] text-[1F1F1F] leading-[100%] font-semibold'>
+      <h1 className='text-[32px] leading-[100%] font-semibold text-[1F1F1F] sm:text-[36px] md:text-[42px]'>
         {title}
         {highlight && <span className='text-primary'>{highlight}</span>}
       </h1>
