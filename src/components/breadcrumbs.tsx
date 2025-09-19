@@ -20,7 +20,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
   };
 
   return (
-    <div className='flex flex-row w-full items-center gap-3 place-self-start'>
+    <div className='flex w-full flex-row items-center gap-3 place-self-start lg:max-w-[40%] xl:max-w-full'>
       <button
         onClick={handleBackClick}
         className='flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-gray-100 bg-white transition-colors hover:bg-gray-50'

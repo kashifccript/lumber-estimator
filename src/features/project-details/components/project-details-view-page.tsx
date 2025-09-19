@@ -141,7 +141,7 @@ export default function ProjectDetailsViewPage() {
   return (
     <PageContainer>
       <div className='flex flex-1 flex-col gap-3 overflow-hidden pb-6'>
-        <div className='flex flex-col items-center justify-between gap-3 sm:gap-4 md:flex-row'>
+        <div className='flex flex-col items-center justify-between gap-3 sm:gap-4 lg:flex-row'>
           {/* Dynamic Breadcrumb */}
           <Breadcrumb
             items={breadcrumbs.map((crumb, index) => ({
