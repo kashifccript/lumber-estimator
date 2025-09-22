@@ -1,8 +1,8 @@
-import { auth } from 'auth';
+import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 
 export default async function middleware(req: NextRequest) {
-  const session = await auth();
+  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
   const url = req.nextUrl;
   const pathname = url.pathname;
 
@@ -17,17 +17,17 @@ export default async function middleware(req: NextRequest) {
   ]);
 
   // If unauthenticated and hitting an allowed auth page, continue
-  if (!session && allowedAuthPaths.has(pathname)) {
+  if (!token && allowedAuthPaths.has(pathname)) {
     return NextResponse.next();
   }
 
   // If unauthenticated and not on auth pages, redirect to sign-in
-  if (!session) {
+  if (!token) {
     return NextResponse.redirect(new URL('/sign-in', url));
   }
 
   // Resolve role as lowercase for matching
-  const role = (session.user?.user?.role || '').toString().toLowerCase();
+  const role = ((token as any)?.user?.role || '').toString().toLowerCase();
 
   // Role-based root dashboards
   const roleHomes: Record<string, string> = {

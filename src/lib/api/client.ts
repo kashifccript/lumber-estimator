@@ -2,13 +2,14 @@
 import { APIRequest, APIResponse } from './types';
 import { API_BASE_URL } from './constants';
 import { isJsonString } from './utils';
-import { auth } from 'auth';
 import { revalidateTag } from 'next/cache';
+import { getServerSession } from 'next-auth';
+import authOptions from '../../../auth.config';
 
 const getAuthToken = async () => {
   try {
-    const session = await auth();
-    return session?.user?.access_token || null;
+    const session = await getServerSession(authOptions as any);
+    return (session as any)?.user?.access_token || null;
   } catch (error) {
     console.error('Error getting auth token:', error);
     return null;

@@ -6,7 +6,8 @@ import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
 import NextTopLoader from 'nextjs-toploader';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
-import { auth } from '../../auth';
+import { getServerSession } from 'next-auth';
+import authOptions from '../../auth.config';
 import './globals.css';
 import './theme.css';
 import localFont from 'next/font/local';
@@ -67,7 +68,7 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const activeThemeValue = cookieStore.get('active_theme')?.value;
   const isScaled = activeThemeValue?.endsWith('-scaled');
-  const session = await auth();
+  const session = await getServerSession(authOptions as any);
 
   return (
     <html lang='en' suppressHydrationWarning>

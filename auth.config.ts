@@ -1,9 +1,7 @@
-import { NextAuthConfig } from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
-
-const authConfig: NextAuthConfig = {
+import CredentialsProvider from 'next-auth/providers/credentials';
+const authOptions = {
   providers: [
-    Credentials({
+    CredentialsProvider({
       id: 'credentials',
       credentials: {
         username: { type: 'text' },
@@ -26,22 +24,20 @@ const authConfig: NextAuthConfig = {
             }
           );
 
-          if (res.status === 401) {
-            return null;
-          }
-
           const result = await res.json();
+
+          if (!res.ok && result) {
+            return { status: false, error: result?.detail };
+          }
 
           if (res.ok) {
             const user = result;
 
-            return user;
+            return user as any;
           } else {
-
             throw new Error('Invalid login credentials');
           }
         } catch (error: any) {
-
           return null;
         }
       }
@@ -55,19 +51,25 @@ const authConfig: NextAuthConfig = {
     maxAge: 24 * 60 * 60 // 1 day
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: any) {
       if (user) {
         return { ...token, ...user };
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       session.user = token as any;
       return session;
+    },
+    async signIn({ user }: any) {
+      console.log('user', user);
+      if (user?.error) {
+        throw new Error(user?.error);
+      }
+      return true;
     }
   },
-  secret: process.env.AUTH_SECRET,
-  trustHost: true
-} satisfies NextAuthConfig;
+  secret: process.env.AUTH_SECRET
+};
 
-export default authConfig;
+export default authOptions;
