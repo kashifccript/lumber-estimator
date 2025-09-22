@@ -72,6 +72,7 @@ export default function SigninForm() {
           password: data.password,
           redirect: false
         });
+
         if (result.error) {
           if (result.error === 'CredentialsSignin')
             toast.error('Pending Approval');
@@ -167,6 +168,17 @@ export default function SigninForm() {
         {/* Submit Button */}
         <Button type='submit' variant='default' disabled={loading}>
           {loading ? 'Signing in...' : 'LogIn'}
+        </Button>
+
+        <Button
+          type='button'
+          variant='outline'
+          onClick={() =>
+            signIn('google', { callbackUrl: '/dashboard/overview' })
+          }
+          disabled={loading}
+        >
+          Continue with Google
         </Button>
 
         {/* Separator */}
