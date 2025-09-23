@@ -208,7 +208,7 @@ export default function SigninForm() {
             type='button'
             variant='ghost'
             className='bg-white font-medium hover:bg-white'
-            onClick={() => signIn('apple', { callbackUrl: '/dashboard' })}
+            onClick={() => toast.error('Apple login is not implemented yet')}
           >
             <Image
               src='/assets/icons/apple.svg'
