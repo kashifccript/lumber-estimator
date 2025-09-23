@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useTransition, useState } from 'react';
+import { useTransition, useState, useEffect } from 'react';
 import { getSession, signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
@@ -39,9 +39,17 @@ type UserFormValue = z.infer<typeof formSchema>;
 export default function SigninForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl');
+  const error = searchParams.get('error');
+  const router = useRouter();
   const [loading, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      router.replace('/sign-in');
+    }
+  }, [error]);
 
   const defaultValues = {
     username: '',
@@ -79,9 +87,11 @@ export default function SigninForm() {
           toast.error(result.error || 'Invalid Credentials');
         } else if (result?.ok) {
           const session = await getSession();
+          console.log('session', session);
 
           if (session?.user?.user) {
             const userRole = session.user.user.role;
+            console.log('userRole', userRole);
             const redirectUrl = callbackUrl || getRedirectUrl(userRole);
 
             toast.success(
@@ -183,6 +193,7 @@ export default function SigninForm() {
             type='button'
             variant='ghost'
             className='bg-white font-medium hover:bg-white'
+            onClick={() => signIn('google')}
           >
             <Image
               src='/assets/icons/google.svg'

@@ -1,4 +1,5 @@
 import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
 const authOptions = {
   providers: [
     CredentialsProvider({
@@ -34,26 +35,33 @@ const authOptions = {
             const user = result;
 
             return user as any;
-          } else {
-            throw new Error('Invalid login credentials');
           }
         } catch (error: any) {
           return null;
         }
       }
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!
     })
   ],
   pages: {
-    signIn: '/sign-in'
+    signIn: '/sign-in',
+    error: '/sign-in'
   },
   session: {
     strategy: 'jwt',
     maxAge: 24 * 60 * 60 // 1 day
   },
   callbacks: {
-    async jwt({ token, user }: any) {
-      if (user) {
+    async jwt({ token, user, account }: any) {
+      if (user && !account?.backendUser) {
         return { ...token, ...user };
+      }
+      if (account?.backendUser) {
+        token.user = account.backendUser.user;
+        token.access_token = account.backendUser.access_token;
       }
       return token;
     },
@@ -61,9 +69,26 @@ const authOptions = {
       session.user = token as any;
       return session;
     },
-    async signIn({ user }: any) {
+    async signIn({ user, account }: any) {
       if (user?.error) {
         throw new Error(user?.error);
+      }
+      if (account?.provider === 'google') {
+        const id_token = account.id_token;
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/google/login`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id_token, role: 'estimator' })
+          }
+        );
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data?.detail?.message || data?.detail);
+        }
+        (account as any).backendUser = data;
       }
       return true;
     }
