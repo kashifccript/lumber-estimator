@@ -62,7 +62,6 @@ const authOptions = {
       return session;
     },
     async signIn({ user }: any) {
-      console.log('user', user);
       if (user?.error) {
         throw new Error(user?.error);
       }
