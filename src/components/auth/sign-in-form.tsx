@@ -19,6 +19,9 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
+import { IconBrandGoogle } from '@tabler/icons-react';
+import Image from 'next/image';
+import { Separator } from '../ui/separator';
 
 const formSchema = z.object({
   username: z
@@ -72,10 +75,7 @@ export default function SigninForm() {
           password: data.password,
           redirect: false
         });
-        if (result.error) {
-          // if (result.error === 'CredentialsSignin')
-          //   toast.error('Pending Approval');
-          // else
+        if (result?.error) {
           toast.error(result.error || 'Invalid Credentials');
         } else if (result?.ok) {
           const session = await getSession();
@@ -171,26 +171,49 @@ export default function SigninForm() {
         </Button>
 
         {/* Separator */}
-        {/* <div className='flex items-center gap-2'>
+        <div className='flex items-center gap-2'>
           <Separator className='flex-1' />
           <span className='text-sm text-gray-500'>Or</span>
           <Separator className='flex-1' />
-        </div> */}
+        </div>
 
-        {/* Social Login Buttons - Commented out for now */}
-        {/*
-        <Button type='button' variant='outline' disabled={isLoading}>
-          <FcGoogle size={20} /> Continue with Google
-        </Button>
+        {/* Social Login Buttons */}
+        <div className='flex flex-col gap-2.5'>
+          <Button
+            type='button'
+            variant='ghost'
+            className='bg-white font-medium hover:bg-white'
+          >
+            <Image
+              src='/assets/icons/google.svg'
+              alt='Google'
+              width={24}
+              height={24}
+            />
+            <span>Continue with Google</span>
+          </Button>
 
-        <Button type='button' variant='outline' disabled={isLoading}>
-          <FaApple size={20} /> Continue with Apple
-        </Button>
-        */}
+          <Button
+            type='button'
+            variant='ghost'
+            className='bg-white font-medium hover:bg-white'
+          >
+            <Image
+              src='/assets/icons/apple.svg'
+              alt='Google'
+              width={24}
+              height={24}
+            />
+            <span>Continue with Apple</span>
+          </Button>
+        </div>
 
         <p className='text-center text-lg font-medium'>
           Don&apos;t have an account?{' '}
-          <Link href='/role-selection' className='text-primary font-bold hover:underline'>
+          <Link
+            href='/role-selection'
+            className='text-primary font-bold hover:underline'
+          >
             Sign Up
           </Link>
         </p>
