@@ -6,6 +6,11 @@ export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
   const pathname = url.pathname;
 
+  // Add safety check for pathname
+  if (!pathname) {
+    return NextResponse.next();
+  }
+
   // Allowed unauthenticated paths (auth pages)
   const allowedAuthPaths = new Set([
     '/sign-in',
