@@ -193,7 +193,7 @@ export default function SigninForm() {
             type='button'
             variant='ghost'
             className='bg-white font-medium hover:bg-white'
-            onClick={() => signIn('google')}
+            onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
           >
             <Image
               src='/assets/icons/google.svg'
@@ -208,6 +208,7 @@ export default function SigninForm() {
             type='button'
             variant='ghost'
             className='bg-white font-medium hover:bg-white'
+            onClick={() => signIn('apple', { callbackUrl: '/dashboard' })}
           >
             <Image
               src='/assets/icons/apple.svg'
