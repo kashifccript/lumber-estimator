@@ -11,6 +11,12 @@ import { useContractorApis } from '@/features/admin/actions/contractor';
 import { toast } from 'sonner';
 import { Quotation } from '@/features/admin/types/contractor';
 import { downloadFile } from '@/lib/download';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 
 export default function QuotationsViewPage() {
   const [quotations, setQuotations] = useState<Quotation[]>([]);
@@ -77,29 +83,83 @@ export default function QuotationsViewPage() {
         <div className='flex items-center justify-between gap-2'>
           <h2 className='text-2xl font-medium'>Quotations</h2>
           <div className={`flex items-center justify-end gap-1.5`}>
-            <Button onClick={handleExportPdf} variant='icon' size='icon'>
-              <Image
-                src='/assets/icons/pdf.png'
-                alt='PDF'
-                width={20}
-                height={20}
-                unoptimized
-                quality={100}
-              />
-            </Button>
-            <Button variant='icon' size='icon' onClick={handleExportCsv}>
-              <Image
-                src='/assets/icons/csv.png'
-                alt='CSV'
-                width={20}
-                height={20}
-                unoptimized
-                quality={100}
-              />
-            </Button>
-            <Button variant='icon' size='icon' onClick={handlePrint}>
-              <Printer className='h-5 w-5 text-gray-600' />
-            </Button>
+            <TooltipProvider>
+              {/* PDF Export */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span>
+                    <Button
+                      onClick={handleExportPdf}
+                      variant='icon'
+                      size='icon'
+                      disabled={quotations.length === 0}
+                    >
+                      <Image
+                        src='/assets/icons/pdf.png'
+                        alt='PDF'
+                        width={20}
+                        height={20}
+                        unoptimized
+                        quality={100}
+                      />
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {quotations.length === 0
+                    ? 'No quotations available to export'
+                    : 'Export as PDF'}
+                </TooltipContent>
+              </Tooltip>
+              {/* CSV Export */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span>
+                    <Button
+                      onClick={handleExportCsv}
+                      variant='icon'
+                      size='icon'
+                      disabled={quotations.length === 0}
+                    >
+                      <Image
+                        src='/assets/icons/csv.png'
+                        alt='CSV'
+                        width={20}
+                        height={20}
+                        unoptimized
+                        quality={100}
+                      />
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {quotations.length === 0
+                    ? 'No quotations available to export'
+                    : 'Export as Excel'}
+                </TooltipContent>
+              </Tooltip>
+
+              {/* Print */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span>
+                    <Button
+                      variant='icon'
+                      size='icon'
+                      onClick={handlePrint}
+                      disabled={quotations.length === 0}
+                    >
+                      <Printer className='h-5 w-5 text-gray-600' />
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {quotations.length === 0
+                    ? 'No quotations available to print'
+                    : 'Print Page'}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
         <CustomTable data={quotations} columns={columns} itemsPerPage={10} />

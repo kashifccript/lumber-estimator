@@ -96,6 +96,7 @@ export default function QuotationDetailsViewPage() {
           />
 
           <QuotationActionBar
+            quotation={[]}
             onAddNewItem={() => setShowAddItemModal(true)}
             quotationId={quotationIdStr}
           />

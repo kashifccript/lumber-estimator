@@ -110,24 +110,24 @@ export default function EstimatesManagementViewPage({
   return (
     <PageContainer>
       <div className='flex w-full flex-col gap-3'>
-        <div className='md: flex flex-col  justify-between gap-2 md:flex-row'>
+        <div className='md: flex flex-col justify-between gap-2 md:flex-row'>
           <div>
             {isDashboard ? (
               <h1 className='text-2xl font-semibold'>
                 Estimates Awaiting Your Approval
               </h1>
             ) : (
-              <h1 className='md:text-2xl font-semibold text-[16px]'>
+              <h1 className='text-[16px] font-semibold md:text-2xl'>
                 All Estimate
                 {estimates.length > 0 && (
-                  <span className='ml-2 text-sm font-normal text-gray-500 hidden lg:block'>
+                  <span className='ml-2 hidden text-sm font-normal text-gray-500 lg:block'>
                     ({estimates.length} total)
                   </span>
                 )}
               </h1>
             )}
           </div>
-          <div className='flex flex-col gap-4  sm:flex-row'>
+          <div className='flex flex-col gap-4 sm:flex-row'>
             {/* Search box */}
             <div className='relative w-full'>
               <Search className='w-ful absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32]' />
@@ -140,13 +140,13 @@ export default function EstimatesManagementViewPage({
               />
             </div>
             {/* Dropdown */}
-            {!isDashboard && (
+            {
               <CustomDropdown
                 options={estimatesManagementDropdownList}
                 value={selectedFilter}
                 onValueChange={setSelectedFilter}
               />
-            )}
+            }
           </div>
         </div>
 
