@@ -123,10 +123,10 @@ export default function EmailVerification() {
   };
 
   return (
-    <div className='rounded-lg bg-white p-8'>
-      <div className='space-y-6'>
-        <div className='space-y-6'>
-          <div className='flex justify-center gap-3'>
+    <div className='rounded-lg'>
+      <div className='space-y-3'>
+        <div className='space-y-8'>
+          <div className='flex flex-wrap justify-center gap-3 sm:flex-nowrap md:justify-between'>
             {code.map((digit, index) => (
               <input
                 key={index}
@@ -139,7 +139,7 @@ export default function EmailVerification() {
                 onChange={(e) => handleInputChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 onPaste={handlePaste}
-                className='h-[72px] w-full rounded-md border-0 bg-[#FFFFFF] text-center text-lg font-medium focus:outline-none'
+                className='h-11 w-11 rounded-md border-0 bg-[#FFFFFF] text-center text-lg font-medium placeholder:text-black focus:outline-none md:h-[72px] md:w-[78px]'
                 aria-label={`Digit ${index + 1}`}
                 placeholder='-'
               />
@@ -155,14 +155,13 @@ export default function EmailVerification() {
           >
             {isLoading ? 'Verifying...' : 'Verify'}
           </Button>
-
-          <button
-            onClick={handleResendCode}
-            className='flex-start flex w-full text-[18px] text-[#77797E] transition-colors hover:text-gray-800 -mt-1'
-          >
-            Resend Code
-          </button>
         </div>
+        <button
+          onClick={handleResendCode}
+          className='flex-start flex w-full text-[18px] text-[#77797E] transition-colors hover:text-gray-800'
+        >
+          Resend Code
+        </button>
       </div>
     </div>
   );
