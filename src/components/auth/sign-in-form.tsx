@@ -203,21 +203,6 @@ export default function SigninForm() {
             />
             <span>Continue with Google</span>
           </Button>
-
-          <Button
-            type='button'
-            variant='ghost'
-            className='bg-white font-medium hover:bg-white'
-            onClick={() => toast.error('Apple login is not implemented yet')}
-          >
-            <Image
-              src='/assets/icons/apple.svg'
-              alt='Google'
-              width={24}
-              height={24}
-            />
-            <span>Continue with Apple</span>
-          </Button>
         </div>
 
         <p className='text-center text-lg font-medium'>

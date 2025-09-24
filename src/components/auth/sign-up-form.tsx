@@ -23,10 +23,13 @@ import {
   signUpUser
 } from '@/features/auth/actions/signup';
 import { Eye, EyeOff } from 'lucide-react';
+import Image from 'next/image';
+import { Separator } from '../ui/separator';
+import { signIn } from 'next-auth/react';
 
 export default function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -306,10 +309,37 @@ export default function SignupForm() {
             {isLoading ? 'Creating Account...' : 'Sign Up'}
           </Button>
 
+          {/* Separator */}
+          <div className='flex items-center gap-2'>
+            <Separator className='flex-1' />
+            <span className='text-sm text-gray-500'>Or</span>
+            <Separator className='flex-1' />
+          </div>
+
+          {/* Social Login Buttons */}
+          <div className='flex flex-col gap-2.5'>
+            <Button
+              type='button'
+              variant='ghost'
+              className='bg-white font-medium hover:bg-white'
+              onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+            >
+              <Image
+                src='/assets/icons/google.svg'
+                alt='Google'
+                width={24}
+                height={24}
+              />
+              <span>Continue with Google</span>
+            </Button>
+          </div>
           {/* Login Link */}
           <p className='text-secondary text-center text-lg'>
             Already have an account?{' '}
-            <Link href='/sign-in' className='text-primary font-bold hover:underline'>
+            <Link
+              href='/sign-in'
+              className='text-primary font-bold hover:underline'
+            >
               Sign In
             </Link>
           </p>
