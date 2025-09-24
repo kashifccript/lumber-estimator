@@ -94,9 +94,7 @@ export default function SigninForm() {
             console.log('userRole', userRole);
             const redirectUrl = callbackUrl || getRedirectUrl(userRole);
 
-            toast.success(
-              `Welcome back! Redirecting to ${userRole} dashboard...`
-            );
+            toast.success(`Welcome! Redirecting to your ${userRole} dashboard`);
             router.push(redirectUrl);
           } else {
             toast.success('Signed In Successfully!');
@@ -177,7 +175,7 @@ export default function SigninForm() {
 
         {/* Submit Button */}
         <Button type='submit' variant='default' disabled={loading}>
-          {loading ? 'Signing in...' : 'LogIn'}
+          {loading ? 'Signing in...' : 'Log in'}
         </Button>
 
         {/* Separator */}

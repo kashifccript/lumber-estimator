@@ -27,14 +27,14 @@ const roleOptions: RoleOption[] = [
   // },
   {
     id: 'contractor',
-    title: 'Contractors',
+    title: 'Contractor',
     description:
       'Add and manage team projects, and supervise final project estimates',
     icon: 'hugeicons:labor'
   },
   {
     id: 'estimator',
-    title: 'Estimators',
+    title: 'Estimator',
     description:
       'Upload project files to automatically generate detailed cost estimates',
     icon: 'hugeicons:estimate-01'
@@ -105,7 +105,7 @@ export function RoleSelection() {
           href='/sign-in'
           className='text-primary font-bold hover:underline'
         >
-          Sign In
+          Login
         </Link>
       </p>
     </div>

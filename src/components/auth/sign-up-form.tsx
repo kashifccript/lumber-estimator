@@ -340,7 +340,7 @@ export default function SignupForm() {
               href='/sign-in'
               className='text-primary font-bold hover:underline'
             >
-              Sign In
+              Login
             </Link>
           </p>
         </form>

@@ -4,13 +4,25 @@ import { Skeleton } from '@/components/ui/skeleton'; // Adjust import path as ne
 
 interface MetricsCardProps {
   title: string;
-  value: string | number;
+  value: number;
   textColor?: string;
   className?: string;
   subtitle?: string;
   isLoading?: boolean;
 }
 
+function formatNumber(num: number): string {
+  if (num >= 1_000_000_000) {
+    return (num / 1_000_000_000).toFixed(2).replace(/\.00$/, '') + 'B';
+  }
+  if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(2).replace(/\.00$/, '') + 'M';
+  }
+  if (num >= 1_000) {
+    return (num / 1_000).toFixed(2).replace(/\.00$/, '') + 'K';
+  }
+  return num.toString();
+}
 export function EstimatorStats({
   title,
   value,
@@ -23,7 +35,7 @@ export function EstimatorStats({
     return (
       <div
         className={cn(
-          'relative flex w-full max-w-sm flex-col justify-between gap-6 rounded-2xl bg-[#F8F8F8]',
+          'relative flex w-full max-w-sm min-w-[208px] flex-col justify-between gap-6 rounded-2xl bg-[#F8F8F8]',
           className
         )}
       >
@@ -63,7 +75,7 @@ export function EstimatorStats({
           </div>
         </div>
         <div className='overflow-hidden text-[32px] font-normal text-[#1F1F1F] sm:text-[56px]'>
-          {value}
+          {formatNumber(value)}
         </div>
       </div>
     </div>
