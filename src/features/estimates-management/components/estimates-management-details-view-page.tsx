@@ -67,6 +67,7 @@ export default function EstimatesManagementDetails() {
 
       if (response && response.project_id) {
         setProjectData(response);
+
         const transformedData = transformApiDataToTableItems(response);
         setTableData(transformedData);
       } else {
@@ -113,7 +114,7 @@ export default function EstimatesManagementDetails() {
               <Input
                 type='text'
                 placeholder='Search By Name or Email'
-                className='h-[48px] rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-[#292D32] placeholder:text-[16px]'
+                className='h-[48px] rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[16px] placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0'
               />
             </div>
           </div>
@@ -134,8 +135,8 @@ export default function EstimatesManagementDetails() {
               </div>
 
               <div className='flex-1'>
-                <h3 className='text-[18px] md:text-lg font-semibold'>
-                  {projectData?.project_name || 'Loading...'}
+                <h3 className='text-[18px] font-semibold md:text-lg'>
+                  {projectData?.estimator_name || 'Loading...'}
                 </h3>
                 <p className='mb-2 text-[12px] font-[400] text-[#1F1F1F]'>
                   {projectData?.description || 'Project description'}
@@ -150,7 +151,7 @@ export default function EstimatesManagementDetails() {
                 </div>
               </div>
             </div>
-            <div className='flex flex-col gap-3 hidden md:block'>
+            <div className='flex hidden flex-col gap-3 md:block'>
               <p className='text-lg font-semibold'>Submitted Date</p>
               <span className='text-xs font-normal'>
                 {projectData?.created_at
