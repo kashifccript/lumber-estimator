@@ -67,6 +67,14 @@ export function UserNav() {
       ? `${userData.first_name} ${userData.last_name}`
       : userData.username;
 
+  const settingsPath = (() => {
+    const role = userData.role;
+    if (role === 'admin') return '/dashboard/admin/settings';
+    if (role === 'contractor') return '/dashboard/contractor/settings';
+    if (role === 'estimator') return '/dashboard/estimator/settings';
+    return '/dashboard/overview';
+  })();
+
   // Transform session user data to match UserAvatarProfile interface
   const user = {
     fullName: fullName,
@@ -104,7 +112,7 @@ export function UserNav() {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem
-              onClick={() => router.push('/dashboard/admin/settings')}
+              onClick={() => router.push(settingsPath)}
               className='cursor-pointer'
             >
               Profile
@@ -112,7 +120,7 @@ export function UserNav() {
             {/* <DropdownMenuItem>Billing</DropdownMenuItem> */}
             <DropdownMenuItem
               className='cursor-pointer'
-              onClick={() => router.push('/dashboard/admin/settings')}
+              onClick={() => router.push(settingsPath)}
             >
               Settings
             </DropdownMenuItem>
