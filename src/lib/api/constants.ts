@@ -20,7 +20,5 @@ export const estimatesManagementDropdownList = [
   'All',
   'pending',
   'approved',
-  'rejected',
-  'quoted',
-  'quotation needed'
+  'rejected'
 ];

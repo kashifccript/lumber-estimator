@@ -127,8 +127,7 @@ export default function EstimatesManagementViewPage({
               </h1>
             )}
           </div>
-          <div className='flex flex-col gap-4 gap-6 sm:flex-row'>
-            {' '}
+          <div className='flex flex-col gap-4  sm:flex-row'>
             {/* Search box */}
             <div className='relative w-full'>
               <Search className='w-ful absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32]' />
