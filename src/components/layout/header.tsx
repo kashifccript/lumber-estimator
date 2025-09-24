@@ -184,13 +184,23 @@ export default function Header() {
         {/* Center: Navigation */}
         <nav className='flex items-center gap-2 rounded-lg bg-white p-[5px]'>
           {navItems.map((item) => {
-            const isActive =
+            let isActive =
               item.href === '/dashboard/admin' ||
               item.href === '/dashboard/estimator' ||
               item.href === '/dashboard/contractor'
                 ? pathname === item.href
                 : pathname === item.href ||
                   pathname.startsWith(item.href + '/');
+
+            // Keep Estimates highlighted on related detail pages
+            if (item.href === '/dashboard/estimator/estimates') {
+              if (
+                pathname.startsWith('/dashboard/estimator/project-details') ||
+                pathname.startsWith('/dashboard/estimator/estimation-details')
+              ) {
+                isActive = true;
+              }
+            }
             return (
               <Link key={item.name} href={item.href}>
                 <Button
