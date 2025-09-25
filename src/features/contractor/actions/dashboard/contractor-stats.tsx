@@ -27,7 +27,7 @@ export default function ContractorStats() {
   }, [session]);
 
   return (
-    <div className='flex flex-col gap-6 py-8 lg:flex-row'>
+    <div className='flex flex-col justify-between gap-4 py-8 lg:flex-row lg:gap-20'>
       {/* First div = double width */}
       <div className='h-full flex-[1]'>
         <SegmentedProgress value={stats?.approval_percentage || 0} />

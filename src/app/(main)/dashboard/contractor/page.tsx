@@ -16,14 +16,13 @@ export default function ContractorPage() {
   const { data: session } = useSession();
   const { fetchAllQuotationsbyUser } = useContractorApis();
   const userId = String(session?.user?.user.id);
-  console.log(userId, 'userId');
 
   const fetchQuotations = async () => {
     try {
       setLoading(true);
       const response = await fetchAllQuotationsbyUser(userId);
-      console.log('response', response);
       setQuotations(response);
+
     } catch (error) {
       console.error('Error fetching users:', error);
       toast.error('Failed to fetch users');
@@ -43,7 +42,7 @@ export default function ContractorPage() {
     );
   }
 
-  return quotations?.length <= 0 ? (
+  return quotations?.length > 0 ? (
     <Index />
   ) : (
     <RoleOverview role='contractor' />

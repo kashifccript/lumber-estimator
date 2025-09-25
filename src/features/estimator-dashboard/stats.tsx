@@ -27,44 +27,43 @@ export default function Stats() {
   }, [session]);
 
   return (
-   <div className="flex flex-col gap-6 py-8 lg:flex-row">
-  {/* First div = double width */}
-  <div className="flex-[1] h-full">
-    <SegmentedProgress value={stats?.percentage || 0} />
-  </div>
+    <div className='flex flex-col justify-between gap-4 py-8 lg:flex-row lg:gap-20'>
+      {/* First div = double width */}
+      <div className='h-full flex-[1]'>
+        <SegmentedProgress value={stats?.percentage || 0} />
+      </div>
 
-  {/* Stats container = remaining space */}
-  <div className="flex-[3] flex flex-wrap gap-3 md:gap-6">
-    <div className="flex-1 min-w-[45%] lg:min-w-[22%]">
-      <EstimatorStats
-        title="Total Projects"
-        value={stats?.total_projects || 0}
-        isLoading={loading}
-      />
+      {/* Stats container = remaining space */}
+      <div className='flex flex-[3] flex-wrap gap-3 md:gap-6'>
+        <div className='min-w-[45%] flex-1 lg:min-w-[22%]'>
+          <EstimatorStats
+            title='Total Projects'
+            value={stats?.total_projects || 0}
+            isLoading={loading}
+          />
+        </div>
+        <div className='min-w-[45%] flex-1 lg:min-w-[22%]'>
+          <EstimatorStats
+            title='Active Estimates'
+            value={stats?.active_estimates || 0}
+            isLoading={loading}
+          />
+        </div>
+        <div className='min-w-[45%] flex-1 lg:min-w-[22%]'>
+          <EstimatorStats
+            title='This Month Expense'
+            value={stats?.expenses_this_month || 0}
+            isLoading={loading}
+          />
+        </div>
+        <div className='min-w-[45%] flex-1 lg:min-w-[22%]'>
+          <EstimatorStats
+            title='No of Contractor'
+            value={stats?.no_of_contractors || 0}
+            isLoading={loading}
+          />
+        </div>
+      </div>
     </div>
-    <div className="flex-1 min-w-[45%] lg:min-w-[22%]">
-      <EstimatorStats
-        title="Active Estimates"
-        value={stats?.active_estimates || 0}
-        isLoading={loading}
-      />
-    </div>
-    <div className="flex-1 min-w-[45%] lg:min-w-[22%]">
-      <EstimatorStats
-        title="This Month Expense"
-        value={stats?.expenses_this_month || 0}
-        isLoading={loading}
-      />
-    </div>
-    <div className="flex-1 min-w-[45%] lg:min-w-[22%]">
-      <EstimatorStats
-        title="No of Contractor"
-        value={stats?.no_of_contractors || 0}
-        isLoading={loading}
-      />
-    </div>
-  </div>
-</div>
-  )
-
+  );
 }

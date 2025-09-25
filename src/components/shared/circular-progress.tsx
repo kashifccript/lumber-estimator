@@ -56,12 +56,12 @@ export function SegmentedProgress({
   let filledDegrees = 0;
 
   return (
-    <div className='flex flex-col justify-between gap-2 md:flex-row'>
-      <div className='flex  text-[48px] font-normal text-[#1F1F1F] '>
+    <div className='flex flex-col justify-between gap-2 md:flex-row md:items-center lg:gap-20'>
+      <div className='flex text-[48px] font-normal text-[#1F1F1F]'>
         {'Overview'}
       </div>
       <div
-        className={`relative inline-flex items-center justify-center mr-16 ${className}`}
+        className={`relative inline-flex items-center justify-center ${className}`}
       >
         <svg width={size} height={size}>
           {scaledSegments.map((segment, index) => {
