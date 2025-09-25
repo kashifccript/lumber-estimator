@@ -136,17 +136,17 @@ export default function EstimatesManagementDetails() {
 
               <div className='flex-1'>
                 <h3 className='text-[18px] font-semibold md:text-lg'>
-                  {projectData?.estimator_name || 'Loading...'}
+                  {projectData?.user_name || 'User Name'}
                 </h3>
                 <p className='mb-2 text-[12px] font-[400] text-[#1F1F1F]'>
-                  {projectData?.description || 'Project description'}
+                  {projectData?.user_email || 'User Email'}
                 </p>
                 <div className='flex flex-row gap-3'>
                   <Badge
                     variant='secondary'
                     className={`h-[22px] rounded-[2px] bg-[#3B81F5] px-2 text-white capitalize`}
                   >
-                    {'Estimator'}
+                    {projectData?.user_role || 'Estimator'}
                   </Badge>
                 </div>
               </div>
