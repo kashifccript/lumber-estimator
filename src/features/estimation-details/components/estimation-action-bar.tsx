@@ -11,6 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
+import { IconButtonWithTooltip } from '@/components/shared/icon-button-with-tooltip';
 
 type EstimationActionBarProps = {
   estimations: any;
@@ -160,88 +161,40 @@ export function EstimationActionBar({
     }
   };
 
+  const isEmpty = estimations.length === 0;
+
   return (
     <div
       className={`flex w-full flex-col items-end justify-end gap-1.5 md:flex-row md:items-center ${className ?? ''}`}
     >
       <div className='flex flex-row gap-1.5'>
-        <TooltipProvider>
-          {/* PDF Export */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span>
-                <Button
-                  onClick={handleExportPdf}
-                  variant='icon'
-                  size='icon'
-                  disabled={estimations.length === 0}
-                >
-                  <Image
-                    src='/assets/icons/pdf.png'
-                    alt='PDF'
-                    width={20}
-                    height={20}
-                    unoptimized
-                    quality={100}
-                  />
-                </Button>
-              </span>
-            </TooltipTrigger>
-            <TooltipContent>
-              {estimations.length === 0
-                ? 'No estimations available to export'
-                : 'Export as PDF'}
-            </TooltipContent>
-          </Tooltip>
-          {/* CSV Export */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span>
-                <Button
-                  onClick={handleExportCsv}
-                  variant='icon'
-                  size='icon'
-                  disabled={estimations.length === 0}
-                >
-                  <Image
-                    src='/assets/icons/csv.png'
-                    alt='CSV'
-                    width={20}
-                    height={20}
-                    unoptimized
-                    quality={100}
-                  />
-                </Button>
-              </span>
-            </TooltipTrigger>
-            <TooltipContent>
-              {estimations.length === 0
-                ? 'No estimations available to export'
-                : 'Export as Excel'}
-            </TooltipContent>
-          </Tooltip>
+        <IconButtonWithTooltip
+          src='/assets/icons/pdf.png'
+          alt='Export PDF'
+          tooltip={
+            isEmpty ? 'No estimations available to export' : 'Export as PDF'
+          }
+          onClick={handleExportPdf}
+          disabled={isEmpty}
+        />
 
-          {/* Print */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span>
-                <Button
-                  variant='icon'
-                  size='icon'
-                  onClick={onPrint}
-                  disabled={estimations.length === 0}
-                >
-                  <Printer className='h-5 w-5 text-gray-600' />
-                </Button>
-              </span>
-            </TooltipTrigger>
-            <TooltipContent>
-              {estimations.length === 0
-                ? 'No estimations available to print'
-                : 'Print Page'}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <IconButtonWithTooltip
+          src='/assets/icons/csv.png'
+          alt='Export Excel'
+          tooltip={
+            isEmpty ? 'No estimations available to export' : 'Export as Excel'
+          }
+          onClick={handleExportCsv}
+          disabled={isEmpty}
+        />
+        {/* // Print button */}
+        <IconButtonWithTooltip
+          src='/assets/icons/printer.png'
+          alt='Print'
+          tooltip={isEmpty ? 'No estimations available to print' : 'Print Page'}
+          onClick={onPrint}
+          disabled={isEmpty}
+        />
       </div>
 
       <Button
@@ -258,6 +211,7 @@ export function EstimationActionBar({
         variant='primary'
         size='secondary'
         className='w-full md:w-fit'
+        disabled={estimations.length === 0}
       >
         <Send />
         Submit Estimate

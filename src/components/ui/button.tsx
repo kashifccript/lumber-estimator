@@ -27,7 +27,7 @@ const buttonVariants = cva(
         approve:
           'bg-[#00A42E]  text-white rounded-lg px-5 py-3.5 w-fit font-normal text-base',
 
-        icon: 'h-12 w-12 items-center w-fit justify-center rounded-xl  bg-white hover:bg-gray-100',
+        icon: 'h-12 w-12 flex items-center justify-center rounded-xl bg-white hover:bg-gray-100',
         tableIcon:
           'h-8 w-8 items-center w-fit justify-center rounded-md  bg-white hover:bg-gray-100 border border-gray-200'
       },
