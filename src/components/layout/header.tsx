@@ -201,6 +201,15 @@ export default function Header() {
                 isActive = true;
               }
             }
+
+            // Keep Quotations highlighted on contractor quotation details pages
+            if (item.href === '/dashboard/contractor/quotations') {
+              if (
+                pathname.startsWith('/dashboard/contractor/quotation-details')
+              ) {
+                isActive = true;
+              }
+            }
             return (
               <Link key={item.name} href={item.href}>
                 <Button

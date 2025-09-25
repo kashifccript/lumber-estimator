@@ -2,7 +2,7 @@
 import PageContainer from '@/components/layout/page-container';
 import { CustomTable } from '@/components/shared/table';
 import { Button } from '@/components/ui/button';
-import { Printer } from 'lucide-react';
+import { Plus, Printer } from 'lucide-react';
 import Image from 'next/image';
 import { createColumns } from './quotation-tables/columns';
 import { useEffect, useState } from 'react';
@@ -18,6 +18,9 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip';
 import { IconButtonWithTooltip } from '@/components/shared/icon-button-with-tooltip';
+import { CreateQuotationModal } from '@/components/modal/create-quotation-modal';
+import { createQuotation } from '@/features/quotations/actions/actions';
+import { useRouter } from 'next/navigation';
 
 export default function QuotationsViewPage() {
   const [quotations, setQuotations] = useState<Quotation[]>([]);
@@ -26,6 +29,9 @@ export default function QuotationsViewPage() {
   const { fetchAllQuotationsbyUser } = useContractorApis();
   const userId = String(session?.user?.user.id);
   const userName = String(session?.user?.user.username);
+  const userIdNum = Number(session?.user?.user?.id);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const router = useRouter();
 
   const fetchQuotations = async () => {
     try {
@@ -66,6 +72,27 @@ export default function QuotationsViewPage() {
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleCreateQuotation = async (data: {
+    itemName: string;
+    sku?: string;
+    unitOfMeasure: string;
+    cost: string;
+  }) => {
+    const res = await createQuotation(userIdNum, {
+      item_name: data.itemName,
+      sku: data.sku || '',
+      unit: data.unitOfMeasure,
+      unit_of_measure: data.unitOfMeasure,
+      cost: parseFloat(data.cost)
+    });
+
+    if (res.success) {
+      toast.success('Quotation created successfully!');
+    } else {
+      toast.error(res.message || 'Failed to create quotation');
+    }
   };
 
   useEffect(() => {
@@ -117,9 +144,30 @@ export default function QuotationsViewPage() {
               onClick={handlePrint}
               disabled={isEmpty}
             />
+
+            <Button
+              onClick={() => setShowCreateModal(true)}
+              variant='primary'
+              size='secondary'
+            >
+              <Plus className='size-6' />
+              Create Quotation
+            </Button>
           </div>
         </div>
         <CustomTable data={quotations} columns={columns} itemsPerPage={10} />
+        <CreateQuotationModal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          mode='create'
+          onSubmit={handleCreateQuotation}
+          onSuccess={async () => {
+            await fetchQuotations();
+          }}
+          onError={(error) => {
+            console.error('Error creating quotation:', error);
+          }}
+        />
       </div>
     </PageContainer>
   );

@@ -92,6 +92,7 @@ export function CreateQuotationModal({
     onClose();
   };
 
+  // In CreateQuotationModal
   const handleSubmit = async (values: FormValues) => {
     if (!onSubmit) {
       toast.error('No submit handler provided');
@@ -99,12 +100,13 @@ export function CreateQuotationModal({
     }
 
     setIsSubmitting(true);
-
     try {
       await onSubmit(values);
-      form.reset();
-      onSuccess?.();
-      handleClose();
+
+      // Wait for parent refresh before closing
+      await onSuccess?.();
+
+      handleClose(); // close after refresh
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'An error occurred';
@@ -194,7 +196,6 @@ export function CreateQuotationModal({
             )}
           />
 
-          
           <FormField
             control={form.control}
             name='cost'
