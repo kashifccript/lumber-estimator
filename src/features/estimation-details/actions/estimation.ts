@@ -8,7 +8,7 @@ export const processEstimationPdf = async (
   try {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('force_fresh', 'false');
+    formData.append('force_fresh', 'true');
 
     const response = await post({
       endpoint: '/lumber/estimate/pdf',

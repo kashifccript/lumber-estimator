@@ -136,7 +136,7 @@ export default function EstimationDetailsViewPage() {
 
   return (
     <PageContainer>
-      <div className='flex flex-col gap-3 overflow-hidden flex-1 pb-6'>
+      <div className='flex flex-1 flex-col gap-3 overflow-hidden pb-6'>
         <div className='flex flex-col items-start justify-between gap-3 lg:flex-row lg:items-center'>
           {/* Dynamic Breadcrumb */}
           <Breadcrumb
@@ -149,6 +149,7 @@ export default function EstimationDetailsViewPage() {
 
           {/* Action Bar */}
           <EstimationActionBar
+            estimations={items}
             projectId={currentEstimationData?.project_id}
             onAddNewItem={() => setShowAddItemModal(true)}
             onSubmitEstimate={handleSubmitEstimate}

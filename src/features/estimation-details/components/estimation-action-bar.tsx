@@ -5,8 +5,15 @@ import { FileSpreadsheet, FileText, Plus, Printer, Send } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { useSession } from 'next-auth/react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 
 type EstimationActionBarProps = {
+  estimations: any;
   projectId?: string;
   onAddNewItem?: () => void;
   onSubmitEstimate?: () => void;
@@ -16,6 +23,7 @@ type EstimationActionBarProps = {
 };
 
 export function EstimationActionBar({
+  estimations,
   projectId,
   onAddNewItem,
   onSubmitEstimate,
@@ -157,29 +165,83 @@ export function EstimationActionBar({
       className={`flex w-full flex-col items-end justify-end gap-1.5 md:flex-row md:items-center ${className ?? ''}`}
     >
       <div className='flex flex-row gap-1.5'>
-        <Button onClick={handleExportPdf} variant='icon' size='icon'>
-          <Image
-            src='/assets/icons/pdf.png'
-            alt='PDF'
-            width={20}
-            height={20}
-            unoptimized
-            quality={100}
-          />
-        </Button>
-        <Button variant='icon' size='icon' onClick={handleExportCsv}>
-          <Image
-            src='/assets/icons/csv.png'
-            alt='CSV'
-            width={20}
-            height={20}
-            unoptimized
-            quality={100}
-          />
-        </Button>
-        <Button variant='icon' size='icon' onClick={onPrint}>
-          <Printer className='h-5 w-5 text-gray-600' />
-        </Button>
+        <TooltipProvider>
+          {/* PDF Export */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span>
+                <Button
+                  onClick={handleExportPdf}
+                  variant='icon'
+                  size='icon'
+                  disabled={estimations.length === 0}
+                >
+                  <Image
+                    src='/assets/icons/pdf.png'
+                    alt='PDF'
+                    width={20}
+                    height={20}
+                    unoptimized
+                    quality={100}
+                  />
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              {estimations.length === 0
+                ? 'No estimations available to export'
+                : 'Export as PDF'}
+            </TooltipContent>
+          </Tooltip>
+          {/* CSV Export */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span>
+                <Button
+                  onClick={handleExportCsv}
+                  variant='icon'
+                  size='icon'
+                  disabled={estimations.length === 0}
+                >
+                  <Image
+                    src='/assets/icons/csv.png'
+                    alt='CSV'
+                    width={20}
+                    height={20}
+                    unoptimized
+                    quality={100}
+                  />
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              {estimations.length === 0
+                ? 'No estimations available to export'
+                : 'Export as Excel'}
+            </TooltipContent>
+          </Tooltip>
+
+          {/* Print */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span>
+                <Button
+                  variant='icon'
+                  size='icon'
+                  onClick={onPrint}
+                  disabled={estimations.length === 0}
+                >
+                  <Printer className='h-5 w-5 text-gray-600' />
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              {estimations.length === 0
+                ? 'No estimations available to print'
+                : 'Print Page'}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
       <Button

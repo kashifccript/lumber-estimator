@@ -153,6 +153,7 @@ export default function ProjectDetailsViewPage() {
 
           {/* Action Bar */}
           <EstimationActionBar
+            estimations={items}
             onAddNewItem={() => setShowAddItemModal(true)}
             onSubmitEstimate={handleSubmitEstimate}
             onPrint={handlePrint}
