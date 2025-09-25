@@ -4,7 +4,7 @@ import PageContainer from '@/components/layout/page-container';
 import { CreateQuotationModal } from '@/components/modal/create-quotation-modal';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 import { useBreadcrumbs } from '@/hooks/use-breadcrumbs';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { QuotationDataTable } from './quotation-table';
 import { Item, getItemColumns } from './quotation-table/columns';
 import { QuotationActionBar } from './quotations-action-bar';
@@ -16,11 +16,14 @@ import {
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import { useParams } from 'next/navigation';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
 
 export default function QuotationDetailsViewPage() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [quotationData, setQuotationData] = useState<Item[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const breadcrumbs = useBreadcrumbs();
 
   // const { data: session } = useSession();
@@ -56,6 +59,16 @@ export default function QuotationDetailsViewPage() {
     loadQuotationItems();
   }, [quotationIdStr]);
 
+  const filteredData = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return quotationData;
+    return quotationData.filter((item) => {
+      const name = item.name?.toString().toLowerCase() || '';
+      const sku = item.sku?.toString().toLowerCase() || '';
+      return name.includes(query) || sku.includes(query);
+    });
+  }, [quotationData, searchQuery]);
+
   const handleAddItem = async (data: {
     itemName: string;
     sku?: string;
@@ -86,7 +99,7 @@ export default function QuotationDetailsViewPage() {
   return (
     <PageContainer>
       <div className='flex flex-1 flex-col gap-3 pb-6'>
-        <div className='flex items-center justify-between'>
+        <div className='flex items-center justify-between gap-3'>
           <Breadcrumb
             items={breadcrumbs.map((crumb, index) => ({
               label: crumb.title,
@@ -95,18 +108,32 @@ export default function QuotationDetailsViewPage() {
             }))}
           />
 
-          <QuotationActionBar
-            quotation={quotationData}
-            onAddNewItem={() => setShowAddItemModal(true)}
-            quotationId={quotationIdStr}
-          />
+          <div className='flex items-center gap-2'>
+            {/* Search box */}
+            <div className='relative'>
+              <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-[#292D32]' />
+              <Input
+                type='text'
+                placeholder='Search by Name or SKU/ID'
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className='h-[48px] w-72 rounded-[8px] border border-[#8896AB33] py-2 pr-4 pl-10 placeholder:text-[#292D32] focus-visible:ring-0 focus-visible:ring-offset-0'
+              />
+            </div>
+
+            <QuotationActionBar
+              quotation={quotationData}
+              onAddNewItem={() => setShowAddItemModal(true)}
+              quotationId={quotationIdStr}
+            />
+          </div>
         </div>
 
         {isLoadingData ? (
           <DataTableSkeleton columnCount={6} rowCount={8} filterCount={0} />
         ) : (
           <QuotationDataTable
-            data={quotationData}
+            data={filteredData}
             columns={getItemColumns(loadQuotationItems)}
           />
         )}
