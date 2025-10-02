@@ -16,6 +16,7 @@ import { transformApiDataToTableItems } from '@/features/estimation-details/util
 import { toast } from 'sonner';
 import { addManualItem } from '@/features/estimation-details/actions/estimation';
 import { fetchProjectById } from '../actions/project';
+import { CustomTable } from '@/components/shared/table';
 
 export default function ProjectDetailsViewPage() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
@@ -88,24 +89,18 @@ export default function ProjectDetailsViewPage() {
 
       if (result.success) {
         // Use unit_price from API response if available
-        const totalCost = result.estimated_cost || 0;
-        let costPerUnit = '$0';
-
-        if (typeof result.estimated_unit_price === 'number') {
-          costPerUnit = `$ ${result.estimated_unit_price.toFixed(2)}`;
-        } else if (typeof result.unit_price === 'number') {
-          costPerUnit = `$ ${result.unit_price.toFixed(2)}`;
-        }
-
-        // Use the rich data from API response instead of form data
         const item: Item = {
           id: result.item_id,
           name: result.item_name,
-          sku: result.sku_id,
+          sku: result.sku,
           quantity: `${result.quantity} ${result.unit}`,
           status: 'approved', // API processed it successfully
-          cost: `$ ${totalCost.toLocaleString()}`,
-          costPerUnit
+          cost: `$ ${result.estimated_unit_price.toLocaleString()}`,
+          costPerUnit : result.estimated_unit_price,
+          contractor: {name: result.contractor_name,
+          avatar: 'https://api.builder.io/api/v1/image/assets/TEMP/c621edd36a0654de255120825ca63122a262c93a?width=64'
+          },
+          
         };
         setItems([...items, item]);
 
@@ -176,7 +171,7 @@ export default function ProjectDetailsViewPage() {
         {isLoadingData ? (
           <DataTableSkeleton columnCount={6} rowCount={8} filterCount={0} />
         ) : (
-          <DataTable columns={itemColumns} data={items} />
+          <CustomTable itemsPerPage={10} columns={itemColumns} data={items} />
         )}
 
         {/* Summary */}

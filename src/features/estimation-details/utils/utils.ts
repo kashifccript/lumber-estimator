@@ -19,27 +19,15 @@ export const transformApiDataToTableItems = (apiData: any): Item[] => {
         status = 'approved';
       }
 
-      // Format cost - handle both string and number values
-      let cost = '$0';
-      let costPerUnit = '$0';
+      const estimatedPrice = (item.total_price && typeof item.total_price === 'number') 
+        ? `$ ${item.total_price % 1 === 0 ? item.total_price : item.total_price.toFixed(2)}` 
+        : 'Quotation needed'; 
+      const costPerUnit = (item.unit_price && typeof item.unit_price === 'number') 
+        ? `$ ${item.unit_price % 1 === 0 ? item.unit_price : item.unit_price.toFixed(2)}` 
+        : 'Quotation needed'; 
+      
+      
 
-      if (typeof item.total_price === 'number') {
-        cost = `$ ${item.total_price.toLocaleString()}`;
-      } else if (typeof item.estimated_cost === 'number') {
-        cost = `$ ${item.estimated_cost.toLocaleString()}`;
-      } else if (item.estimated_unit_price === 'Quotation needed') {
-        cost = 'Quotation needed';
-        costPerUnit = 'Quotation needed';
-      }
-
-      // Use unit_price from API response if available
-      if (typeof item.unit_price === 'number') {
-        costPerUnit = `$ ${item.unit_price.toFixed(2)}`;
-      } else if (typeof item.estimated_unit_price === 'number') {
-        costPerUnit = `$ ${item.estimated_unit_price.toFixed(2)}`;
-      } else if (item.estimated_unit_price === 'Quotation needed') {
-        costPerUnit = 'Quotation needed';
-      }
 
       // Format quantity
       const quantity = item.quantity_needed
@@ -52,7 +40,7 @@ export const transformApiDataToTableItems = (apiData: any): Item[] => {
         sku: item.sku || 'N/A',
         quantity,
         status,
-        cost,
+        cost: estimatedPrice,
         costPerUnit,
         contractor: {
           name:

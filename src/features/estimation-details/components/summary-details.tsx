@@ -1,7 +1,6 @@
 import { Card } from '@/components/ui/card';
 
 export function SummaryDetails({ data }: { data: any }) {
-  console.log("DATA.........", data)
   // Handle new API response format
   const totalCost = data?.total_cost || 0;
   const items = data?.items || [];
@@ -9,17 +8,17 @@ export function SummaryDetails({ data }: { data: any }) {
   // Count items priced (has valid numeric price and database match found)
   const itemsPriced = items.filter((item: any) => {
     // Check if item has database match
-    const hasDatabaseMatch = item.database_match_found === 1;
+    const hasDatabaseMatch = item.database_match_found === 1 || item.database_match === 'Available';
     
     // Check if item has valid numeric prices (not "Quotation needed" string and > 0)
     const hasValidPrice = 
-      (typeof item.estimated_unit_price === 'number' && item.estimated_unit_price > 0) ||
-      (typeof item.estimated_cost === 'number' && item.estimated_cost > 0);
+      (typeof item.unit_price === 'number' && item.unit_price > 0) ||
+      (typeof item.total_price === 'number' && item.total_price > 0);
     
     // Check if prices are not "Quotation needed" strings
     const notQuotationNeeded = 
-      item.estimated_unit_price !== 'Quotation needed' &&
-      item.estimated_cost !== 'Quotation needed';
+      item.unit_price !== 'Quotation needed' &&
+      item.total_price !== 'Quotation needed';
     
     return hasDatabaseMatch && hasValidPrice && notQuotationNeeded;
   }).length;
