@@ -3,20 +3,35 @@ import { AlertModal } from '@/components/modal/alert-modal';
 import { Edit, Eye, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { deleteProject } from '../../actions/estimates';
+import { toast } from 'sonner';
 
 interface CellActionProps {
   data: any; // Project data from API
+  onDelete?: () => void; // Callback to refresh the data after deletion
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const [loading] = useState(false);
+export const CellAction: React.FC<CellActionProps> = ({ data, onDelete }) => {
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   const onConfirm = async () => {
-    // Handle delete logic here
-    console.log('Deleting estimate:', data.id);
-    // Add your delete logic here
-    setOpen(false);
+    setLoading(true);
+    try {
+      const response = await deleteProject(data.id);
+      
+      if (response.success) {
+        toast.success(response.message);
+        onDelete?.(); // Refresh the data
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      toast.error('Failed to delete project');
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
   };
 
   return (
@@ -36,15 +51,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         >
           <Eye className='h-4 w-4 text-[#8896AB]' />
         </Link>
-        {/* <button className='flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-gray-200 bg-white shadow-sm transition-colors hover:bg-gray-50'>
-          <Edit className='h-4 w-4 text-[#8896AB]' />
-        </button>
         <button
           onClick={() => setOpen(true)}
-          className='flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-gray-200 bg-white shadow-sm transition-colors hover:bg-gray-50'
+          className='flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-gray-200 bg-white shadow-sm transition-colors hover:bg-red-50 hover:border-red-200'
         >
           <Trash2 className='h-4 w-4 text-[#8896AB]' />
-        </button> */}
+        </button>
       </div>
     </>
   );

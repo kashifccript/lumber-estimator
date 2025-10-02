@@ -5,7 +5,7 @@ import { StatusProgress } from '../status-progress';
 import { CellAction } from './cell-action';
 import StatusList from '@/components/shared/status-bar';
 
-export const columns: ColumnDef<any>[] = [
+export const createColumns = (onDelete?: () => void): ColumnDef<any>[] => [
   {
     accessorKey: 'id',
     header: 'Estimate ID',
@@ -43,6 +43,9 @@ export const columns: ColumnDef<any>[] = [
   {
     id: 'actions',
     header: 'Actions',
-    cell: ({ row }) => <CellAction data={row.original} />
+    cell: ({ row }) => <CellAction data={row.original} onDelete={onDelete} />
   }
 ];
+
+// Backward compatibility - default columns without delete callback
+export const columns = createColumns();

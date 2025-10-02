@@ -1,6 +1,6 @@
 'use client';
 import { EstimateTable } from './estimate-tables';
-import { columns } from './estimate-tables/columns';
+import { createColumns } from './estimate-tables/columns';
 import { getAllProjects } from '../actions/estimates';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 import { useEffect, useState } from 'react';
@@ -10,25 +10,31 @@ export default function EstimateListing() {
   const [projects, setProjects] = useState([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
 
-  useEffect(() => {
-    const loadProjects = async () => {
-      setIsLoadingData(true);
+  const loadProjects = async () => {
+    setIsLoadingData(true);
 
-      try {
-        const response = await getAllProjects();
+    try {
+      const response = await getAllProjects();
 
-        if (response.success) {
-          setProjects(response.projects);
-        } else {
-          toast.error(response.message || 'Failed to load projects');
-        }
-      } catch (error) {
-        toast.error('Error loading projects');
+      if (response.success) {
+        setProjects(response.projects);
+      } else {
+        toast.error(response.message || 'Failed to load projects');
       }
+    } catch (error) {
+      toast.error('Error loading projects');
+    }
 
-      setIsLoadingData(false);
-    };
+    setIsLoadingData(false);
+  };
 
+  const handleDelete = () => {
+    loadProjects(); // Refresh the data after deletion
+  };
+
+  const columns = createColumns(handleDelete);
+
+  useEffect(() => {
     loadProjects();
   }, []);
   return (

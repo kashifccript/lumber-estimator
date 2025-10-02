@@ -1,4 +1,4 @@
-import { get } from '@/lib/api/client';
+import { get, del } from '@/lib/api/client';
 
 export async function getAllProjects() {
   try {
@@ -15,6 +15,24 @@ export async function getAllProjects() {
       success: false,
       message:
         error instanceof Error ? error.message : 'Failed to fetch projects'
+    };
+  }
+}
+
+export async function deleteProject(projectId: number) {
+  try {
+    const response = await del({
+      endpoint: `/projects/${projectId}`
+    });
+    return {
+      success: true,
+      message: response.message || 'Project deleted successfully'
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : 'Failed to delete project'
     };
   }
 }
