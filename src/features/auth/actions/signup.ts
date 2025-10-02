@@ -61,7 +61,7 @@ export const signUpSchema = z.object({
     .min(2, 'State is required')
     .regex(/^[A-Za-z\s]+$/, 'State must only contain letters'),
 
-  zip_code: z.string().regex(/^[0-9]{5,10}$/, 'ZIP code must be 5–10 digits')
+  zip_code: z.string().regex(/^[0-9]{4,10}$/, 'ZIP code must be 4–10 digits')
 });
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;
