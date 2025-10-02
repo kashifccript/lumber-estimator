@@ -112,13 +112,6 @@ export function UserNav() {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem
-              onClick={() => router.push(settingsPath)}
-              className='cursor-pointer'
-            >
-              Profile
-            </DropdownMenuItem>
-            {/* <DropdownMenuItem>Billing</DropdownMenuItem> */}
-            <DropdownMenuItem
               className='cursor-pointer'
               onClick={() => router.push(settingsPath)}
             >
