@@ -2,7 +2,6 @@ import * as React from "react";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
 import * as RPNInput from "react-phone-number-input";
 import flags from "react-phone-number-input/flags";
-import { isPossiblePhoneNumber, isValidPhoneNumber } from 'react-phone-number-input';
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,96 +27,32 @@ type PhoneInputProps = Omit<
 > &
   Omit<RPNInput.Props<typeof RPNInput.default>, "onChange"> & {
     onChange?: (value: RPNInput.Value) => void;
-    onValidationChange?: (isValid: boolean) => void;
-    showValidationError?: boolean;
-    validationErrorMessage?: string;
   };
 
 const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
   React.forwardRef<React.ElementRef<typeof RPNInput.default>, PhoneInputProps>(
-    ({ 
-      className, 
-      onChange, 
-      value, 
-      onValidationChange,
-      showValidationError = true,
-      validationErrorMessage,
-      ...props 
-    }, ref) => {
-      const [validationError, setValidationError] = React.useState<string>('');
-      const [isValid, setIsValid] = React.useState<boolean>(true);
-
-      const handlePhoneChange = (value: RPNInput.Value) => {
-        // Update the field value
-        onChange?.(value || ("" as RPNInput.Value));
-        
-          // Perform validation
-          if (value) {
-            const phoneIsValid = validatePhoneNumber(value);
-            const errorMessage = phoneIsValid ? '' : getValidationError(value);
-            
-            setValidationError(errorMessage);
-            setIsValid(phoneIsValid);
-            onValidationChange?.(phoneIsValid);
-          } else {
-            const isEmpty = !value || value === '';
-            const errorMessage = props.required && isEmpty ? 'Phone number is required' : '';
-            
-            setValidationError(errorMessage);
-            setIsValid(!props.required || !isEmpty);
-            onValidationChange?.(!props.required || !isEmpty);
-          }
-        };
-  
-        const validatePhoneNumber = (phoneNumber: RPNInput.Value): boolean => {
-          if (!phoneNumber) return false;
-          return isValidPhoneNumber(phoneNumber);
-        };
-  
-        const getValidationError = (phoneNumber: RPNInput.Value): string => {
-          if (!phoneNumber) return '';
-          
-          if (validationErrorMessage) {
-            return validationErrorMessage;
-          }
-          
-          if (!isPossiblePhoneNumber(phoneNumber)) {
-            return 'Invalid phone number format';
-          }
-          if (!isValidPhoneNumber(phoneNumber)) {
-            return 'Please enter a valid phone number';
-          }
-          return '';
-        };
-
+    ({ className, onChange, value, ...props }, ref) => {
       return (
-        <div className="phone-input-container">
-          <RPNInput.default
-            ref={ref}
-            className={cn("flex w-full max-h-12", !isValid && 'phone-input-error', className)}
-            flagComponent={FlagComponent}
-            countrySelectComponent={CountrySelect}
-            inputComponent={InputComponent}
-            smartCaret={false}
-            value={value || undefined}
-            /**
-             * Handles the onChange event.
-             *
-             * react-phone-number-input might trigger the onChange event as undefined
-             * when a valid phone number is not entered. To prevent this,
-             * the value is coerced to an empty string.
-             *
-             * @param {E164Number | undefined} value - The entered value
-             */
-            onChange={handlePhoneChange}
-            {...props}
-          />
-          {showValidationError && validationError && (
-            <div className="text-red-500 text-sm mt-1" role="alert">
-              {validationError}
-            </div>
-          )}
-        </div>
+        <RPNInput.default
+          ref={ref}
+          className={cn("flex w-full max-h-12", className)}
+          flagComponent={FlagComponent}
+          countrySelectComponent={CountrySelect}
+          inputComponent={InputComponent}
+          smartCaret={false}
+          value={value || undefined}
+          /**
+           * Handles the onChange event.
+           *
+           * react-phone-number-input might trigger the onChange event as undefined
+           * when a valid phone number is not entered. To prevent this,
+           * the value is coerced to an empty string.
+           *
+           * @param {E164Number | undefined} value - The entered value
+           */
+          onChange={(value) => onChange?.(value || ("" as RPNInput.Value))}
+          {...props}
+        />
       );
     },
   );
