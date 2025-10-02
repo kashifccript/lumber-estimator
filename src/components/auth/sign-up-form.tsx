@@ -312,7 +312,7 @@ export default function SignupForm() {
             type='submit'
             variant='default'
             className='w-full'
-            disabled={isLoading}
+            // disabled={isLoading}
           >
             {isLoading ? 'Creating Account...' : 'Sign Up'}
           </Button>

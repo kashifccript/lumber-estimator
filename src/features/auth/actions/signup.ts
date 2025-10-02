@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isValidPhoneNumber } from 'react-phone-number-input';
 
 // Schema that matches the FastAPI registration endpoint
 
@@ -39,7 +40,13 @@ export const signUpSchema = z.object({
     .min(1, 'Last name is required')
     .regex(/^[A-Za-z]+$/, 'Last name must only contain letters'),
 
-  phone: z.string().min(1, 'Phone number is required'),
+  phone: z
+    .string()
+    .min(1, 'Phone number is required')
+    .refine((phone) => {
+      if (!phone) return false;
+      return isValidPhoneNumber(phone);
+    }, 'Please enter a valid phone number'),
 
   company_name: z.string().min(1, 'Company name is required'),
 
