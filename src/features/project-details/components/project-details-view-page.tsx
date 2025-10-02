@@ -109,6 +109,17 @@ export default function ProjectDetailsViewPage() {
         };
         setItems([...items, item]);
 
+        // Refresh project data to update summary details
+        try {
+          const updatedProjectResponse = await fetchProjectById(projectId);
+          if (updatedProjectResponse && updatedProjectResponse.project_id) {
+            setProjectData(updatedProjectResponse);
+          }
+        } catch (error) {
+          console.error('Error refreshing project data:', error);
+          // Don't show error toast for this as the main operation succeeded
+        }
+
         toast.success(result.message);
       } else {
         toast.error(result.message || 'Failed to add item');

@@ -14,6 +14,7 @@ import { transformApiDataToTableItems } from '../utils/utils';
 import { toast } from 'sonner';
 import { addManualItem, fetchProjectData } from '../actions/estimation';
 import { useBreadcrumbs } from '@/hooks/use-breadcrumbs';
+import { fetchProjectById } from '@/features/project-details/actions/project';
 
 export default function EstimationDetailsViewPage() {
   const [showAddItemModal, setShowAddItemModal] = useState(false);
@@ -50,9 +51,7 @@ export default function EstimationDetailsViewPage() {
         } catch (error) {
           toast.error('Error loading project data');
         }
-      } else {
-        toast.error('No project ID found. Please upload a PDF first.');
-      }
+      } 
 
       setIsLoadingData(false);
     };
@@ -104,6 +103,21 @@ export default function EstimationDetailsViewPage() {
           costPerUnit
         };
         setItems([...items, item]);
+                
+        // Refresh project data to update summary details
+        try {
+          const updatedProjectResponse = await fetchProjectById(projectId);
+          if (updatedProjectResponse && updatedProjectResponse.project_id) {
+            setProjectData(updatedProjectResponse);
+            
+            // Also update the items state with the refreshed data to ensure consistency
+            const updatedTableItems = transformApiDataToTableItems(updatedProjectResponse);
+            setItems(updatedTableItems);
+          }
+        } catch (error) {
+          console.error('Error refreshing project data:', error);
+          // Don't show error toast for this as the main operation succeeded
+        }
 
         toast.success(result.message);
       } else {

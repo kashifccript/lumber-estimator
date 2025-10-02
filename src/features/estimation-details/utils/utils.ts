@@ -27,7 +27,7 @@ export const transformApiDataToTableItems = (apiData: any): Item[] => {
         cost = `$ ${item.total_price.toLocaleString()}`;
       } else if (typeof item.estimated_cost === 'number') {
         cost = `$ ${item.estimated_cost.toLocaleString()}`;
-      } else if (item.total_price === 'Quotation needed') {
+      } else if (item.estimated_unit_price === 'Quotation needed') {
         cost = 'Quotation needed';
         costPerUnit = 'Quotation needed';
       }
@@ -37,7 +37,7 @@ export const transformApiDataToTableItems = (apiData: any): Item[] => {
         costPerUnit = `$ ${item.unit_price.toFixed(2)}`;
       } else if (typeof item.estimated_unit_price === 'number') {
         costPerUnit = `$ ${item.estimated_unit_price.toFixed(2)}`;
-      } else if (item.unit_price === 'Quotation needed') {
+      } else if (item.estimated_unit_price === 'Quotation needed') {
         costPerUnit = 'Quotation needed';
       }
 
@@ -49,7 +49,7 @@ export const transformApiDataToTableItems = (apiData: any): Item[] => {
       return {
         id: item.item_id || item.id || `item-${index}`,
         name: item.item_name || 'Unknown Item',
-        sku: item.sku || item.item_id || 'N/A',
+        sku: item.sku || 'N/A',
         quantity,
         status,
         cost,
