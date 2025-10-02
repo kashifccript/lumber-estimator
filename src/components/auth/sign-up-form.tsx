@@ -26,6 +26,8 @@ import { Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
 import { Separator } from '../ui/separator';
 import { signIn } from 'next-auth/react';
+import { PhoneInput } from '../ui/phone-input';
+import type { Value } from 'react-phone-number-input';
 
 export default function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -202,7 +204,13 @@ export default function SignupForm() {
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter your phone number' {...field} />
+                  <PhoneInput
+                    defaultCountry="US"
+                    placeholder="Enter your phone number"
+                    international
+                    value={field.value as Value | undefined}
+                    onChange={(value) => field.onChange(value || '')}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -39,9 +39,7 @@ export const signUpSchema = z.object({
     .min(1, 'Last name is required')
     .regex(/^[A-Za-z]+$/, 'Last name must only contain letters'),
 
-  phone: z
-    .string()
-    .regex(/^[0-9]{10,15}$/, 'Phone number must be 10–15 digits'),
+  phone: z.string().min(1, 'Phone number is required'),
 
   company_name: z.string().min(1, 'Company name is required'),
 
