@@ -19,6 +19,7 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 import TableLoader from './table-skeleton';
+import { DataTableSkeleton } from '../ui/table/data-table-skeleton';
 
 interface UserTableProps<TData, TValue> {
   data: TData[];
@@ -51,7 +52,7 @@ export function CustomTable<TData, TValue>({
 
   const startIndex = table.getState().pagination.pageIndex * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, data.length);
-  if (isLoading) return <TableLoader />;
+  if (isLoading) return <DataTableSkeleton columnCount={6} rowCount={8} filterCount={0} />;
   return (
     <div className='overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm'>
       <Table>
@@ -102,7 +103,7 @@ export function CustomTable<TData, TValue>({
       {data.length > 0 && (
         <div className='flex h-[64px] items-center justify-between border-t border-gray-200 bg-[#F1F5F9] p-6'>
           <span className='text-secondary text-sm font-medium'>
-            Page {startIndex + 1}-{endIndex} of {data.length}
+          Showing {startIndex + 1}-{endIndex} of {data.length} entries
           </span>
           <div className='flex items-center gap-2'>
             <Button
