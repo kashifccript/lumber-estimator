@@ -200,11 +200,12 @@ export default function SignupForm() {
           <FormField
             control={form.control}
             name='phone'
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
                 <FormControl>
                   <PhoneInput
+                    {...field}
                     defaultCountry="US"
                     placeholder="Enter your phone number"
                     international
@@ -312,7 +313,7 @@ export default function SignupForm() {
             type='submit'
             variant='default'
             className='w-full'
-            // disabled={isLoading}
+            disabled={isLoading}
           >
             {isLoading ? 'Creating Account...' : 'Sign Up'}
           </Button>

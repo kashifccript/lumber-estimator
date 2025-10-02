@@ -29,12 +29,31 @@ type PhoneInputProps = Omit<
     onChange?: (value: RPNInput.Value) => void;
   };
 
-const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
-  React.forwardRef<React.ElementRef<typeof RPNInput.default>, PhoneInputProps>(
-    ({ className, onChange, value, ...props }, ref) => {
-      return (
+// Define the ref type that matches what we want to expose
+export interface PhoneInputRef {
+  focus: () => void;
+  blur: () => void;
+}
+
+const PhoneInput = React.forwardRef<PhoneInputRef, PhoneInputProps>(
+  ({ className, onChange, value, ...props }, ref) => {
+    const phoneInputRef = React.useRef<HTMLDivElement>(null);
+    
+    // Expose focus and blur methods to parent components
+    React.useImperativeHandle(ref, () => ({
+      focus: () => {
+        const input = phoneInputRef.current?.querySelector('input');
+        input?.focus();
+      },
+      blur: () => {
+        const input = phoneInputRef.current?.querySelector('input');
+        input?.blur();
+      }
+    }), []);
+
+    return (
+      <div ref={phoneInputRef}>
         <RPNInput.default
-          ref={ref}
           className={cn("flex w-full max-h-12", className)}
           flagComponent={FlagComponent}
           countrySelectComponent={CountrySelect}
@@ -53,9 +72,10 @@ const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
           onChange={(value) => onChange?.(value || ("" as RPNInput.Value))}
           {...props}
         />
-      );
-    },
-  );
+      </div>
+    );
+  }
+);
 PhoneInput.displayName = "PhoneInput";
 
 const InputComponent = React.forwardRef<
@@ -63,7 +83,7 @@ const InputComponent = React.forwardRef<
   React.ComponentProps<"input">
 >(({ className, ...props }, ref) => (
   <Input
-    className={cn("rounded-none px-3 w-full", className)}
+    className={cn("rounded-none px-3 w-full ", className)}
     {...props}
     ref={ref}
   />
