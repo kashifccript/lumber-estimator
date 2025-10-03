@@ -13,16 +13,18 @@ interface StatusDropdownProps {
   value: string;
   onValueChange: (value: string) => void;
   options?: any;
+  className?: string;
 }
 
 export function CustomDropdown({
   value,
   onValueChange,
-  options = dropdownList
+  options = dropdownList,
+  className
 }: StatusDropdownProps) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className='bg-background flex h-[48px] cursor-pointer items-center justify-between rounded-[8px] border !border-[#E2624B] px-4 py-2 text-sm text-[16px] font-medium whitespace-nowrap !text-[#E2624B] capitalize transition-colors w-fit'>
+      <DropdownMenuTrigger className={`${className} bg-background flex h-[48px] cursor-pointer items-center justify-between rounded-[8px] border !border-[#E2624B] px-4 py-2 text-sm text-[16px] font-medium whitespace-nowrap !text-[#E2624B] capitalize transition-colors w-fit`}>
         {value}
         <ChevronDown className='ml-2 h-4 w-4 shrink-0' />
       </DropdownMenuTrigger>
