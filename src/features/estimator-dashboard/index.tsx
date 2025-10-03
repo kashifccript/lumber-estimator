@@ -20,7 +20,7 @@ const Index = () => {
         subtitle='Overview of your Dashboard'
       />
       <Stats />
-      <div className='flex flex-col md:flex-row  gap-4'>
+      <div className='flex flex-col lg:flex-row  gap-4'>
       <CandlestickChart/>
       <DonutChart/>
 
