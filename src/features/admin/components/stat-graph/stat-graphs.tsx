@@ -105,10 +105,10 @@ export function DashboardCharts() {
   }
 
   return (
-    <div className='flex flex-col gap-6 sm:flex-row sm:justify-between'>
+    <div className='flex flex-col gap-3 xl:flex-row '>
       <NewSignupStats />
 
-      <Card className='w-full'>
+      <Card className='w-full bg-white'>
         <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
           <div>
             <CardTitle className='text-[20px] font-normal text-[#1F1F1F]'>
@@ -121,7 +121,7 @@ export function DashboardCharts() {
             options={months}
           />
         </CardHeader>
-        <CardContent>
+        <CardContent className='bg-background rounded-lg py-3'>
           <div className='flex items-center justify-center'>
             <ChartContainer
               config={chartConfig}

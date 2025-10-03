@@ -40,49 +40,53 @@ export default function AdminStats() {
   }, [session]);
 
   return (
-    <div>
-      <div className='grid grid-cols-1 gap-6 py-8 md:grid-cols-2 lg:grid-cols-4'>
-        <div className='h-full'>
+    <div className='flex flex-col gap-3'>
+      <div className='grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4 bg-white rounded-lg p-3'>
+        <div className='h-full min-h-[180px] flex'>
           <StatCard
             title='Pending Request'
             value={stats?.pending_requests || 0}
             isLoading={loading}
+            className='h-full flex-1'
             // onClick={scrollToUsers}
              onClick={()=>{
               redirect("/dashboard/admin/user-management?status=pending")
             }}
           />
         </div>
-        <div className='h-full'>
+        <div className='h-full min-h-[180px] flex'>
           <StatCard
             title='Total Active Users'
             value={stats?.total_active_users || 0}
             isLoading={loading}
+            className='h-full flex-1'
             onClick={()=>{
               redirect("/dashboard/admin/user-management?status=approved")
             }}
           />
         </div>
-        <div className='h-full'>
+        <div className='h-full min-h-[180px] flex'>
           <StatCard
             title='Estimates Created'
             value={stats?.estimates_created_this_month || 0}
             subtitle='(This month)'
             isLoading={loading}
+            className='h-full flex-1'
             onClick={scrollToCharts}
           />
         </div>
-        <div className='h-full'>
+        <div className='h-full min-h-[180px] flex'>
           <StatCard
             title='Quotations Added'
             value={stats?.quotations_added_this_month || 0}
             subtitle='(This month)'
             isLoading={loading}
+            className='h-full flex-1'
             onClick={scrollToCharts}
           />
         </div>
       </div>
-      <div ref={chartsRef}>
+      <div ref={chartsRef} >
         <DashboardCharts />
       </div>
       <div ref={pendindUserRef}>

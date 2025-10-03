@@ -99,8 +99,8 @@ export function NewSignupStats() {
   }
 
   return (
-    <Card className='w-full border-0 shadow-0'>
-      <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+    <Card className='w-full  bg-white gap-3'>
+      <CardHeader className='flex flex-row items-center justify-between space-y-0  px-0'>
         <div>
           <CardTitle className='text-[20px] font-normal text-[#0C0C0C]'>
             New User Signups - Last 30 Days
@@ -112,7 +112,7 @@ export function NewSignupStats() {
           options={months}
         />
       </CardHeader>
-      <CardContent className='w-full'>
+      <CardContent className='w-full justify-start px-0'>
         <ChartContainer config={chartConfig} className='h-[300px] w-full'>
           <ResponsiveContainer width='full' height='100%'>
             <LineChart
