@@ -60,8 +60,8 @@ export default function CostLineChart() {
   const months = ['This Month'];
   const [selectedValue, setSelectedValue] = useState(months[0]);
   return (
-    <div className='flex w-full flex-col'>
-      <div className='flex flex-col flex-row gap-6 py-4 justify-between'>
+    <div className='flex w-full flex-col bg-white rounded-lg p-3'>
+      <div className='flex flex-row gap-6 py-4 justify-between'>
         <div className='text-[20px] font-normal text-[#1F1F1F]'>
           <span className='block lg:hidden'>Estimate Cost</span>
           <span className='hidden lg:block'>Actual Cost Estimated Cost</span>

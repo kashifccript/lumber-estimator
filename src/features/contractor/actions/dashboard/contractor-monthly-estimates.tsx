@@ -67,8 +67,8 @@ export default function MonthlyBarChart() {
     return maxEntry.month;
   }, [chartData]);
   return (
-    <div className='flex h-100 w-full flex-col gap-9'>
-      <div className='flex flex-col flex-row gap-6 py-4 justify-between'>
+    <div className='flex h-100 w-full flex-col gap-3 bg-white rounded-lg p-3'>
+      <div className='flex flex-row gap-6 px-3 py-5 items-center justify-between'>
         <div className='text-[20px] font-normal text-[#1F1F1F]'>
           Monthly Revenue
         </div>
@@ -79,7 +79,7 @@ export default function MonthlyBarChart() {
         />
       </div>
 
-      <ResponsiveContainer>
+      <ResponsiveContainer className={'bg-background rounded-lg'}>
         <BarChart data={chartData} barCategoryGap='40%' barGap={8}>
           <XAxis dataKey='month' />
           <Tooltip

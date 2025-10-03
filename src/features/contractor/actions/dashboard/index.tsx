@@ -18,7 +18,8 @@ const Index = () => {
         subtitle='Overview of your Dashboard'
       />
       <ContractorStats />
-      <div className='flex flex-col justify-between gap-20 md:flex-row'>
+      <div className='flex flex-col md:flex-row  gap-4'>
+
         <CostLineChart />
       </div>
       <MonthlyBarChart />
