@@ -95,7 +95,7 @@ export default function ProjectDetailsViewPage() {
           sku: result.sku,
           quantity: `${result.quantity} ${result.unit}`,
           status: 'approved', // API processed it successfully
-          cost: `$ ${result.estimated_unit_price.toLocaleString()}`,
+          cost: `$ ${result.estimated_cost.toLocaleString()}`,
           costPerUnit : result.estimated_unit_price,
           contractor: {name: result.contractor_name,
           avatar: 'https://api.builder.io/api/v1/image/assets/TEMP/c621edd36a0654de255120825ca63122a262c93a?width=64'
