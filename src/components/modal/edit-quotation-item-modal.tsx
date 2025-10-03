@@ -37,8 +37,8 @@ const UNITS = [
 ] as const;
 
 const formSchema = z.object({
-  itemName: z.string().min(1, { message: 'Item name is required.' }),
-  sku: z.string().optional(),
+  itemName: z.string().min(1, { message: 'Item name is required.' }).max(50, 'Item name must be 50 characters or less'),
+  sku: z.string().max(50, 'SKU must be 50 characters or less').optional(),
   unitOfMeasure: z.string().min(1, { message: 'Unit of measure is required.' }),
   cost: z.string().min(1, { message: 'Cost is required.' })
 });
@@ -146,6 +146,7 @@ export function EditQuotationItemModal({
                 <FormControl>
                   <Input
                     placeholder='e.g., Premium Oak Flooring'
+                   
                     {...field}
                     disabled={isSubmitting}
                   />
@@ -164,6 +165,7 @@ export function EditQuotationItemModal({
                 <FormControl>
                   <Input
                     placeholder='e.g., OAK-PREM-001'
+                   
                     {...field}
                     disabled={isSubmitting}
                   />

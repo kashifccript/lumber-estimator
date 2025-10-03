@@ -45,16 +45,17 @@ const UNITS = [
 ] as const;
 
 const formSchema = z.object({
-  item: z.string().min(2, 'Item name is required'),
+  item: z.string().min(2, 'Item name is required').max(50, 'Item name must be 50 characters or less'),
   quantity: z
     .string()
     .min(1, 'Quantity is required')
+    .max(10, 'Quantity must be 10 characters or less')
     .refine(
       (val) => !isNaN(Number(val)) && Number(val) > 0,
       'Quantity must be a positive number'
     ),
   unit: z.string().min(1, 'Unit is required'),
-  productCode: z.string().optional()
+  productCode: z.string().max(50, 'Product code must be 50 characters or less').optional()
 });
 
 export function AddItemModal({ isOpen, onClose, onSubmit }: AddItemModalProps) {
@@ -106,15 +107,16 @@ export function AddItemModal({ isOpen, onClose, onSubmit }: AddItemModalProps) {
               <FormItem>
                 <FormLabel>Item Name</FormLabel>
                 <FormControl>
-                  <Input placeholder='e.g., Premium Oak Flooring' {...field} />
+                  <Input 
+                    placeholder='e.g., Premium Oak Flooring' 
+                    {...field} 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          {/* Quantity and Unit */}
-          <div className='flex gap-2'>
             <FormField
               control={form.control}
               name='quantity'
@@ -122,7 +124,12 @@ export function AddItemModal({ isOpen, onClose, onSubmit }: AddItemModalProps) {
                 <FormItem className='flex-1'>
                   <FormLabel>Quantity</FormLabel>
                   <FormControl>
-                    <Input type='number' placeholder='e.g., 20' {...field} />
+                    <Input 
+                      type='number' 
+                      placeholder='e.g., 20' 
+                      maxLength={10}
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -140,7 +147,7 @@ export function AddItemModal({ isOpen, onClose, onSubmit }: AddItemModalProps) {
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className='w-full'>
                         <SelectValue placeholder='Select unit' />
                       </SelectTrigger>
                     </FormControl>
@@ -156,7 +163,6 @@ export function AddItemModal({ isOpen, onClose, onSubmit }: AddItemModalProps) {
                 </FormItem>
               )}
             />
-          </div>
 
           {/* SKU/Product Code */}
           <FormField
@@ -166,7 +172,11 @@ export function AddItemModal({ isOpen, onClose, onSubmit }: AddItemModalProps) {
               <FormItem>
                 <FormLabel>SKU/Product Code (Optional)</FormLabel>
                 <FormControl>
-                  <Input placeholder='e.g., OAK-PREM-001' {...field} />
+                  <Input 
+                    placeholder='e.g., OAK-PREM-001' 
+                   
+                    {...field} 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
