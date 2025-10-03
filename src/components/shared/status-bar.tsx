@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 type Statuses = {
   available: number;
@@ -16,6 +17,7 @@ const statusColors: Record<keyof Statuses, string> = {
 };
 
 export default function StatusList({ statuses }: { statuses: Statuses }) {
+  console.log("statuses", statuses);
   const maxValue = Math.max(...Object.values(statuses));
 
   return (
@@ -24,13 +26,19 @@ export default function StatusList({ statuses }: { statuses: Statuses }) {
         const percentage = maxValue > 0 ? (value / maxValue) * 80 : 0;
 
         return (
-          <div
-            key={status}
-            className={`w-2 rounded-[19px] ${statusColors[status as keyof Statuses]}`}
-            style={{
-              height: `${percentage}%`
-            }}
-          />
+          <Tooltip key={status}>
+            <TooltipTrigger asChild>
+              <div
+                className={`w-2 rounded-[19px] ${statusColors[status as keyof Statuses]} cursor-pointer`}
+                style={{
+                  height: `${percentage}%`
+                }}
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{status.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}: {value}</p>
+            </TooltipContent>
+          </Tooltip>
         );
       })}
     </div>
