@@ -51,8 +51,8 @@ export function DonutChart() {
   const onHoldCount = 140;
   const [selectedValue, setSelectedValue] = useState(months[0]);
   return (
-    <div className='flex w-full flex-col'>
-      <div className='flex  flex-row gap-6 py-4 justify-between'>
+    <div className='flex w-full flex-col bg-white p-3 rounded-lg'>
+      <div className='flex  flex-row gap-6 py-5 px-3 justify-between items-center'>
         <div className='text-[20px] font-normal text-[#1F1F1F]'>
           Estimate Status Distribution
         </div>
