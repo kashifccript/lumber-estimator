@@ -143,7 +143,7 @@ export default function Header() {
   return (
     <header className='flex h-[52px] items-center justify-between overflow-hidden'>
       {/* Mobile Layout */}
-      <div className='flex w-full items-center justify-between md:hidden'>
+      <div className='flex w-full items-center justify-between lg:hidden'>
         <MobileNav />
 
         <Link
@@ -163,7 +163,7 @@ export default function Header() {
         </div>
       </div>
 
-      <div className='hidden h-[52px] w-full items-center justify-between md:flex'>
+      <div className='hidden h-[52px] w-full items-center justify-between lg:flex'>
         {/* Left: Logo + App Name */}
         <Link
           href={homeUrl}
@@ -230,7 +230,7 @@ export default function Header() {
 
         {/* Right: Notifications + User */}
         <div className='flex h-full gap-2'>
-          <div className='hover:hover:bg-accent flex h-full items-center rounded-xl bg-white px-[5px] py-[10px]'>
+          <div className='hover:bg-accent flex h-full items-center rounded-xl bg-white px-[5px] py-[10px]'>
             <UserNav />
           </div>
         </div>

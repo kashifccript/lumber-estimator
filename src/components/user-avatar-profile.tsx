@@ -24,7 +24,7 @@ export function UserAvatarProfile({
         </AvatarFallback>
       </Avatar>
 
-     <p className="hidden md:block text-secondary text-lg font-medium">
+     <p className="hidden lg:block text-secondary text-lg font-medium">
   {user?.fullName || "User Name"}
 </p>
 

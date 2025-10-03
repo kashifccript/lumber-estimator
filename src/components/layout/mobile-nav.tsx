@@ -132,7 +132,7 @@ export function MobileNav() {
       <SheetTrigger asChild>
         <Button
           variant='ghost'
-          className='size-[42px] rounded-xl bg-white p-3 md:hidden'
+          className='size-[42px] rounded-xl bg-white p-3 lg:hidden'
         >
           <Menu className='h-6 w-6 text-black' />
         </Button>
