@@ -70,6 +70,16 @@ const Security = () => {
       const response = await resetPassword(data);
       toast.success('Password updated successfully!');
       console.log('[v0] Profile updated:', response);
+      
+      // Clear the form fields after successful update
+      form.reset({
+        new_password: '',
+        confirm_password: ''
+      });
+      
+      // Also hide the password visibility
+      setShowNewPassword(false);
+      setShowConfirmPassword(false);
     } catch (error) {
       console.error('Error updating profile:', error);
       toast.error('Failed to update Password');
