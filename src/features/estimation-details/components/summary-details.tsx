@@ -20,7 +20,7 @@ export function SummaryDetails({ data }: { data: any }) {
       item.unit_price !== 'Quotation needed' &&
       item.total_price !== 'Quotation needed';
     
-    return hasDatabaseMatch && hasValidPrice && notQuotationNeeded;
+    return hasDatabaseMatch || hasValidPrice && notQuotationNeeded;
   }).length;
 
   // Count items needing quotation (no database match OR contains "Quotation needed" OR cost is 0)
