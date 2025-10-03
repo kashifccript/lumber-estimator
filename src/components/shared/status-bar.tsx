@@ -17,7 +17,6 @@ const statusColors: Record<keyof Statuses, string> = {
 };
 
 export default function StatusList({ statuses }: { statuses: Statuses }) {
-  console.log("statuses", statuses);
   const maxValue = Math.max(...Object.values(statuses));
 
   return (
