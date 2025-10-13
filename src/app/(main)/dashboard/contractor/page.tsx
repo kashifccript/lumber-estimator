@@ -29,6 +29,8 @@ export default function ContractorPage() {
       toast.error('Failed to fetch users');
     } finally {
       setLoading(false);
+      console.log("Hello")
+
     }
   };
   useEffect(() => {
